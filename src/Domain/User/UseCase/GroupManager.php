@@ -1,0 +1,120 @@
+<?php
+    declare(strict_types=1);
+    
+    namespace Domain\User\UseCase;
+
+    use Domain\UseCase\AbstractManager;
+    use Domain\User\Aggregate\Group;
+    use Domain\User\Aggregate\GroupCollection;
+    use Domain\User\Infrastructure\Repository\Bitrix\GroupRepository;
+    use Domain\User\Infrastructure\Repository\GroupRepositoryInterface;
+
+    /**
+     *
+     */
+    class GroupManager extends AbstractManager
+    {
+        private static ?self $instance = null;
+        private GroupRepositoryInterface $repository;
+        
+        /**
+         * @param GroupRepositoryInterface|null $repository
+         * @return self
+         */
+        public static function getInstance(GroupRepositoryInterface $repository = null): self
+        {
+            if ( !self::$instance ) {
+                self::$instance = new self($repository);
+            }
+            return self::$instance;
+        }
+        
+        /**
+         * @param GroupRepositoryInterface|null $repository
+         */
+        private function __construct(GroupRepositoryInterface $repository = null)
+        {
+            $this->repository = $repository ?? new GroupRepository();
+            parent::__construct();
+        }
+
+        /**
+         * @param Group $group
+         * @return int
+         */
+        private function create(Group $group): int
+        {
+            return $this->repository->create($group);
+        }
+
+        /**
+         * @param Group $group
+         * @return bool
+         */
+        private function update(Group $group): bool
+        {
+            return $this->repository->update($group);
+        }
+
+        /**
+         * @param Group $group
+         * @return Group
+         */
+        public function persist(Group $group): Group
+        {
+            if ( 0 < $group->getId() ) {
+                $this->update($group);
+            } else {
+                $id = $this->create($group);
+                $group->setId($id);
+            }
+    
+            return $this->findById($group->getId());
+        }
+
+        /**
+         * @return ?GroupCollection
+         */
+        public function find(): ?GroupCollection
+        {
+            $groups = $this->repository->find(
+                $this->getFilter(),
+                $this->getSort(),
+                $this->getLimits(),
+                $this->getFields()
+            );
+            $this->reset();
+            return $groups;
+        }
+        
+        /**
+         * @param int $id
+         * @return Group|null
+         */
+        public function findById(int $id): ?Group
+        {
+            $group = $this->repository->findById($id);
+            $this->reset();
+            return $group;
+        }
+
+        /**
+         * @param int $id
+         * @return bool
+         */
+        public function delete(int $id): bool
+        {
+            return $this->repository->delete($id);
+        }
+    
+        /**
+         * @param string $code
+         * @return $this
+         */
+        public function filterByCode(string $code): self
+        {
+            $this->addFilter('string_id', $code);
+            return $this;
+        }
+        
+    }
