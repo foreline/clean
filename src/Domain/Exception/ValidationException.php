@@ -6,13 +6,18 @@
     use Exception, Throwable;
 
     /**
-     * Исключение валидации
+     * Validation Exception
      */
     class ValidationException extends Exception
     {
         /** @var ?string[]  */
         private ?array $errors;
-        
+    
+        /**
+         * @param string $message
+         * @param int $code
+         * @param Throwable|null $previous
+         */
         public function __construct(string $message = 'Ошибка валидации', int $code = 0, Throwable $previous = null)
         {
             parent::__construct($message, $code, $previous);

@@ -8,10 +8,6 @@
       "email": "dima@foreline.ru"
     }
   ],
-  "config": {
-    "platform": {
-    }
-  },
   "require": {
     "php": ">=8.0",
     "webmozart/assert": "^1.11",
@@ -29,9 +25,5 @@
       "Infrastructure\\": "src/Infrastructure",
       "Presentation\\": "src/Presentation"
     }
-  },
-  "autoload-dev": {
-    "classmap": [
-    ]
   }
 }

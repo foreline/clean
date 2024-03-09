@@ -15,7 +15,7 @@
         private string $addSlug = '';
         
         /**
-         * HTML тег на скачивание файла
+         * HTML tag for file download
          * @return string
          */
         public function getDownloadLink(): string
@@ -29,7 +29,7 @@
         }
     
         /**
-         * Возвращает содержимое файла
+         * Returns file content
          * @return string $content
          */
         public function getContent(): string

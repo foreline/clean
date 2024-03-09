@@ -7,7 +7,7 @@
     use Domain\File\Aggregate\File;
 
     /**
-     * Событие создания файла
+     * File Created Event
      */
     class FileCreatedEvent extends Event
     {

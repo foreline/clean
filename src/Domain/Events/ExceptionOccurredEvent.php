@@ -8,7 +8,7 @@
     use Throwable;
 
     /**
-     * Событие возникновения исключения
+     * Exception Occurred Event
      */
     class ExceptionOccurredEvent extends Event implements EventInterface
     {

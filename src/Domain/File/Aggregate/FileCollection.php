@@ -9,7 +9,7 @@
     use Iterator;
     
     /**
-     * Коллекция файлов
+     * File Collection
      */
     class FileCollection implements IteratorInterface
     {

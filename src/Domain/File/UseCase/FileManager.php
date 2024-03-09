@@ -23,7 +23,7 @@
         
         private static ?self $instance = null;
         
-        /** @var string Директория для загрузки файлов */
+        /** @var string Files upload Directory */
         private string $uploadDir = '';
         
         /**

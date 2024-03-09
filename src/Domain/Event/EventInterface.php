@@ -1,4 +1,6 @@
 <?php
+    declare(strict_types=1);
+    
     namespace Domain\Event;
 
     use DateTimeImmutable;
@@ -6,9 +8,8 @@
     /**
      *
      */
-    interface EventInterface {
-
-
+    interface EventInterface
+    {
         /**
          * @return DateTimeImmutable
          */

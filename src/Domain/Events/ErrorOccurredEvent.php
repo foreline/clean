@@ -7,7 +7,7 @@
     use Domain\Event\EventInterface;
 
     /**
-     * Событие возникновения ошибки
+     * Error Occurred Event
      */
     class ErrorOccurredEvent extends Event implements EventInterface
     {

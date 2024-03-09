@@ -7,7 +7,7 @@
     use Domain\File\Aggregate\File;
 
     /**
-     * Событие обновления файла
+     * File updated Event
      */
     class FileUpdatedEvent extends Event
     {

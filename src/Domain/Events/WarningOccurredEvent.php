@@ -6,7 +6,7 @@
     use Domain\Event\Event;
 
     /**
-     * Событие возникновения предупреждения
+     * Warning Occurred Event
      */
     class WarningOccurredEvent extends Event
     {

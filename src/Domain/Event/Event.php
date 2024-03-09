@@ -11,7 +11,10 @@
     class Event implements EventInterface
     {
         private DateTimeImmutable $occurredOn;
-
+    
+        /**
+         *
+         */
         public function __construct()
         {
             $this->occurredOn = new DateTimeImmutable();

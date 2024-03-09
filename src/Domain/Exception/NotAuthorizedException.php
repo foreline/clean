@@ -6,10 +6,15 @@
     use Exception, Throwable;
 
     /**
-     * Исключение неавторизованного пользователя
+     * User Not Authorized Exception
      */
     class NotAuthorizedException extends Exception
     {
+        /**
+         * @param string $message
+         * @param int $code
+         * @param Throwable|null $previous
+         */
         public function __construct(string $message = 'Требуется авторизация', int $code = 0, Throwable $previous = null)
         {
             parent::__construct($message, $code, $previous);
