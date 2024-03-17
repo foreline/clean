@@ -5,6 +5,7 @@
     
     use Domain\File\Aggregate\File;
     use Domain\File\Aggregate\FileCollection;
+    use Domain\File\Infrastructure\Bitrix\FileRepository;
     use Domain\File\Infrastructure\Repository\FileRepositoryInterface;
     use Domain\UseCase\AbstractManager;
     use Exception;
@@ -168,9 +169,9 @@
         public function find(): ?FileCollection
         {
             $files = $this->repository->find(
-                $this->getFilter(),
-                $this->getSort(),
-                $this->getLimits()
+                $this->filter->get(),
+                $this->sort->get(),
+                $this->limit->getLimits()
             );
             $this->reset();
             return $files;

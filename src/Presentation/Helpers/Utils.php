@@ -28,7 +28,7 @@
             }
             
             // Обычные ссылки
-            preg_match_all('#(https?://[0-9a-z._?&=/:%\{\}\-]+)#xim', $text, $matches);
+            preg_match_all('#(https?://[0-9a-z._?&=/:%{}\-]+)#xim', $text, $matches);
         
             if ( is_array($matches) && 0 < count($matches) ) {
                 foreach ( $matches[1] as $match ) {

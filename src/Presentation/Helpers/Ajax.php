@@ -220,7 +220,7 @@
          * @param array|string $errors
          * @return Ajax
          */
-        public function setErrors($errors): self
+        public function setErrors(array|string $errors): self
         {
             $this->errors = $errors;
             return $this;

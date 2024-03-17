@@ -65,7 +65,7 @@
          * @param ?int $id
          * @return UserInterface
          */
-        public function setId(?int $id): UserInterface
+        public function setId(?int $id): self
         {
             $this->id = $id;
             return $this;

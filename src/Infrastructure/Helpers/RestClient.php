@@ -58,14 +58,6 @@
             
             // @fixme
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-            
-            // @fixme
-            /*if ( $debug ) {
-                if ( $fp = fopen(__DIR__ . '/curl_log_943iewl.txt', 'a+') ) {
-                    curl_setopt($curl, CURLOPT_VERBOSE, 1);
-                    curl_setopt($curl, CURLOPT_STDERR, $fp);
-                }
-            }*/
         
             curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
         
@@ -90,7 +82,6 @@
                     break;
             
                 case 'PUT':
-                    //curl_setopt($curl, CURLOPT_PUT, 1);
                     curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'PUT');
                     curl_setopt($curl, CURLOPT_POSTFIELDS, $params);
                 

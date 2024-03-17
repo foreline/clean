@@ -78,10 +78,10 @@
         public function find(): ?GroupCollection
         {
             $groups = $this->repository->find(
-                $this->getFilter(),
-                $this->getSort(),
-                $this->getLimits(),
-                $this->getFields()
+                $this->filter->get(),
+                $this->sort->get(),
+                $this->limit->getLimits(),
+                $this->fields->get()
             );
             $this->reset();
             return $groups;
@@ -113,7 +113,8 @@
          */
         public function filterByCode(string $code): self
         {
-            $this->addFilter('string_id', $code);
+            $this
+                ->filter->add('string_id', $code);
             return $this;
         }
         

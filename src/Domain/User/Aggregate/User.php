@@ -4,7 +4,6 @@
     namespace Domain\User\Aggregate;
 
     use Domain\Aggregate\AggregateInterface;
-    use Domain\Entity\EntityInterface;
     use Domain\File\Aggregate\File;
     use Domain\User\ValueObject\Role;
     use Domain\User\ValueObject\RoleCollection;

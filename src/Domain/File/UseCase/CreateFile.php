@@ -4,8 +4,8 @@
     namespace Domain\File\UseCase;
 
     use Domain\Event\Publisher;
+    use Domain\Events\ExceptionOccurredEvent;
     use Domain\Exception\NotAuthorizedException;
-    use Domain\Exception\NotPermittedException;
     use Domain\File\Aggregate\File;
     use Domain\File\Event\FileCreatedEvent;
     use Domain\User\UseCase\UserManager;
@@ -31,7 +31,6 @@
          * @param File $file
          * @return File $file
          * @throws NotAuthorizedException
-         * @throws NotPermittedException
          * @throws InvalidArgumentException
          * @throws Exception
          */
@@ -49,19 +48,17 @@
     
         /**
          * @throws NotAuthorizedException
-         * @throws NotPermittedException
          * @throws Exception
          * @param ?File $file
          * @return void
          */
         public function checkPermissions(?File $file = null): void
         {
-            if ( !$user = UserManager::getInstance()->getCurrent() ) {
+            if ( !UserManager::getInstance()->getCurrent() ) {
                 throw new NotAuthorizedException();
             }
             // @fixme @todo check permissions
         }
-    
     
         /**
          * @return bool
@@ -71,6 +68,7 @@
             try {
                 $this->checkPermissions();
             } catch ( Exception $e ) {
+                Publisher::getInstance()->publish(new ExceptionOccurredEvent($e));
                 return false;
             }
             return true;

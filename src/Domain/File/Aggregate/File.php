@@ -60,7 +60,7 @@
          */
         public function getSlug(): string
         {
-            return '/files/' . $this->getId(); // @fixme
+            return $this->slug;
         }
     
         /**

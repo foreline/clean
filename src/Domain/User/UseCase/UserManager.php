@@ -89,10 +89,10 @@
         public function find(): ?UserCollection
         {
             $users = $this->repository->find(
-                $this->getFilter(),
-                $this->getSort(),
-                $this->getLimits(),
-                $this->getFields(),
+                $this->filter->get(),
+                $this->sort->get(),
+                $this->limit->getLimits(),
+                $this->fields->get()
             );
             
             $this->reset();
@@ -204,7 +204,8 @@
          */
         public function filterByGroupId(int $groupId): self
         {
-            $this->addFilter(UserProxy::GROUPS, $groupId);
+            $this
+                ->filter->add(UserProxy::GROUPS, $groupId);
             return $this;
         }
     
@@ -219,7 +220,8 @@
                 ->setFields(['id'])
                 ->filterByCode($groupCode)
                 ->find()?->current()?->getId();
-            $this->addFilter(UserProxy::GROUPS, $groupId);
+            $this
+                ->filter->add(UserProxy::GROUPS, $groupId);
             return $this;
         }
     
@@ -267,8 +269,10 @@
          */
         public function sortByName(string $order = 'asc'): self
         {
-            $this->addSort('last_name', $order);
-            $this->addSort('name', $order);
+            $this
+                ->sort->add('last_name', $order);
+            $this
+                ->sort->add('name', $order);
             return $this;
         }
     
@@ -279,7 +283,8 @@
         public function filterByRole(string $roleCode): self
         {
             // @fixme
-            $this->addFilter(UserProxy::GROUPS, $roleCode);
+            $this
+                ->filter->add(UserProxy::GROUPS, $roleCode);
             return $this;
         }
     
@@ -290,7 +295,8 @@
         public function filterByRoles(string ...$rolesCode): self
         {
             // @fixme
-            $this->addFilter(UserProxy::GROUPS, $rolesCode);
+            $this
+                ->filter->add(UserProxy::GROUPS, $rolesCode);
             return $this;
         }
     }

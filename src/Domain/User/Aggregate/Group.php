@@ -4,7 +4,6 @@
     namespace Domain\User\Aggregate;
 
     use Domain\Aggregate\AggregateInterface;
-    use Domain\Entity\EntityInterface;
     use Domain\User\Entity\GroupEntity;
 
     /**

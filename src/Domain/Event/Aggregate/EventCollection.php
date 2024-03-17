@@ -70,7 +70,7 @@
         public function toArray(array $fields = []): ?array
         {
             return [
-                'entity_type'   => 'domain_events_collection',
+                'entityType'   => 'domain_event_collection',
                 //'events'        => '',
             ];
         }

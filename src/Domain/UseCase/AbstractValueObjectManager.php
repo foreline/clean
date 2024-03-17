@@ -270,16 +270,9 @@
          */
         public function setSort(array $sort): self
         {
-            /*foreach ( $sort as $tsort ) {
-                //list($field, $order) = $torder;
-                //[$field => $order] = $torder;
-                foreach ( $tsort as $field => $order ) {
-                    $this->sortBy($field, $order);
-                }
-            }*/
             foreach ( $sort as $sortBy => $sortOrder )
             {
-                $this->sortBy((string)$sortBy, $sortOrder);
+                $this->sort->by((string)$sortBy, $sortOrder);
             }
             return $this;
         }

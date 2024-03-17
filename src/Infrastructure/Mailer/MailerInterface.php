@@ -1,4 +1,5 @@
 <?php
+    declare(strict_types=1);
     
     namespace Infrastructure\Mailer;
 
@@ -11,5 +12,5 @@
          * @param MessageInterface $message
          * @return mixed
          */
-        public function send(MessageInterface $message);
+        public function send(MessageInterface $message): mixed;
     }

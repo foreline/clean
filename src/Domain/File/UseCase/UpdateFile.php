@@ -50,12 +50,11 @@
     
         /**
          * @throws NotAuthorizedException
-         * @throws NotPermittedException
          * @throws Exception
          */
         public function checkPermissions(File $file): void
         {
-            if ( !$user = UserManager::getInstance()->getCurrent() ) {
+            if ( !UserManager::getInstance()->getCurrent() ) {
                 throw new NotAuthorizedException();
             }
             // @fixme @todo check permissions
