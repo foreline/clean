@@ -12,13 +12,16 @@
     class FileUpdatedEvent extends Event
     {
         private File $file;
+        private File $previous;
     
         /**
          * @param File $file
+         * @param File $previous
          */
-        public function __construct(File $file)
+        public function __construct(File $file, File $previous)
         {
             $this->file = $file;
+            $this->previous = $previous;
             parent::__construct();
         }
     
@@ -29,5 +32,12 @@
         {
             return $this->file;
         }
-        
+    
+        /**
+         * @return File
+         */
+        public function getPrevious(): File
+        {
+            return $this->previous;
+        }
     }

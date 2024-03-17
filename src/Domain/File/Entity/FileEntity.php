@@ -2,7 +2,7 @@
     declare(strict_types=1);
     
     namespace Domain\File\Entity;
-
+    
     /**
      * File Entity
      */
@@ -19,6 +19,9 @@
         
         /** @var string File Name */
         private string $fileName;
+        
+        /** @var string File tmp_name while uploading */
+        private string $tmpName = '';
         
         /** @var string File description */
         private string $description;
@@ -52,7 +55,7 @@
             $this->description = $description;
             $this->size = $size;
         }
-    
+        
         /**
          * @return int|null
          */
@@ -60,7 +63,7 @@
         {
             return $this->id;
         }
-    
+        
         /**
          * @param int|null $id
          * @return self
@@ -70,7 +73,7 @@
             $this->id = $id;
             return $this;
         }
-    
+        
         /**
          * @return string
          */
@@ -78,7 +81,7 @@
         {
             return $this->source;
         }
-    
+        
         /**
          * @param string $source
          * @return self
@@ -88,7 +91,7 @@
             $this->source = $source;
             return $this;
         }
-    
+        
         /**
          * @return string
          */
@@ -96,7 +99,7 @@
         {
             return !empty($this->getDescription()) ? $this->getDescription() : $this->getFileName();
         }
-    
+        
         /**
          * @return string
          */
@@ -104,7 +107,7 @@
         {
             return $this->fileName;
         }
-    
+        
         /**
          * @param string $fileName
          * @return self
@@ -114,7 +117,25 @@
             $this->fileName = $fileName;
             return $this;
         }
-    
+        
+        /**
+         * @return string
+         */
+        public function getTmpName(): string
+        {
+            return $this->tmpName;
+        }
+        
+        /**
+         * @param string $tmpName
+         * @return $this
+         */
+        public function setTmpName(string $tmpName): self
+        {
+            $this->tmpName = $tmpName;
+            return $this;
+        }
+        
         /**
          * @return string
          */
@@ -122,7 +143,7 @@
         {
             return $this->originalName;
         }
-    
+        
         /**
          * @param string $originalName
          * @return self
@@ -132,7 +153,7 @@
             $this->originalName = $originalName;
             return $this;
         }
-    
+        
         /**
          * @return string
          */
@@ -140,7 +161,7 @@
         {
             return $this->description;
         }
-    
+        
         /**
          * @param string $description
          * @return self
@@ -150,7 +171,7 @@
             $this->description = $description;
             return $this;
         }
-    
+        
         /**
          * @return int
          */
@@ -158,7 +179,7 @@
         {
             return $this->size;
         }
-    
+        
         /**
          * @param int $size
          * @return self
@@ -168,7 +189,7 @@
             $this->size = $size;
             return $this;
         }
-    
+        
         /**
          * @return string
          */
@@ -176,7 +197,7 @@
         {
             return $this->path;
         }
-    
+        
         /**
          * @param string $path
          * @return self
@@ -186,7 +207,7 @@
             $this->path = $path;
             return $this;
         }
-    
+        
         /**
          * @return string
          */
@@ -194,7 +215,7 @@
         {
             return $this->getPath();
         }
-    
+        
         /**
          * @return bool
          */
@@ -202,7 +223,7 @@
         {
             return $this->removed;
         }
-    
+        
         /**
          * @param bool $removed
          * @return self
@@ -212,7 +233,7 @@
             $this->removed = $removed;
             return $this;
         }
-    
+        
         /**
          * @return bool
          */
@@ -220,7 +241,7 @@
         {
             return $this->newlyUploaded;
         }
-    
+        
         /**
          * @param bool $newlyUploaded
          * @return self

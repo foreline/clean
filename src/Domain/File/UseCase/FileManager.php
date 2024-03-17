@@ -3,19 +3,16 @@
     
     namespace Domain\File\UseCase;
     
-    use Domain\Event\Publisher;
     use Domain\File\Aggregate\File;
     use Domain\File\Aggregate\FileCollection;
-    use Domain\File\Event\FileCreatedEvent;
-    use Domain\File\Event\FileUpdatedEvent;
-    use Domain\File\Infrastructure\Repository\Bitrix\FileRepository;
     use Domain\File\Infrastructure\Repository\FileRepositoryInterface;
     use Domain\UseCase\AbstractManager;
     use Exception;
     use InvalidArgumentException;
     
     /**
-     * Service for working with File Aggregate. Singleton Pattern
+     * Service for working with File Aggregate. Singleton Pattern.
+     * Uploading a file is a responsibility of FileRepository.
      */
     class FileManager extends AbstractManager
     {
@@ -58,16 +55,7 @@
          */
         public function persist(File $file): File
         {
-            $fileId = $file->getId();
-            
-            $file = $this->repository->persist($file);
-            
-            // @fixme вынести события в отдельные сервисы
-            Publisher::getInstance()->publish(
-                0 < $fileId ? new FileUpdatedEvent($file) : new FileCreatedEvent($file)
-            );
-            
-            return $file;
+            return $this->repository->persist($file);
         }
         
         /**
@@ -160,29 +148,11 @@
                 throw new Exception('Не является файлом');
             }
             
-            /*if ( !is_readable($filePath) ) {
-                throw new \Exception('Файл не доступен для чтения');
-            }*/
-            
-            $toDir = $this->getUploadDir() . '/' . substr(md5((string)rand()), 0, 6);
-            if ( !mkdir($toDir) ) {
-                throw new Exception('Не удалось создать директорию для загрузки файла');
-            }
-            
-            $to = $toDir . '/' . $name;
-            
-            if ( !move_uploaded_file($filePath, $to) ) {
-                throw new Exception('Ошибка при загрузке файла'/* . $error['message']*/);
-            }
-            
             $file = new File();
-            $file->setOriginalName($name/*$filePath*/);
-            //$file->setSource($to);
+            $file->setOriginalName($name);
+            $file->setTmpName($filePath);
             $file->setFileName($name);
             $file->setDescription($description);
-            $file->setPath($to);
-            ///$file->setPath($filePath);
-            $file->setSize((int)filesize($to));
             
             $file = $this->persist($file);
             

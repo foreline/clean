@@ -2,14 +2,14 @@
     declare(strict_types=1);
     
     namespace Domain\File\Event;
-
+    
     use Domain\Event\Event;
     use Domain\File\Aggregate\File;
 
     /**
-     * File Created Event
+     * File persisted event
      */
-    class FileCreatedEvent extends Event
+    class FilePersistedEvent extends Event
     {
         private File $file;
     

@@ -89,7 +89,7 @@
             Publisher::getInstance()->publish(new ExceptionOccurredEvent(new Exception($errorMessage, $errorCode)));
             $this->status = 0;
             $this->error = $errorMessage;
-            $this->errorCode = $errorCode;
+            $this->errorCode = (string)$errorCode;
             $this->response();
         }
         
@@ -103,7 +103,7 @@
             Publisher::getInstance()->publish(new ExceptionOccurredEvent($e));
             $this->status = 0;
             $this->error = $e->getMessage();
-            $this->errorCode = $e->getCode();
+            $this->errorCode = (string)$e->getCode();
             $this->response();
         }
         

@@ -5,7 +5,7 @@
     
     use Domain\Aggregate\AggregateInterface;
     use Domain\File\Entity\FileEntity;
-
+    
     /**
      * File Aggregate
      */
@@ -27,22 +27,22 @@
                     target="_blank"
                 >' . ($this->getDescription() ?: $this->getOriginalName()) . '</a>';
         }
-    
+        
         /**
-         * Returns file content
+         * Returns file contents
          * @return string $content
          */
         public function getContent(): string
         {
             return (string)file_get_contents($this->getPath());
         }
-    
+        
         /**
          * @return string
          */
-        public function getSlug(): string
+        public function getDetailPageUrl(): string
         {
-            return $this->slug;
+            return $this->getSlug();
         }
     
         /**
@@ -53,6 +53,14 @@
         {
             $this->slug = $slug;
             return $this;
+        }
+    
+        /**
+         * @return string
+         */
+        public function getSlug(): string
+        {
+            return '/files/' . $this->getId(); // @fixme
         }
     
         /**
@@ -72,7 +80,7 @@
             $this->addSlug = $addSlug;
             return $this;
         }
-    
+        
         /**
          * @param array $fields
          * @return ?array
@@ -80,9 +88,10 @@
         public function toArray(array $fields = []): ?array
         {
             return [
-                'id'    => $this->getId(),
-                'name'  => $this->getName(),
-                'source'    => $this->getSource(),
+                'entityType'    => 'file',
+                'id'            => $this->getId(),
+                'name'          => $this->getName(),
+                'source'        => $this->getSource(),
                 'originalName'  => $this->getOriginalName(),
                 'slug'          => $this->getSlug(),
             ];
