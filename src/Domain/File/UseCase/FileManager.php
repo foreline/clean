@@ -5,7 +5,7 @@
     
     use Domain\File\Aggregate\File;
     use Domain\File\Aggregate\FileCollection;
-    use Domain\File\Infrastructure\Bitrix\FileRepository; // @fixme
+    use Domain\File\Infrastructure\Repository\Bitrix\FileRepository; // @fixme
     use Domain\File\Infrastructure\Repository\FileRepositoryInterface;
     use Domain\UseCase\AbstractManager;
     use Exception;
