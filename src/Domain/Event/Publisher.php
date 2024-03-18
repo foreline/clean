@@ -46,7 +46,7 @@
         /**
          * The publish method checks all possible subscribers to see if they are interested in the published domain event.
          * If so, the subscriber's handle method is called.
-         * @param EventInterface ...$events
+         * @param Event ...$events
          */
         public function publish(EventInterface ... $events): void
         {

@@ -5,6 +5,7 @@
     
     /**
      * Поле объекта DTO
+     * @deprecated
      */
     class Field
     {

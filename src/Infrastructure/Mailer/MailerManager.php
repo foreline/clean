@@ -34,7 +34,7 @@
          */
         private function __construct(MailerInterface $mailer = null)
         {
-            $this->mailer = $mailer ?? new Mailer();
+            $this->mailer = $mailer;
         }
     
         /**

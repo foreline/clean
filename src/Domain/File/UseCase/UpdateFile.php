@@ -5,7 +5,6 @@
 
     use Domain\Event\Publisher;
     use Domain\Exception\NotAuthorizedException;
-    use Domain\Exception\NotPermittedException;
     use Domain\File\Aggregate\File;
     use Domain\File\Event\FileUpdatedEvent;
     use Domain\User\UseCase\UserManager;
@@ -19,7 +18,6 @@
     {
         /**
          * @throws NotAuthorizedException
-         * @throws NotPermittedException
          * @throws InvalidArgumentException
          * @throws Exception
          */
@@ -30,7 +28,6 @@
     
         /**
          * @throws NotAuthorizedException
-         * @throws NotPermittedException
          * @throws InvalidArgumentException
          * @throws Exception
          */

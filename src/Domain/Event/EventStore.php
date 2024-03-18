@@ -69,7 +69,7 @@
          */
         public function findById(int $id): ?EventInterface
         {
-            if ( !$events = $this->find(['id' => $id]) ) {
+            if ( !$events = $this->find() ) {
                 return null;
             }
 

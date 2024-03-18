@@ -20,7 +20,7 @@
          * @param ?int $id
          * @return $this
          */
-        public function setId(?int $id): self;
+        public function setId(?int $id): static;
     
         /**
          * Returns user email

@@ -5,7 +5,7 @@
     
     use Domain\File\Aggregate\File;
     use Domain\File\Aggregate\FileCollection;
-    use Domain\File\Infrastructure\Bitrix\FileRepository;
+    use Domain\File\Infrastructure\Bitrix\FileRepository; // @fixme
     use Domain\File\Infrastructure\Repository\FileRepositoryInterface;
     use Domain\UseCase\AbstractManager;
     use Exception;
@@ -43,7 +43,7 @@
          */
         private function __construct(FileRepositoryInterface $repository = null)
         {
-            $this->repository = $repository ?? new FileRepository();
+            $this->repository = $repository ?? new FileRepository(); // @fixme use DI
             $this->setUploadDir($_SERVER['DOCUMENT_ROOT'] . '/upload/files'); // @fixme
             
             parent::__construct();
