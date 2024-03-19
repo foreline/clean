@@ -28,10 +28,10 @@
                 return;
             }
             
-            $exception = $event->getError();
+            $error = $event->getError();
             
             try {
-                $subject = 'Error: ' . trim($exception->getMessage());
+                $subject = 'Error: ' . trim($error);
                 
                 $body = '<b>' . $subject . '</b>' . PHP_EOL;
                 if ( null !== $user = UserManager::getInstance()->getCurrent() ) {
@@ -51,8 +51,7 @@
                     static function($trace, $i) {
                         return
                             '#' . $i . ': ' . $trace['class'] . $trace['type'] . $trace['function'] . '()' . PHP_EOL .
-                            "\t" . $trace['file'] . ':' . $trace['line']
-                            ;
+                            "\t" . $trace['file'] . ':' . $trace['line'];
                     },
                     $event->getTrace(),
                     array_keys($event->getTrace())
