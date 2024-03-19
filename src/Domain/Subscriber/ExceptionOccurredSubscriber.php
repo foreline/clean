@@ -10,6 +10,7 @@
     use Exception;
     use Infrastructure\Mailer\EmailMessage;
     use Infrastructure\Mailer\MailerManager;
+    use Infrastructure\Mailer\Bitrix\Mailer; // @fixme
 
     /**
      * Обработчик события вызова исключения
@@ -58,7 +59,7 @@
                 $body .= implode(PHP_EOL, $trace) . PHP_EOL;
                 $body .= '</pre>' . PHP_EOL;
                 
-                MailerManager::getInstance()->send(
+                MailerManager::getInstance(new Mailer())->send(
                     (new EmailMessage())
                         ->setSubject($subject)
                         ->setTo($_ENV['EXCEPTION_EMAIL'])

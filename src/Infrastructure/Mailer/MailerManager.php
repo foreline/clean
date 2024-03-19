@@ -17,10 +17,10 @@
         private static ?self $instance = null;
     
         /**
-         * @param MailerInterface|null $mailer
+         * @param MailerInterface $mailer
          * @return self
          */
-        public static function getInstance(MailerInterface $mailer = null): self
+        public static function getInstance(MailerInterface $mailer): self
         {
             if ( !self::$instance ) {
                 self::$instance = new self($mailer);
@@ -45,6 +45,9 @@
         public function send(EmailMessage $message): void
         {
             if ( defined('DEV_ENV') && true === DEV_ENV ) {
+                return;
+            }
+            if ( 'dev' === mb_strtolower($_ENV['APP_ENV']) ) {
                 return;
             }
             $this->mailer->send($message);

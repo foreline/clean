@@ -10,6 +10,7 @@
     use Exception;
     use Infrastructure\Mailer\EmailMessage;
     use Infrastructure\Mailer\MailerManager;
+    use Infrastructure\Mailer\Bitrix\Mailer; // @fixme
 
     /**
      * Warning event Subscriber. Sends WarningOccurredEvent message to email $_ENV['WARNING_EMAIL']
@@ -51,7 +52,7 @@
                 $body .= implode(PHP_EOL, $trace) . PHP_EOL;
                 $body .= '</pre>' . PHP_EOL;
                 
-                MailerManager::getInstance()->send(
+                MailerManager::getInstance(new Mailer())->send(
                     (new EmailMessage())
                         ->setTo($_ENV['WARNING_EMAIL'])
                         ->setSubject($subject)
