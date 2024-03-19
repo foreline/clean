@@ -4,13 +4,14 @@
     namespace Infrastructure\Mailer;
 
     /**
-     * Интерфейс почтовой службы
+     * Mail service Interface
      */
     interface MailerInterface
     {
         /**
          * @param MessageInterface $message
-         * @return mixed
+         * @return void
          */
-        public function send(MessageInterface $message): mixed;
+        public function send(MessageInterface $message): void;
+        
     }
