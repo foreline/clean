@@ -9,7 +9,7 @@
     interface ToArrayInterface
     {
         /**
-         * Преобразует сущность в массив
+         * Returns array presentation of Entity
          * @param array $fields
          * @return ?array
          */

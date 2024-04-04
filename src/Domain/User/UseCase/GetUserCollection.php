@@ -10,6 +10,7 @@
     use Domain\UseCase\Limit;
     use Domain\UseCase\Sort;
     use Domain\User\Aggregate\UserCollection;
+    use Domain\User\Infrastructure\Repository\UserRepositoryInterface;
     use Exception;
     use InvalidArgumentException;
 
@@ -18,6 +19,7 @@
      */
     class GetUserCollection
     {
+        //private UserRepositoryInterface $repository;
         public UserManager $manager;
         public Filter $filter;
         public Sort $sort;
@@ -27,8 +29,9 @@
         /**
          * 
          */
-        public function __construct()
+        public function __construct(/*UserRepositoryInterface $repository*/)
         {
+            //$this->repository = $repository;
             $this->manager = UserManager::getInstance();
         
             $this->filter = new Filter();
