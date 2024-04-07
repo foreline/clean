@@ -240,5 +240,12 @@
             }
             return $this;
         }
-        
+    
+        /**
+         * @return int
+         */
+        public function getTotalCount(): int
+        {
+            return $this->repository->getTotalCount();
+        }
     }
