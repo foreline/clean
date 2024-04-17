@@ -391,6 +391,7 @@
         public function addFilter(string $field, $value): self
         {
             $this->_filter[$field] = $value;
+            $this->filter->add($field, $value);
             return $this;
         }
     
@@ -461,6 +462,7 @@
         {
             $condition['LOGIC'] = $logic;
             $this->addFilter('condition', $condition);
+            $this->filter->addCondition($condition, $logic);
             return $this;
         }
     }
