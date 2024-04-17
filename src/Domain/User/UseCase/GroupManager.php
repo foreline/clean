@@ -113,8 +113,27 @@
          */
         public function filterByCode(string $code): self
         {
-            $this
-                ->filter->add('string_id', $code);
+            $this->filter->add($this->repository::CODE, $code);
+            return $this;
+        }
+    
+        /**
+         * @param int|int[] $id
+         * @return $this
+         */
+        public function filterById(int|array $id): self
+        {
+            $this->filter->add($this->repository::ID, $id);
+            return $this;
+        }
+    
+        /**
+         * @param bool|bool[] $active
+         * @return $this
+         */
+        public function filterByActive(bool|array $active = true): self
+        {
+            $this->filter->add($this->repository::ACTIVE, $active);
             return $this;
         }
         
