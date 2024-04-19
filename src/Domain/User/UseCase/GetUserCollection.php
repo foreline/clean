@@ -2,7 +2,8 @@
     declare(strict_types=1);
     
     namespace Domain\User\UseCase;
-    
+
+    use Domain\User\Infrastructure\Repository\Bitrix\UserProxy;
     use Domain\User\Infrastructure\Repository\Bitrix\UserRepository;
     use Domain\Exception\NotAuthorizedException;
     use Domain\UseCase\Fields;
@@ -10,6 +11,7 @@
     use Domain\UseCase\Limit;
     use Domain\UseCase\Sort;
     use Domain\User\Aggregate\UserCollection;
+    use Domain\User\Infrastructure\Repository\GroupRepositoryInterface;
     use Domain\User\Infrastructure\Repository\UserRepositoryInterface;
     use Exception;
     use InvalidArgumentException;
@@ -121,14 +123,19 @@
             }
             return $this;
         }
-        
+    
         /**
-         * @param int|int[] $protocolId
+         * @param string|string[] $role
          * @return $this
          */
-        public function filterByProtocol(int|array $protocolId): self
+        public function filterByRole(string|array $role): self
         {
-            $this->filter->add(UserRepository::PROTOCOL, $protocolId);
+            $groupId = GroupManager::getInstance()
+                ->setFields(['id'])
+                ->filterByCode($role)
+                ->find()?->current()?->getId();
+            
+            $this->filter->add(UserProxy::GROUPS, $groupId);
             return $this;
         }
     
@@ -157,6 +164,15 @@
         public function sort(array $sort): self
         {
             $this->sort->set($sort);
+            return $this;
+        }
+    
+        /**
+         * @return $this
+         */
+        public function sortByRand(): self
+        {
+            $this->sort->byRand();
             return $this;
         }
         
