@@ -140,6 +140,16 @@
         }
     
         /**
+         * @param bool|array $active
+         * @return $this
+         */
+        public function filterByActive(bool|array $active = true): self
+        {
+            $this->filter->add('active', $active);
+            return $this;
+        }
+    
+        /**
          * @return int
          */
         public function getTotalCount(): int
