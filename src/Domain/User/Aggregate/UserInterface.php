@@ -42,8 +42,8 @@
     
         /**
          * Checks if user is in roles
-         * @param Role ...$role
+         * @param string|string[] ...$role
          * @return bool
          */
-        public function in(Role ...$role): bool;
+        public function in(string|array ...$role): bool;
     }

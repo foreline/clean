@@ -71,27 +71,33 @@
             $this->roles = $roles;
             return $this;
         }
-        
+    
         /**
-         * @param string ...$rolesCode
+         * @param string|string[] ...$rolesCode
          * @return bool
          */
-        public function in(...$rolesCode): bool
+        public function in(string|array ...$rolesCode): bool
         {
             if ( null === $userRoles = $this->getRoles() ) {
                 return false;
             }
-            
+        
             if ( 0 === $userRoles->getCount() ) {
                 return false;
             }
-            
-            foreach ( $rolesCode as $roleCode ) {
+        
+            // Convert multidimensional array to flat
+            $roles = [];
+            array_walk_recursive($rolesCode, function ($item, $key) use (&$roles) {
+                $roles[$key] = $item;
+            });
+        
+            foreach ( $roles as $roleCode ) {
                 if ( in_array($roleCode, $userRoles->getCollection()) ) {
                     return true;
                 }
             }
-            
+        
             return false;
         }
     
