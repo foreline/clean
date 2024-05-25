@@ -108,10 +108,10 @@
         }
     
         /**
-         * @param string $code
+         * @param string|string[] $code
          * @return $this
          */
-        public function filterByCode(string $code): self
+        public function filterByCode(string|array $code): self
         {
             $this->filter->add($this->repository::CODE, $code);
             return $this;
