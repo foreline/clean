@@ -13,18 +13,28 @@
      */
     abstract class AbstractEntity
     {
+        /** @var int|null ID */
         private ?int $id = null;
+        /** @var User|null Кем создано */
         private ?User $createdBy = null;
+        /** @var User|null Кем изменено */
         private ?User $modifiedBy = null;
+        /** @var DateTimeImmutable|null Дата создания */
         private ?DateTimeImmutable $dateCreated = null;
+        /** @var DateTimeImmutable|null Дата изменения */
         private ?DateTimeImmutable $dateModified = null;
+        /** @var bool Активность */
         private bool $active = true;
+        /** @var string Название */
         private string $name = '';
+        /** @var string Код */
+        private string $code = '';
+        /** @var int Сортировка */
+        private int $sort = 50;
+    
         private string $detailPageUrl = '';
         private string $listUrl = '';
         private string $addUrl = '';
-        private string $code = '';
-        private int $sort = 50;
         
         /**
          * @return int|null
@@ -109,7 +119,7 @@
          * @param User|null $createdBy
          * @return self
          */
-        public function setCreatedBy(?User $createdBy): AbstractEntity
+        public function setCreatedBy(?User $createdBy): self
         {
             $this->createdBy = $createdBy;
             return $this;
@@ -127,7 +137,7 @@
          * @param User|null $modifiedBy
          * @return self
          */
-        public function setModifiedBy(?User $modifiedBy): AbstractEntity
+        public function setModifiedBy(?User $modifiedBy): self
         {
             $this->modifiedBy = $modifiedBy;
             return $this;
