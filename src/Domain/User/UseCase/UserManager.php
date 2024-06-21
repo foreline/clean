@@ -250,7 +250,7 @@
         {
             self::$currentUser = null;
             global $USER;
-            $USER->Authorize($userId);
+            $USER?->Authorize($userId);
         }
         
         /*
