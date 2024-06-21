@@ -12,6 +12,8 @@
      */
     class GetCurrentUser
     {
+        private ?User $currentUser = null;
+        
         /**
          * @return User|null
          * @throws Exception
@@ -27,6 +29,16 @@
          */
         public function get(): ?User
         {
-            return UserManager::getInstance()->getCurrent();
+            return $this->currentUser ?? UserManager::getInstance()->getCurrent();
+        }
+    
+        /**
+         * @param User $user
+         * @return $this
+         */
+        public function set(User $user): self
+        {
+            $this->currentUser = $user;
+            return $this;
         }
     }
