@@ -249,8 +249,10 @@
         public function authorize(int $userId): void
         {
             self::$currentUser = null;
-            global $USER;
-            $USER?->Authorize($userId);
+            //global $USER;
+            //$USER?->Authorize($userId);
+            
+            (new \CUser())->Authorize($userId);
         }
         
         /*
