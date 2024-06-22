@@ -12,7 +12,7 @@
      */
     class GetCurrentUser
     {
-        private ?User $currentUser = null;
+        private static ?User $currentUser = null;
         
         /**
          * @return User|null
@@ -29,16 +29,17 @@
          */
         public function get(): ?User
         {
-            return $this->currentUser ?? UserManager::getInstance()->getCurrent();
+            return self::$currentUser ?? UserManager::getInstance()->getCurrent();
         }
     
         /**
+         * May be used as authorize method
          * @param User $user
          * @return $this
          */
         public function set(User $user): self
         {
-            $this->currentUser = $user;
+            self::$currentUser = $user;
             return $this;
         }
     }
