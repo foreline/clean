@@ -8,11 +8,12 @@
      */
     class Fields
     {
+        /** @var string[] */
         private array $fields = [];
     
         /**
          * Задает поля для выборки
-         * @param array $fields
+         * @param string[] $fields
          * @return self
          */
         public function set(array $fields = []): self
@@ -22,7 +23,7 @@
         }
     
         /**
-         * @return array
+         * @return string[]
          */
         public function get(): array
         {

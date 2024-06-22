@@ -16,7 +16,7 @@
     
         /**
          * Returns filter parameters
-         * @return array
+         * @return array<string,mixed>
          */
         public function get(): array
         {
@@ -25,7 +25,7 @@
     
         /**
          * Sets filter parameters
-         * @param array $filter
+         * @param array<string,mixed> $filter
          * @return self
          */
         public function set(array $filter): self

@@ -87,7 +87,7 @@
         }
     
         /**
-         * @return array
+         * @return array{limit: int, offset: int, pageNum: int}
          */
         public function getLimits(): array
         {

@@ -8,6 +8,7 @@
      */
     class Sort
     {
+        /** @var array<string,string>  */
         private array $sort = [];
     
         /**
@@ -81,7 +82,7 @@
         }
     
         /**
-         * @return array
+         * @return array<string,string>
          */
         public function get(): array
         {
@@ -89,7 +90,7 @@
         }
     
         /**
-         * @param array $sort
+         * @param array<string,string> $sort
          * @return self
          */
         public function set(array $sort): self
