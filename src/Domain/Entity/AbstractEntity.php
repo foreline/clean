@@ -15,20 +15,28 @@
     {
         /** @var int|null ID */
         private ?int $id = null;
+        
         /** @var User|null Кем создано */
         private ?User $createdBy = null;
+        
         /** @var User|null Кем изменено */
         private ?User $modifiedBy = null;
+        
         /** @var DateTimeImmutable|null Дата создания */
         private ?DateTimeImmutable $dateCreated = null;
+        
         /** @var DateTimeImmutable|null Дата изменения */
         private ?DateTimeImmutable $dateModified = null;
+        
         /** @var bool Активность */
         private bool $active = true;
+        
         /** @var string Название */
         private string $name = '';
+        
         /** @var string Код */
         private string $code = '';
+        
         /** @var int Сортировка */
         private int $sort = 50;
     
@@ -328,5 +336,23 @@
         {
             return ($this->getModifiedBy() && $userId === $this->getModifiedBy()->getId());
         }
-
+    
+        /**
+         * @param array $fields
+         * @return array
+         */
+        public function getArray(array $fields = []): array
+        {
+            return [
+                'id'            => $this->getId(),
+                'name'          => $this->getName(),
+                'createdBy'     => $this->getCreatedBy()?->toArray(),
+                'modifiedBy'    => $this->getModifiedBy()?->toArray(),
+                'dateCreated'   => $this->getDateCreated()?->format('Y.m.d H:i:s'),
+                'dateModified'  => $this->getDateModified()?->format('Y.m.d H:i:s'),
+                'active'        => $this->isActive(),
+                'code'          => $this->getCode(),
+                'sort'          => $this->getSort(),
+            ];
+        }
     }
