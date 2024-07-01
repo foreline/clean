@@ -11,8 +11,6 @@
     use Domain\UseCase\Limit;
     use Domain\UseCase\Sort;
     use Domain\User\Aggregate\UserCollection;
-    use Domain\User\Infrastructure\Repository\GroupRepositoryInterface;
-    use Domain\User\Infrastructure\Repository\UserRepositoryInterface;
     use Exception;
     use InvalidArgumentException;
 

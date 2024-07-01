@@ -11,7 +11,20 @@
      */
     interface UserRepositoryInterface
     {
-
+        public const ID = 'id';
+        public const LOGIN = 'login';
+        public const EMAIL = 'email';
+        public const PASSWORD = 'password';
+        public const CONFIRM_PASSWORD = 'confirm_password';
+        public const NAME = 'name';
+        public const LAST_NAME = 'last_name';
+        public const ACTIVE = 'active';
+        public const PHONE = 'personal_phone';
+        public const DEPARTMENT = 'work_department';
+        public const POSITION = 'work_position';
+        public const GROUPS = 'group_id';
+        public const CONFIRM_CODE = 'confirm_code';
+        
         /**
          * @param UserInterface $user
          * @return UserInterface
@@ -58,5 +71,15 @@
          * @return bool
          */
         public function isAuthorized(): bool;
+    
+        /**
+         * @return int
+         */
+        public function getCount(): int;
+    
+        /**
+         * @return int
+         */
+        public function getTotalCount(): int;
         
     }
