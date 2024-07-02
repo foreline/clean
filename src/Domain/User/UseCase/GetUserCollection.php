@@ -3,14 +3,13 @@
     
     namespace Domain\User\UseCase;
 
-    use Domain\User\Infrastructure\Repository\Bitrix\UserProxy;
-    use Domain\User\Infrastructure\Repository\Bitrix\UserRepository;
     use Domain\Exception\NotAuthorizedException;
     use Domain\UseCase\Fields;
     use Domain\UseCase\Filter;
     use Domain\UseCase\Limit;
     use Domain\UseCase\Sort;
     use Domain\User\Aggregate\UserCollection;
+    use Domain\User\Infrastructure\Repository\UserRepositoryInterface;
     use Exception;
     use InvalidArgumentException;
 
@@ -75,7 +74,7 @@
          */
         public function count(): int
         {
-            $this->fields->set([UserRepository::ID]);
+            $this->fields->set([UserRepositoryInterface::ID]);
             $this->get();
             return $this->getTotalCount();
         }
@@ -100,9 +99,9 @@
         public function filterById(int|array $id, bool $inverse = false): self
         {
             if ( $inverse ) {
-                $this->filter->not(UserRepository::ID, $id);
+                $this->filter->not(UserRepositoryInterface::ID, $id);
             } else {
-                $this->filter->add(UserRepository::ID, $id);
+                $this->filter->add(UserRepositoryInterface::ID, $id);
             }
             return $this;
         }
@@ -112,15 +111,15 @@
          * @param bool $inverse
          * @return $this
          */
-        public function filterByCode(string|array $code, bool $inverse = false): self
+        /*public function filterByCode(string|array $code, bool $inverse = false): self
         {
             if ( $inverse ) {
-                $this->filter->not(UserRepository::CODE, $code);
+                $this->filter->not(UserRepositoryInterface::CODE, $code);
             } else {
-                $this->filter->add(UserRepository::CODE, $code);
+                $this->filter->add(UserRepositoryInterface::CODE, $code);
             }
             return $this;
-        }
+        }*/
     
         /**
          * @param string|string[] $role
@@ -133,7 +132,7 @@
                 ->filterByCode($role)
                 ->find()?->current()?->getId();
             
-            $this->filter->add(UserProxy::GROUPS, $groupId);
+            $this->filter->add(UserRepositoryInterface::GROUPS, $groupId);
             return $this;
         }
     
