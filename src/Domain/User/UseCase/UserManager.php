@@ -4,12 +4,15 @@
     namespace Domain\User\UseCase;
     
     use Bitrix\Main\Engine\CurrentUser;
+    
     use CGroup;
     use CUser;
     use Domain\UseCase\AbstractManager;
     use Domain\User\Aggregate\User;
     use Domain\User\Aggregate\UserInterface;
     use Domain\User\Aggregate\UserCollection;
+    use Domain\User\Infrastructure\Repository\Bitrix\UserProxy;
+    use Domain\User\Infrastructure\Repository\Bitrix\UserRepository;
     use Domain\User\Infrastructure\Repository\UserRepositoryInterface;
     use Exception;
     use InvalidArgumentException;
