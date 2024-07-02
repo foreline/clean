@@ -10,8 +10,6 @@
     use Domain\User\Aggregate\User;
     use Domain\User\Aggregate\UserInterface;
     use Domain\User\Aggregate\UserCollection;
-    use Domain\User\Infrastructure\Repository\Bitrix\UserProxy;
-    use Domain\User\Infrastructure\Repository\Bitrix\UserRepository;
     use Domain\User\Infrastructure\Repository\UserRepositoryInterface;
     use Exception;
     use InvalidArgumentException;
@@ -205,7 +203,7 @@
         public function filterByGroupId(int $groupId): self
         {
             $this
-                ->filter->add(UserProxy::GROUPS, $groupId);
+                ->filter->add(UserRepositoryInterface::GROUPS, $groupId);
             return $this;
         }
     
@@ -221,7 +219,7 @@
                 ->filterByCode($groupCode)
                 ->find()?->current()?->getId();
             $this
-                ->filter->add(UserProxy::GROUPS, $groupId);
+                ->filter->add(UserRepositoryInterface::GROUPS, $groupId);
             return $this;
         }
     
@@ -252,7 +250,7 @@
             //global $USER;
             //$USER?->Authorize($userId);
             
-            (new \CUser())->Authorize($userId);
+            (new CUser())->Authorize($userId);
         }
         
         /*
@@ -286,7 +284,7 @@
         {
             // @fixme
             $this
-                ->filter->add(UserProxy::GROUPS, $roleCode);
+                ->filter->add(UserRepositoryInterface::GROUPS, $roleCode);
             return $this;
         }
     
@@ -298,7 +296,7 @@
         {
             // @fixme
             $this
-                ->filter->add(UserProxy::GROUPS, $rolesCode);
+                ->filter->add(UserRepositoryInterface::GROUPS, $rolesCode);
             return $this;
         }
     
