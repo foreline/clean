@@ -21,7 +21,8 @@
         public function __construct(Throwable $exception)
         {
             $this->exception = $exception;
-            $this->trace = debug_backtrace();
+            //$this->trace = debug_backtrace();
+            $this->trace = $exception->getTrace();
             
             parent::__construct();
         }
