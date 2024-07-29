@@ -28,17 +28,8 @@
         /** @var DateTimeImmutable|null Дата изменения */
         private ?DateTimeImmutable $dateModified = null;
         
-        /** @var bool Активность */
-        private bool $active = true;
-        
         /** @var string Название */
         private string $name = '';
-        
-        /** @var string Код */
-        private string $code = '';
-        
-        /** @var int Сортировка */
-        private int $sort = 50;
     
         private string $detailPageUrl = '';
         private string $listUrl = '';
@@ -72,24 +63,6 @@
                 throw new InvalidArgumentException('ID не может быть изменен');
             }
             $this->id = $id;
-            return $this;
-        }
-
-        /**
-         * @return bool
-         */
-        public function isActive(): bool
-        {
-            return $this->active;
-        }
-
-        /**
-         * @param bool $active
-         * @return self
-         */
-        public function setActive(bool $active = true): self
-        {
-            $this->active = $active;
             return $this;
         }
 
@@ -280,44 +253,6 @@
         }
 
         /**
-         * @return string
-         */
-        public function getCode(): string
-        {
-            return $this->code;
-        }
-
-        /**
-         * @param string $code
-         * @return self
-         */
-        public function setCode(string $code): self
-        {
-            $this->code = $code;
-            return $this;
-        }
-
-        /**
-         * @return int
-         */
-        public function getSort(): int
-        {
-            return $this->sort;
-        }
-
-        /**
-         * @param int $sort
-         * @return self
-         * @throw \InvalidArgumentException
-         */
-        public function setSort(int $sort): self
-        {
-            Assert::greaterThanEq($sort, 0, 'Сортировка не может быть отрицательной');
-            $this->sort = $sort;
-            return $this;
-        }
-
-        /**
          * Проверяет создан ли элемент указанным пользователем
          * @param int $userId
          * @return bool
@@ -350,9 +285,6 @@
                 'modifiedBy'    => $this->getModifiedBy()?->toArray(),
                 'dateCreated'   => $this->getDateCreated()?->format('Y.m.d H:i:s'),
                 'dateModified'  => $this->getDateModified()?->format('Y.m.d H:i:s'),
-                'active'        => $this->isActive(),
-                'code'          => $this->getCode(),
-                'sort'          => $this->getSort(),
             ];
         }
     }

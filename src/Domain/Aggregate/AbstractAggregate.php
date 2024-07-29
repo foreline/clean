@@ -6,7 +6,7 @@
     use Domain\Entity\AbstractEntity;
 
     /**
-     * Abstract aggregate for inheritance
+     * Abstract Aggregate for inheritance
      */
     abstract class AbstractAggregate extends AbstractEntity implements AggregateInterface
     {

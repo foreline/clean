@@ -11,7 +11,6 @@
     use Domain\User\Aggregate\User;
     use Domain\User\Aggregate\UserInterface;
     use Domain\User\Aggregate\UserCollection;
-    use Domain\User\Infrastructure\Repository\Bitrix\UserProxy;
     use Domain\User\Infrastructure\Repository\Bitrix\UserRepository;
     use Domain\User\Infrastructure\Repository\UserRepositoryInterface;
     use Exception;
