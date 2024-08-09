@@ -2,9 +2,9 @@
     declare(strict_types=1);
     
     namespace Domain\UseCase;
-
+    
     use Webmozart\Assert\Assert;
-
+    
     /**
      *
      */
@@ -13,7 +13,7 @@
         private int $limit = 0;
         private int $offset = 0;
         private int $pageNum = 0;
-    
+        
         /**
          * @param int $limit
          * @return self
@@ -25,7 +25,7 @@
             $this->limit = $limit;
             return $this;
         }
-    
+        
         /**
          * @param int $limit
          * @param int $offset
@@ -34,13 +34,13 @@
          */
         public function set(int $limit = 1, int $offset = 0, int $pageNum = 1): self
         {
-            Assert::greaterThan($limit, 0, 'Limit must be greater than 0');
+            //Assert::greaterThan($limit, 0, 'Limit must be greater than 0');
             $this->limit = $limit;
             $this->offset = $offset;
             $this->pageNum = $pageNum;
             return $this;
         }
-    
+        
         /**
          * @return int
          */
@@ -48,7 +48,7 @@
         {
             return $this->limit;
         }
-    
+        
         /**
          * @param int $offset
          * @return self
@@ -58,7 +58,7 @@
             $this->offset = $offset;
             return $this;
         }
-    
+        
         /**
          * @return int
          */
@@ -66,7 +66,7 @@
         {
             return $this->offset;
         }
-    
+        
         /**
          * @return int
          */
@@ -74,18 +74,18 @@
         {
             return $this->pageNum;
         }
-    
+        
         /**
          * @param int $pageNum
          * @return self
          */
         public function setPageNum(int $pageNum): self
         {
-            Assert::greaterThanEq($pageNum, 1, 'Page number must be greater than 0');
+            //Assert::greaterThanEq($pageNum, 1, 'Page number must be greater than 0');
             $this->pageNum = $pageNum;
             return $this;
         }
-    
+        
         /**
          * @return array{limit: int, offset: int, pageNum: int}
          */
@@ -97,7 +97,7 @@
                 'page_num'  => $this->pageNum,
             ];
         }
-    
+        
         /**
          * @return self
          */
