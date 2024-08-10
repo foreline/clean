@@ -11,8 +11,32 @@
      */
     class Group extends GroupEntity implements AggregateInterface
     {
+        /** @var string Внешний ID */
+        private string $extId = '';
+        
+        /** @var string  */
         private string $slug = '';
+        
+        /** @var string  */
         private string $addSlug = '';
+    
+        /**
+         * @return string
+         */
+        public function getExtId(): string
+        {
+            return $this->extId;
+        }
+    
+        /**
+         * @param string $extId
+         * @return $this
+         */
+        public function setExtId(string $extId): self
+        {
+            $this->extId = $extId;
+            return $this;
+        }
         
         /**
          * Group detail page url

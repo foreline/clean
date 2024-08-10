@@ -11,8 +11,14 @@
      */
     class File extends FileEntity implements AggregateInterface
     {
+        /** @var string  */
         private string $slug = '';
+        
+        /** @var string  */
         private string $addSlug = '';
+    
+        /** @var string Внешний ID */
+        private string $extId = '';
         
         /**
          * HTML tag for file download
@@ -78,6 +84,24 @@
         public function setAddSlug(string $addSlug): static
         {
             $this->addSlug = $addSlug;
+            return $this;
+        }
+    
+        /**
+         * @return string
+         */
+        public function getExtId(): string
+        {
+            return $this->extId;
+        }
+    
+        /**
+         * @param string $extId
+         * @return File
+         */
+        public function setExtId(string $extId): self
+        {
+            $this->extId = $extId;
             return $this;
         }
         

@@ -14,14 +14,23 @@
      */
     class User extends UserEntity implements AggregateInterface, UserInterface
     {
+        /** @var RoleCollection|null Роли */
         private ?RoleCollection $roles = null;
+        
+        /** @var GroupCollection|null Группы */
         private ?GroupCollection $groups = null;
+        
+        /** @var File|null Аватар */
         private ?File $avatar = null;
         
         /** @var string  */
         private string $slug = '';
+        
         /** @var string  */
         private string $addSlug = '';
+    
+        /** @var string Внешний ID */
+        private string $extId = '';
     
         /**
          * @return string
@@ -167,6 +176,24 @@
         public function setAddSlug(string $addSlug): static
         {
             $this->addSlug = $addSlug;
+            return $this;
+        }
+    
+        /**
+         * @return string
+         */
+        public function getExtId(): string
+        {
+            return $this->extId;
+        }
+    
+        /**
+         * @param string $extId
+         * @return User
+         */
+        public function setExtId(string $extId): self
+        {
+            $this->extId = $extId;
             return $this;
         }
         
