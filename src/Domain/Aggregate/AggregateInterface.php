@@ -9,7 +9,7 @@
     /**
      * Aggregate Interface
      */
-    interface AggregateInterface extends EntityInterface, ToArrayInterface
+    interface AggregateInterface extends EntityInterface, ToArrayInterface, ConvertableInterface
     {
     
     }
