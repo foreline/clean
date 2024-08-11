@@ -15,6 +15,10 @@
         public const ID = 'id';
         public const NAME = 'name';
         public const CODE = 'code';
+        public const DESCRIPTION = 'description';
+        public const ORIGINAL_NAME = 'original_name';
+        public const FILE_SIZE = 'file_size';
+        public const FILE_NAME = 'file_name';
         
         /**
          * @param File $file
