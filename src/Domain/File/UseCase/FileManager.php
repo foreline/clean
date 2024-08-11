@@ -28,6 +28,7 @@
          * @param FileRepositoryInterface|null $repository
          * @throws Exception
          * @return self
+         * @deprecated
          */
         public static function getInstance(FileRepositoryInterface $repository = null): self
         {
@@ -41,7 +42,7 @@
          * @param FileRepositoryInterface|null $repository
          * @throws Exception
          */
-        private function __construct(FileRepositoryInterface $repository = null)
+        public function __construct(FileRepositoryInterface $repository = null)
         {
             $this->repository = $repository ?? new FileRepository(); // @fixme use DI
             $this->setUploadDir($_SERVER['DOCUMENT_ROOT'] . '/upload/files'); // @fixme

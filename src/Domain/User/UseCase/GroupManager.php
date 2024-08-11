@@ -20,6 +20,7 @@
         /**
          * @param GroupRepositoryInterface|null $repository
          * @return self
+         * @deprecated
          */
         public static function getInstance(GroupRepositoryInterface $repository = null): self
         {
@@ -32,7 +33,7 @@
         /**
          * @param GroupRepositoryInterface|null $repository
          */
-        private function __construct(GroupRepositoryInterface $repository = null)
+        public function __construct(GroupRepositoryInterface $repository = null)
         {
             $this->repository = $repository ?? new GroupRepository();
             parent::__construct();

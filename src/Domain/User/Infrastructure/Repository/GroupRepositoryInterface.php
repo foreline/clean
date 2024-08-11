@@ -11,6 +11,10 @@
      */
     interface GroupRepositoryInterface
     {
+        public const ID = 'id';
+        public const CODE = 'code';
+        public const ACTIVE = 'active';
+        
         /**
          * @param Group $group
          * @return int

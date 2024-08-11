@@ -12,6 +12,7 @@
     use Domain\User\Aggregate\UserInterface;
     use Domain\User\Aggregate\UserCollection;
     use Domain\User\Infrastructure\Repository\Bitrix\UserRepository;
+    use Domain\User\Infrastructure\Repository\GroupRepositoryInterface;
     use Domain\User\Infrastructure\Repository\UserRepositoryInterface;
     use Exception;
     use InvalidArgumentException;
@@ -36,6 +37,7 @@
         /**
          * @param UserRepositoryInterface|null $repository
          * @return self
+         * @deprecated
          */
         public static function getInstance(UserRepositoryInterface $repository = null): self
         {
@@ -49,7 +51,7 @@
         /**
          *
          */
-        private function __construct(UserRepositoryInterface $repository = null)
+        public function __construct(UserRepositoryInterface $repository = null)
         {
             $this->repository = $repository ?? new UserRepository();
             parent::__construct();
@@ -216,8 +218,8 @@
         public function filterByGroupCode(string $groupCode): self
         {
             // @fixme не делать запрос
-            $groupId = GroupManager::getInstance()
-                ->setFields(['id'])
+            $groupId = (new GroupManager() )
+                ->setFields([GroupRepositoryInterface::ID])
                 ->filterByCode($groupCode)
                 ->find()?->current()?->getId();
             $this
