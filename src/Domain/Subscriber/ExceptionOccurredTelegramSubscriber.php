@@ -6,7 +6,7 @@
     use Domain\Event\Event;
     use Domain\Event\SubscriberInterface;
     use Domain\Events\ExceptionOccurredEvent;
-    use Domain\User\UseCase\UserManager;
+    use Domain\User\Service\GetCurrentUser;
     use Exception;
 
     /**
@@ -35,7 +35,7 @@
                 
                 $body = '<b>' . $subject . '</b>' . PHP_EOL;
                 $body .= 'File: ' . $exception->getFile() . ':' . $exception->getLine() . PHP_EOL;
-                if ( null !== $user = UserManager::getInstance()->getCurrent() ) {
+                if ( null !== $user = ( new GetCurrentUser() )->get() ) {
                     $body .= 'User: ' . $user->getFullName() . PHP_EOL;
                 } else {
                     $body .= 'User: Not Authorized' . PHP_EOL;

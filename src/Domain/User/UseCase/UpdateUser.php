@@ -8,6 +8,7 @@
     use Domain\Exception\NotPermittedException;
     use Domain\User\Aggregate\UserInterface;
     use Domain\User\Event\UserUpdatedEvent;
+    use Domain\User\Service\GetCurrentUser;
     use Domain\User\ValueObject\Role;
     use Exception;
 
@@ -38,7 +39,7 @@
         {
             $this->checkPermissions($user);
             
-            $user = UserManager::getInstance()->persist($user);
+            $user = ( new UserManager() )->persist($user);
             
             Publisher::getInstance()->publish(new UserUpdatedEvent($user));
             
@@ -54,7 +55,7 @@
          */
         public function checkPermissions(UserInterface $user): void
         {
-            if ( !$currentUser = UserManager::getInstance()->getCurrent() ) {
+            if ( !$currentUser = ( new GetCurrentUser() )->get() ) {
                 throw new NotAuthorizedException();
             }
     

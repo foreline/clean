@@ -50,7 +50,7 @@
         
             $user->setConfirmationCode('');
         
-            $user = UserManager::getInstance()->persist($user);
+            $user = ( new UserManager() )->persist($user);
         
             Publisher::getInstance()->publish(new UserConfirmedEvent($user));
         

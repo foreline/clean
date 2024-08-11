@@ -9,7 +9,9 @@
     use Domain\UseCase\Limit;
     use Domain\UseCase\Sort;
     use Domain\User\Aggregate\UserCollection;
+    use Domain\User\Infrastructure\Repository\GroupRepositoryInterface;
     use Domain\User\Infrastructure\Repository\UserRepositoryInterface;
+    use Domain\User\Service\GetCurrentUser;
     use Exception;
     use InvalidArgumentException;
 
@@ -31,7 +33,7 @@
         public function __construct(/*UserRepositoryInterface $repository*/)
         {
             //$this->repository = $repository;
-            $this->manager = UserManager::getInstance();
+            $this->manager = ( new UserManager() );
         
             $this->filter = new Filter();
             $this->sort = new Sort();
@@ -85,7 +87,7 @@
          */
         public function checkPermissions(): void
         {
-            if ( !$user = UserManager::getInstance()->getCurrent() ) {
+            if ( !$user = ( new GetCurrentUser() )->get() ) {
                 throw new NotAuthorizedException();
             }
             // @fixme @todo check permissions
@@ -127,8 +129,8 @@
          */
         public function filterByRole(string|array $role): self
         {
-            $groupId = GroupManager::getInstance()
-                ->setFields(['id'])
+            $groupId = ( new GroupManager() )
+                ->setFields([GroupRepositoryInterface::ID])
                 ->filterByCode($role)
                 ->find()?->current()?->getId();
             

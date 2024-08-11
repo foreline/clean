@@ -7,7 +7,7 @@
     use Domain\Exception\NotAuthorizedException;
     use Domain\File\Aggregate\File;
     use Domain\File\Event\FileUpdatedEvent;
-    use Domain\User\UseCase\UserManager;
+    use Domain\User\Service\GetCurrentUser;
     use Exception;
     use InvalidArgumentException;
 
@@ -37,7 +37,7 @@
         
             $previous = clone $file;
         
-            $file = FileManager::getInstance()->persist($file);
+            $file = ( new FileManager() )->persist($file);
         
             Publisher::getInstance()->publish(
                 new FileUpdatedEvent($file, $previous)
@@ -51,7 +51,7 @@
          */
         public function checkPermissions(File $file): void
         {
-            if ( !UserManager::getInstance()->getCurrent() ) {
+            if ( !$user = ( new GetCurrentUser() )->get() ) {
                 throw new NotAuthorizedException();
             }
             // @fixme @todo check permissions

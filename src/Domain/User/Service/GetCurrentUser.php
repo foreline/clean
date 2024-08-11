@@ -29,7 +29,7 @@
          */
         public function get(): ?User
         {
-            return self::$currentUser ?? UserManager::getInstance()->getCurrent();
+            return self::$currentUser ?? ( new UserManager() )->getCurrent();
         }
     
         /**

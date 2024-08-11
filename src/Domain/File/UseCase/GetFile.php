@@ -5,10 +5,13 @@
     
     use Domain\Exception\NotAuthorizedException;
     use Domain\File\Aggregate\File;
-    use Domain\User\UseCase\UserManager;
+    use Domain\User\Service\GetCurrentUser;
     use Exception;
     use InvalidArgumentException;
 
+    /**
+     *
+     */
     class GetFile
     {
         /**
@@ -30,7 +33,7 @@
         {
             $this->checkPermissions($id);
         
-            return FileManager::getInstance()->findById($id);
+            return ( new FileManager() )->findById($id);
         }
     
         /**
@@ -39,7 +42,7 @@
          */
         public function checkPermissions(int $id): void
         {
-            if ( !$user = UserManager::getInstance()->getCurrent() ) {
+            if ( !$user = ( new GetCurrentUser() )->get() ) {
                 throw new NotAuthorizedException();
             }
             // @fixme @todo check permissions

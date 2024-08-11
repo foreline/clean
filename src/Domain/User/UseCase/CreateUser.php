@@ -30,10 +30,12 @@
          */
         public function create(UserInterface $user): UserInterface
         {
-            $user = UserManager::getInstance()->persist($user);
+            $user = ( new UserManager() )->persist($user);
+            
             Publisher::getInstance()->publish(
                 new UserCreatedEvent($user)
             );
+            
             return $user;
         }
     }

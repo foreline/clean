@@ -3,7 +3,6 @@
     
     namespace Domain\User\Entity;
     
-    use Domain\User\Aggregate\UserInterface;
     use Webmozart\Assert\Assert;
     
     /**

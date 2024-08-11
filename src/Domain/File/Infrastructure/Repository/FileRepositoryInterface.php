@@ -12,6 +12,10 @@
      */
     interface FileRepositoryInterface extends RepositoryInterface
     {
+        public const ID = 'id';
+        public const NAME = 'name';
+        public const CODE = 'code';
+        
         /**
          * @param File $file
          * @return File

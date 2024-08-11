@@ -19,6 +19,7 @@
         /**
          * @param MailerInterface $mailer
          * @return self
+         * @deprecated
          */
         public static function getInstance(MailerInterface $mailer): self
         {
@@ -32,7 +33,7 @@
         /**
          * @param MailerInterface|null $mailer
          */
-        private function __construct(MailerInterface $mailer = null)
+        public function __construct(MailerInterface $mailer = null)
         {
             $this->mailer = $mailer;
         }

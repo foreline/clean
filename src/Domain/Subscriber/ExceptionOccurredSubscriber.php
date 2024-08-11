@@ -4,7 +4,7 @@
     namespace Domain\Subscriber;
     
     use Domain\Event\SubscriberInterface;
-    use Domain\User\UseCase\UserManager;
+    use Domain\User\Service\GetCurrentUser;
     use Domain\Event\Event;
     use Domain\Events\ExceptionOccurredEvent;
     use Exception;
@@ -35,7 +35,7 @@
     
                 $body = $subject . '<br />' . PHP_EOL;
                 $body .= 'File: ' . $exception->getFile() . ':' . $exception->getLine() . '<br />' . PHP_EOL;
-                if ( null !== $user = UserManager::getInstance()->getCurrent() ) {
+                if ( null !== $user = ( new GetCurrentUser() )->get() ) {
                     $body .= 'User: ' . $user->getFullName() . '<br />' . PHP_EOL;
                 } else {
                     $body .= 'User: Not Authorized<br />' . PHP_EOL;
@@ -58,8 +58,8 @@
                 );
                 $body .= implode(PHP_EOL, $trace) . PHP_EOL;
                 $body .= '</pre>' . PHP_EOL;
-                
-                MailerManager::getInstance(new Mailer())->send(
+    
+                ( new MailerManager(new Mailer()) )->send(
                     (new EmailMessage())
                         ->setSubject($subject)
                         ->setTo($_ENV['EXCEPTION_EMAIL'])

@@ -5,6 +5,7 @@
 
     use Domain\Exception\NotAuthorizedException;
     use Domain\User\Aggregate\Group;
+    use Domain\User\Service\GetCurrentUser;
     use Exception;
     use InvalidArgumentException;
 
@@ -32,7 +33,7 @@
         {
             $this->checkPermissions($id);
         
-            return GroupManager::getInstance()->findById($id);
+            return ( new GroupManager() )->findById($id);
         }
     
         /**
@@ -41,7 +42,7 @@
          */
         public function checkPermissions(int $id): void
         {
-            if ( !$user = UserManager::getInstance()->getCurrent() ) {
+            if ( !( new GetCurrentUser() )->get() ) {
                 throw new NotAuthorizedException();
             }
             // @fixme @todo check permissions

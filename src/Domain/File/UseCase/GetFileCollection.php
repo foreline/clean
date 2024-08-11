@@ -5,11 +5,12 @@
     
     use Domain\Exception\NotAuthorizedException;
     use Domain\File\Aggregate\FileCollection;
+    use Domain\File\Infrastructure\Repository\FileRepositoryInterface;
     use Domain\UseCase\Fields;
     use Domain\UseCase\Filter;
     use Domain\UseCase\Limit;
     use Domain\UseCase\Sort;
-    use Domain\User\UseCase\UserManager;
+    use Domain\User\Service\GetCurrentUser;
     use Exception;
     use InvalidArgumentException;
     use Domain\File\Infrastructure\Repository\Bitrix\FileRepository;
@@ -33,7 +34,7 @@
         public function __construct(/*FileRepositoryInterface $repository*/)
         {
             //$this->repository = $repository;
-            $this->manager = FileManager::getInstance();
+            $this->manager = new FileManager();
         
             $this->filter = new Filter();
             $this->sort = new Sort();
@@ -76,7 +77,7 @@
          */
         public function count(): int
         {
-            $this->fields->set([FileRepository::ID]);
+            $this->fields->set([FileRepositoryInterface::ID]);
             $this->get();
             return $this->getTotalCount();
         }
@@ -87,7 +88,7 @@
          */
         public function checkPermissions(): void
         {
-            if ( !$user = UserManager::getInstance()->getCurrent() ) {
+            if ( !$user = ( new GetCurrentUser() )->get() ) {
                 throw new NotAuthorizedException();
             }
             // @fixme @todo check permissions
@@ -101,9 +102,9 @@
         public function filterById(int|array $id, bool $inverse = false): self
         {
             if ( $inverse ) {
-                $this->filter->not(FileRepository::ID, $id);
+                $this->filter->not(FileRepositoryInterface::ID, $id);
             } else {
-                $this->filter->add(FileRepository::ID, $id);
+                $this->filter->add(FileRepositoryInterface::ID, $id);
             }
             return $this;
         }
@@ -116,9 +117,9 @@
         public function filterByCode(string|array $code, bool $inverse = false): self
         {
             if ( $inverse ) {
-                $this->filter->not(FileRepository::CODE, $code);
+                $this->filter->not(FileRepositoryInterface::CODE, $code);
             } else {
-                $this->filter->add(FileRepository::CODE, $code);
+                $this->filter->add(FileRepositoryInterface::CODE, $code);
             }
             return $this;
         }

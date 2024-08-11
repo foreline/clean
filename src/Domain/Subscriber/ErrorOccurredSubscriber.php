@@ -6,10 +6,10 @@
     use Domain\Event\Event;
     use Domain\Event\SubscriberInterface;
     use Domain\Events\ErrorOccurredEvent;
+    use Domain\User\Service\GetCurrentUser;
     use Exception;
     use Infrastructure\Mailer\EmailMessage;
     use Infrastructure\Mailer\MailerManager;
-    use Domain\User\UseCase\UserManager;
     use Infrastructure\Mailer\Bitrix\Mailer;
 
     /**
@@ -31,7 +31,7 @@
                 $subject = 'Error: ' . trim($event->getError());
                 
                 $body = $subject . '<br />' . PHP_EOL;
-                if ( null !== $user = UserManager::getInstance()->getCurrent() ) {
+                if ( null !== $user = ( new GetCurrentUser() )->get() ) {
                     $body .= 'User: ' . $user->getFullName() . '<br />' . PHP_EOL;
                 } else {
                     $body .= 'User: Not Authorized<br />' . PHP_EOL;
@@ -51,8 +51,8 @@
                 );
                 $body .= implode(PHP_EOL, $trace) . PHP_EOL;
                 $body .= '</pre>' . PHP_EOL;
-                
-                MailerManager::getInstance(new Mailer())->send(
+    
+                (new MailerManager(new Mailer()))->send(
                     (new EmailMessage())
                         ->setSubject($subject)
                         ->setTo($_ENV['ERROR_EMAIL'])
