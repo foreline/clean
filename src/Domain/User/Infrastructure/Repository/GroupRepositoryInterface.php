@@ -12,8 +12,13 @@
     interface GroupRepositoryInterface
     {
         public const ID = 'id';
-        public const CODE = 'code';
+        public const CODE = 'string_id';
         public const ACTIVE = 'active';
+        public const NAME = 'name';
+        public const DESCRIPTION = 'description';
+        public const SORT = 'c_sort';
+        public const ANONYMOUS = 'anonymous';
+        public const PRIVILEGED = 'privileged';
         
         /**
          * @param Group $group
