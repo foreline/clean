@@ -9,7 +9,13 @@
     /**
      * Repository Interface
      */
-    interface RepositoryInterface {
+    interface RepositoryInterface
+    {
+    
+        /**
+         * @return array<string, string>
+         */
+        public static function getFields(): array;
     
         /**
          * @param AggregateInterface $entity

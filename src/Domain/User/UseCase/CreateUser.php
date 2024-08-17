@@ -1,41 +1,41 @@
 <?php
-    declare(strict_types=1);
-    
-    namespace Domain\User\UseCase;
+declare(strict_types=1);
 
-    use Domain\Event\Publisher;
-    use Domain\User\Aggregate\UserInterface;
-    use Domain\User\Event\UserCreatedEvent;
-    use Exception;
+namespace Domain\User\UseCase;
 
+use Domain\Event\Publisher;
+use Domain\User\Aggregate\UserInterface;
+use Domain\User\Event\UserCreatedEvent;
+use Exception;
+
+/**
+ * Сервис создания пользователя
+ */
+class CreateUser
+{
     /**
-     * Сервис создания пользователя
+     * @param UserInterface $user
+     * @return UserInterface
+     * @throws Exception
      */
-    class CreateUser
+    public function __invoke(UserInterface $user): UserInterface
     {
-        /**
-         * @param UserInterface $user
-         * @return UserInterface
-         * @throws Exception
-         */
-        public function __invoke(UserInterface $user): UserInterface
-        {
-            return $this->create($user);
-        }
-        
-        /**
-         * @param UserInterface $user
-         * @return UserInterface
-         * @throws Exception
-         */
-        public function create(UserInterface $user): UserInterface
-        {
-            $user = ( new UserManager() )->persist($user);
-            
-            Publisher::getInstance()->publish(
-                new UserCreatedEvent($user)
-            );
-            
-            return $user;
-        }
+        return $this->create($user);
     }
+    
+    /**
+     * @param UserInterface $user
+     * @return UserInterface
+     * @throws Exception
+     */
+    public function create(UserInterface $user): UserInterface
+    {
+        $user = ( new UserManager() )->persist($user);
+        
+        Publisher::getInstance()->publish(
+            new UserCreatedEvent($user)
+        );
+        
+        return $user;
+    }
+}
