@@ -1,17 +1,17 @@
 <?php
-    declare(strict_types=1);
-    
-    namespace Domain\Event;
+declare(strict_types=1);
 
-    use DateTimeImmutable;
+namespace Domain\Event;
 
+use DateTimeImmutable;
+
+/**
+ *
+ */
+interface EventInterface
+{
     /**
-     *
+     * @return DateTimeImmutable
      */
-    interface EventInterface
-    {
-        /**
-         * @return DateTimeImmutable
-         */
-        public function occurredOn(): DateTimeImmutable;
-    }
+    public function occurredOn(): DateTimeImmutable;
+}

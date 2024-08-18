@@ -1,17 +1,16 @@
 <?php
-    declare(strict_types=1);
-    
-    namespace Domain\Entity;
+declare(strict_types=1);
 
+namespace Domain\Entity;
+
+/**
+ * Entity Interface
+ */
+interface EntityInterface
+{
     /**
-     * Entity Interface
+     * @return int|null
      */
-    interface EntityInterface
-    {
-        /**
-         * @return int|null
-         */
-        public function getId(): ?int;
-        
-    }
+    public function getId(): ?int;
     
+}

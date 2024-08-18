@@ -1,12 +1,12 @@
 <?php
-    declare(strict_types=1);
-    
-    namespace Domain\Aggregate;
+declare(strict_types=1);
 
-    /**
-     * Used for many-to-many relationship in a relational database, also known as an associative or junction table
-     */
-    interface AggregateBridgeInterface
-    {
-        
-    }
+namespace Domain\Aggregate;
+
+/**
+ * Use for many-to-many relationship in a relational database, also known as an associative or junction table
+ */
+interface AggregateBridgeInterface
+{
+
+}

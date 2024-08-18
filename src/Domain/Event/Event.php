@@ -1,30 +1,30 @@
 <?php
-    declare(strict_types=1);
-    
-    namespace Domain\Event;
+declare(strict_types=1);
 
-    use DateTimeImmutable;
+namespace Domain\Event;
+
+use DateTimeImmutable;
+
+/**
+ * Domain Event
+ */
+class Event implements EventInterface
+{
+    private DateTimeImmutable $occurredOn;
 
     /**
-     * Domain Event
+     *
      */
-    class Event implements EventInterface
+    public function __construct()
     {
-        private DateTimeImmutable $occurredOn;
-    
-        /**
-         *
-         */
-        public function __construct()
-        {
-            $this->occurredOn = new DateTimeImmutable();
-        }
-    
-        /**
-         * @return DateTimeImmutable
-         */
-        public function occurredOn(): DateTimeImmutable
-        {
-            return $this->occurredOn;
-        }
+        $this->occurredOn = new DateTimeImmutable();
     }
+
+    /**
+     * @return DateTimeImmutable
+     */
+    public function occurredOn(): DateTimeImmutable
+    {
+        return $this->occurredOn;
+    }
+}

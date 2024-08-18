@@ -1,15 +1,15 @@
 <?php
-    declare(strict_types=1);
-    
-    namespace Domain\Aggregate;
+declare(strict_types=1);
 
-    use Domain\Entity\EntityInterface;
-    use Domain\Entity\ToArrayInterface;
+namespace Domain\Aggregate;
 
-    /**
-     * Aggregate Interface
-     */
-    interface AggregateInterface extends EntityInterface, ToArrayInterface, ConvertableInterface
-    {
-    
-    }
+use Domain\Entity\EntityInterface;
+use Domain\Entity\ToArrayInterface;
+
+/**
+ * Aggregate Interface
+ */
+interface AggregateInterface extends EntityInterface, ToArrayInterface, ConvertableInterface
+{
+
+}

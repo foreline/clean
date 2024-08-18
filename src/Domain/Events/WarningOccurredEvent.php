@@ -1,43 +1,43 @@
 <?php
-    declare(strict_types=1);
-    
-    namespace Domain\Events;
+declare(strict_types=1);
 
-    use Domain\Event\Event;
+namespace Domain\Events;
+
+use Domain\Event\Event;
+
+/**
+ * Warning Occurred Event
+ */
+class WarningOccurredEvent extends Event
+{
+    private string $warning;
+    private array $trace;
 
     /**
-     * Warning Occurred Event
+     * @param string $warning
      */
-    class WarningOccurredEvent extends Event
+    public function __construct(string $warning)
     {
-        private string $warning;
-        private array $trace;
-    
-        /**
-         * @param string $warning
-         */
-        public function __construct(string $warning)
-        {
-            $this->warning = $warning;
-            $this->trace = debug_backtrace();
-            
-            parent::__construct();
-        }
-    
-        /**
-         * @return string
-         */
-        public function getWarning(): string
-        {
-            return $this->warning;
-        }
-    
-        /**
-         * @return array
-         */
-        public function getTrace(): array
-        {
-            return $this->trace;
-        }
-    
+        $this->warning = $warning;
+        $this->trace = debug_backtrace();
+        
+        parent::__construct();
     }
+
+    /**
+     * @return string
+     */
+    public function getWarning(): string
+    {
+        return $this->warning;
+    }
+
+    /**
+     * @return array
+     */
+    public function getTrace(): array
+    {
+        return $this->trace;
+    }
+
+}

@@ -1,34 +1,33 @@
 <?php
-    declare(strict_types=1);
-    
-    namespace Domain\UseCase;
-    
-    use Domain\Aggregate\AggregateInterface;
-    use Domain\Aggregate\IteratorInterface;
-    
+declare(strict_types=1);
+
+namespace Domain\UseCase;
+
+use Domain\Aggregate\AggregateInterface;
+use Domain\Aggregate\IteratorInterface;
+
+/**
+ * Parent class for Aggregates
+ */
+abstract class AbstractManager extends AbstractValueObjectManager
+{
     /**
-     * Родительский класс для менеджеров сущностей и агрегатов.
+     * @return IteratorInterface|null
      */
-    abstract class AbstractManager extends AbstractValueObjectManager
+    //abstract public function find(): ?IteratorInterface;
+
+    /**
+     * @param int $id
+     * @return AggregateInterface|null
+     */
+    //abstract public function findById(int $id): ?AggregateInterface;
+
+
+    /**
+     *
+     */
+    public function __construct()
     {
-        /**
-         * @return IteratorInterface|null
-         */
-        //abstract public function find(): ?IteratorInterface;
-    
-        /**
-         * @param int $id
-         * @return AggregateInterface|null
-         */
-        //abstract public function findById(int $id): ?AggregateInterface;
-    
-    
-        /**
-         *
-         */
-        public function __construct()
-        {
-            parent::__construct();
-        }
+        parent::__construct();
     }
-    
+}

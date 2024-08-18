@@ -1,22 +1,22 @@
 <?php
-    declare(strict_types=1);
-    
-    namespace Domain\Exception;
-    
-    use Exception, Throwable;
+declare(strict_types=1);
 
+namespace Domain\Exception;
+
+use Exception, Throwable;
+
+/**
+ * Not Permitted Exception
+ */
+class NotPermittedException extends Exception
+{
     /**
-     * Not Permitted Exception
+     * @param string $message
+     * @param int $code
+     * @param Throwable|null $previous
      */
-    class NotPermittedException extends Exception
+    public function __construct(string $message = 'Нет доступа', int $code = 0, Throwable $previous = null)
     {
-        /**
-         * @param string $message
-         * @param int $code
-         * @param Throwable|null $previous
-         */
-        public function __construct(string $message = 'Нет доступа', int $code = 0, Throwable $previous = null)
-        {
-            parent::__construct($message, $code, $previous);
-        }
+        parent::__construct($message, $code, $previous);
     }
+}

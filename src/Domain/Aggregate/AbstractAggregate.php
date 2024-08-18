@@ -1,20 +1,20 @@
 <?php
-    declare(strict_types=1);
-    
-    namespace Domain\Aggregate;
-    
-    use Domain\Entity\AbstractEntity;
+declare(strict_types=1);
+
+namespace Domain\Aggregate;
+
+use Domain\Entity\AbstractEntity;
+
+/**
+ * Abstract Aggregate for inheritance
+ */
+abstract class AbstractAggregate extends AbstractEntity implements AggregateInterface
+{
 
     /**
-     * Abstract Aggregate for inheritance
+     * @param array $fields
+     * @return array|null
      */
-    abstract class AbstractAggregate extends AbstractEntity implements AggregateInterface
-    {
+    abstract public function toArray(array $fields = []): ?array;
     
-        /**
-         * @param array $fields
-         * @return array|null
-         */
-        abstract public function toArray(array $fields = []): ?array;
-        
-    }
+}
