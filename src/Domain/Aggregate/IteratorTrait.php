@@ -16,7 +16,7 @@ trait IteratorTrait
     
     /** @var ?AggregateInterface[] */
     private ?array $items;
-
+    
     /**
      *
      */
@@ -43,7 +43,7 @@ trait IteratorTrait
     {
         return $this->position;
     }
-
+    
     /**
      * @return bool
      */
@@ -69,7 +69,7 @@ trait IteratorTrait
     {
         return ( null !== $this->items ? count($this->items) : 0 );
     }
-
+    
     /**
      * @param bool $withUrl
      * @param string $delimiter
@@ -98,11 +98,11 @@ trait IteratorTrait
     {
         return $this->valid()
             ? array_map(
-            fn($item): ?array => $item->toArray($fields),
-            $this->items
-        ) : null;
+                fn($item): ?array => $item->toArray($fields),
+                $this->items
+            ) : null;
     }
-
+    
     /**
      * @return int[]|null
      */
@@ -114,7 +114,7 @@ trait IteratorTrait
                 $this->items
             ) : null;
     }
-
+    
     /**
      * @param AggregateInterface|ValueObjectInterface $item
      * @return bool
@@ -126,5 +126,13 @@ trait IteratorTrait
         }
         
         return in_array($item, $this->items);
+    }
+    
+    /**
+     * @return void
+     */
+    public function rsort(): void
+    {
+        sort($this->items);
     }
 }
