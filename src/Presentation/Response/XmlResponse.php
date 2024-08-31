@@ -1,12 +1,12 @@
 <?php
-    declare(strict_types=1);
-    
-    namespace Presentation\Response;
-    
-    class XmlResponse
+declare(strict_types=1);
+
+namespace Presentation\Response;
+
+class XmlResponse
+{
+    public function response(): string
     {
-        public function response(): string
-        {
-            return '';
-        }
+        return '';
     }
+}
