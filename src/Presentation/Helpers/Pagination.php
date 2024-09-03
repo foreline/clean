@@ -34,6 +34,9 @@ class Pagination
     
     private int $lastPageNum = 1;
     
+    /**
+     *
+     */
     public function __construct()
     {
         $request = Request::createFromGlobals();
@@ -204,7 +207,7 @@ class Pagination
      */
     public function getNav(): string
     {
-        $template = !empty($arFields['TEMPLATE']) ? $arFields['TEMPLATE'] : 'p/#PAGE_NUM#';
+        $template = $this->getTemplate();
         
         if ( str_starts_with($template, '/') ) {
             $template = substr($template, 1);
@@ -250,7 +253,10 @@ class Pagination
         ';
         
         // Предыдущая страница
+        dump($this->getTemplate());
         $url = $this->getListPageUrl() . str_replace('#PAGE_NUM#', (string)($this->getPageNum() - 1), $this->getTemplate()) . $this->getUrlParams();
+        dump($url);
+        
         $nav .= '
         <li class="page-item ' . (1 === $this->getPageNum() ? 'disabled' : '') . '">
             <a class="page-link has-ripple" data-page-num="' . ($this->getPageNum() - 1) . '" href="' . $url . '" aria-label="предыдущая">
