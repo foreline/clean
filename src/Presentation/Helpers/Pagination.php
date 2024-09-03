@@ -253,9 +253,7 @@ class Pagination
         ';
         
         // Предыдущая страница
-        dump($this->getTemplate());
         $url = $this->getListPageUrl() . str_replace('#PAGE_NUM#', (string)($this->getPageNum() - 1), $this->getTemplate()) . $this->getUrlParams();
-        dump($url);
         
         $nav .= '
         <li class="page-item ' . (1 === $this->getPageNum() ? 'disabled' : '') . '">
