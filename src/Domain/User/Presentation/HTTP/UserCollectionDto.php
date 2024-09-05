@@ -6,7 +6,7 @@ namespace Domain\User\Presentation\HTTP;
 use Domain\User\Aggregate\UserCollection;
 
 /**
- *
+ * User Collection HTTP API Data Transfer Object
  */
 class UserCollectionDto
 {
