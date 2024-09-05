@@ -21,9 +21,7 @@ class UserCollectionDto
             return null;
         }
         
-        $dto = [
-            'entityType'    => 'userCollection',
-        ];
+        $dto = [];
         
         foreach ( $users as $user ) {
             $dto[] = UserDto::toArray($user, $fields);

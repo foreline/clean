@@ -21,9 +21,7 @@ class FileCollectionDto
             return null;
         }
         
-        $dto = [
-            'entityType' => 'fileCollection',
-        ];
+        $dto = [];
         
         foreach ( $files as $file ) {
             $dto[] = FileDto::toArray($file, $fields);
