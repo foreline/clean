@@ -49,11 +49,15 @@ class UserDto
     }
     
     /**
-     * @param array $data
-     * @return User
+     * @param ?array $data
+     * @return ?User
      */
-    public static function fromArray(array $data): User
+    public static function fromArray(?array $data): ?User
     {
+        if ( null === $data ) {
+            return null;
+        }
+        
         $user = new User();
         
         if ( array_key_exists('id', $data) ) {

@@ -49,11 +49,15 @@ class FileDto
     }
     
     /**
-     * @param array $data
-     * @return File
+     * @param ?array $data
+     * @return ?File
      */
-    public static function fromArray(array $data): File
+    public static function fromArray(?array $data): ?File
     {
+        if ( null === $data ) {
+            return null;
+        }
+        
         $file = new File();
         
         if ( array_key_exists('id', $data) ) {

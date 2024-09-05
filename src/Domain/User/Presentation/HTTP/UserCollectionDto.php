@@ -31,11 +31,15 @@ class UserCollectionDto
     }
     
     /**
-     * @param array $data
-     * @return UserCollection
+     * @param ?array $data
+     * @return ?UserCollection
      */
-    public static function fromArray(array $data): UserCollection
+    public static function fromArray(?array $data): ?UserCollection
     {
+        if ( null === $data ) {
+            return null;
+        }
+        
         $users = new UserCollection();
         
         foreach ( $data as $item ) {

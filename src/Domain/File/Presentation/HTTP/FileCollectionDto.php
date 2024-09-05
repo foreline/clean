@@ -31,11 +31,15 @@ class FileCollectionDto
     }
     
     /**
-     * @param array $data
-     * @return FileCollection
+     * @param ?array $data
+     * @return ?FileCollection
      */
-    public static function fromArray(array $data): FileCollection
+    public static function fromArray(?array $data): ?FileCollection
     {
+        if ( null === $data ) {
+            return null;
+        }
+        
         $files = new FileCollection();
         
         foreach ( $data as $item ) {
