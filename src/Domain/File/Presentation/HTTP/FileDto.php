@@ -47,4 +47,27 @@ class FileDto
         
         return $dto;
     }
+    
+    /**
+     * @param array $data
+     * @return File
+     */
+    public static function fromArray(array $data): File
+    {
+        $file = new File();
+        
+        if ( array_key_exists('id', $data) ) {
+            $file->setId((int)$data['id']);
+        }
+        
+        if ( array_key_exists('fileName', $data) ) {
+            $file->setFileName((string)$data['fileName']);
+        }
+        
+        if ( array_key_exists('source', $data) ) {
+            $file->setSource((string)$data['source']);
+        }
+        
+        return $file;
+    }
 }

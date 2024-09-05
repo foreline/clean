@@ -29,4 +29,19 @@ class FileCollectionDto
         
         return $dto;
     }
+    
+    /**
+     * @param array $data
+     * @return FileCollection
+     */
+    public static function fromArray(array $data): FileCollection
+    {
+        $files = new FileCollection();
+        
+        foreach ( $data as $item ) {
+            $files->addItem(FileDto::fromArray($item));
+        }
+        
+        return $files;
+    }
 }

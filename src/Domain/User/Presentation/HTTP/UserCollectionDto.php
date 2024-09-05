@@ -29,4 +29,19 @@ class UserCollectionDto
         
         return $dto;
     }
+    
+    /**
+     * @param array $data
+     * @return UserCollection
+     */
+    public static function fromArray(array $data): UserCollection
+    {
+        $users = new UserCollection();
+        
+        foreach ( $data as $item ) {
+            $users->addItem(UserDto::fromArray($item));
+        }
+        
+        return $users;
+    }
 }

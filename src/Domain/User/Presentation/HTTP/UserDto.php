@@ -47,4 +47,31 @@ class UserDto
         
         return $dto;
     }
+    
+    /**
+     * @param array $data
+     * @return User
+     */
+    public static function fromArray(array $data): User
+    {
+        $user = new User();
+        
+        if ( array_key_exists('id', $data) ) {
+            $user->setId((int)$data['id']);
+        }
+        
+        if ( array_key_exists('firstName', $data) ) {
+            $user->setFirstName((string)$data['firstName']);
+        }
+    
+        if ( array_key_exists('lastName', $data) ) {
+            $user->setLastName((string)$data['lastName']);
+        }
+    
+        if ( array_key_exists('email', $data) ) {
+            $user->setEmail((string)$data['email']);
+        }
+        
+        return $user;
+    }
 }
