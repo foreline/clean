@@ -1,13 +1,16 @@
 <?php
-    declare(strict_types=1);
-    
-    namespace Domain\ValueObject;
+declare(strict_types=1);
 
+namespace Domain\ValueObject;
+
+/**
+ * Though Value-Objects are immutable and ID agnostic,
+ * in some cases we need to store values somewhere.
+ */
+interface PersistedValueObjectInterface extends ValueObjectInterface
+{
     /**
-     * Though Value-Objects are immutable and ID agnostic,
-     * we need to store values somewhere.
+     * @return float|int|string
      */
-    interface PersistedValueObjectInterface extends ValueObjectInterface
-    {
-        
-    }
+    public function getId(): float|int|string;
+}

@@ -1,12 +1,12 @@
 <?php
-    declare(strict_types=1);
-    
-    namespace Domain\ValueObject;
+declare(strict_types=1);
 
-    /**
-     * Interface that defines a Value Object (VO) whose value type is a float.
-     */
-    interface FloatValueObjectInterface
-    {
-        
-    }
+namespace Domain\ValueObject;
+
+/**
+ * Interface that defines a Value Object (VO) whose value type is a float.
+ */
+interface FloatValueObjectInterface
+{
+
+}
