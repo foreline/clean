@@ -42,9 +42,9 @@ class GetFile
      */
     public function checkPermissions(int $id): void
     {
-        if ( !$user = ( new GetCurrentUser() )->get() ) {
+        /*if ( !$user = ( new GetCurrentUser() )->get() ) {
             throw new NotAuthorizedException();
-        }
+        }*/
         // @fixme @todo check permissions
     }
 }
