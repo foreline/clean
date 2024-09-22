@@ -7,12 +7,15 @@ use Bitrix\Main\Engine\CurrentUser;
 
 use CGroup;
 use CUser;
+use Domain\Repository\FilterInterface;
 use Domain\UseCase\AbstractManager;
+use Domain\UseCase\ServiceInterface;
 use Domain\User\Aggregate\User;
 use Domain\User\Aggregate\UserInterface;
 use Domain\User\Aggregate\UserCollection;
 use Domain\User\Infrastructure\Repository\Bitrix\UserRepository;
 use Domain\User\Infrastructure\Repository\GroupRepositoryInterface;
+use Domain\User\Infrastructure\Repository\UserFilter;
 use Domain\User\Infrastructure\Repository\UserRepositoryInterface;
 use Exception;
 use InvalidArgumentException;
@@ -23,10 +26,9 @@ use RuntimeException;
  * Не рекомендуется использовать напрямую, а только через сервисы
  * Singleton Pattern.
  */
-class UserManager extends AbstractManager
+class UserManager extends AbstractManager implements ServiceInterface
 {
-    /** @var self|null  */
-    private static ?self $instance = null;
+    private ?ServiceInterface $service;
     
     /** @var UserRepositoryInterface */
     private UserRepositoryInterface $repository;
@@ -34,27 +36,21 @@ class UserManager extends AbstractManager
     /** @var User|null  */
     private static ?User $currentUser = null;
     
-    /**
-     * @param UserRepositoryInterface|null $repository
-     * @return self
-     * @deprecated
-     */
-    public static function getInstance(UserRepositoryInterface $repository = null): self
-    {
-        if ( !self::$instance ) {
-            self::$instance = new self($repository);
-        }
-        
-        return self::$instance;
-    }
+    public FilterInterface $filter;
     
     /**
      *
      */
-    public function __construct(UserRepositoryInterface $repository = null)
+    public function __construct(UserRepositoryInterface $repository = null, ?ServiceInterface $service = null)
     {
-        $this->repository = $repository ?? new UserRepository();
+        $this->service = $service ?? $this;
+        $this->repository = $repository ?? new UserRepository($this->service);
         parent::__construct();
+        
+        $this->filter   = $this->repository->filter;
+        $this->fields   = $this->repository->fields;
+        $this->sort     = $this->repository->sort;
+        $this->limit    = $this->repository->limit;
     }
 
     /**

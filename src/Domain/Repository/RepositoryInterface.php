@@ -5,12 +5,18 @@ namespace Domain\Repository;
 
 use Domain\Aggregate\AggregateInterface;
 use Domain\Aggregate\IteratorInterface;
+use Domain\UseCase\ServiceInterface;
 
 /**
  * Repository Interface
  */
 interface RepositoryInterface
 {
+    /**
+     * @param ServiceInterface|null $service
+     */
+    public function __construct(?ServiceInterface $service = null);
+    
     /**
      * @return array<string, string>
      */

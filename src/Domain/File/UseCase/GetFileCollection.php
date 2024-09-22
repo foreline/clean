@@ -5,15 +5,15 @@ namespace Domain\File\UseCase;
 
 use Domain\Exception\NotAuthorizedException;
 use Domain\File\Aggregate\FileCollection;
+use Domain\File\Infrastructure\Repository\Bitrix\FileRepository;
 use Domain\File\Infrastructure\Repository\FileRepositoryInterface;
-use Domain\UseCase\Fields;
-use Domain\UseCase\Filter;
-use Domain\UseCase\Limit;
-use Domain\UseCase\Sort;
+use Domain\Repository\Fields;
+use Domain\Repository\Filter;
+use Domain\Repository\Limit;
+use Domain\Repository\Sort;
 use Domain\User\Service\GetCurrentUser;
 use Exception;
 use InvalidArgumentException;
-use Domain\File\Infrastructure\Repository\Bitrix\FileRepository;
 
 /**
  *

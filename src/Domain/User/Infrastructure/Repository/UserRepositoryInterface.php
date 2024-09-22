@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Domain\User\Infrastructure\Repository;
 
+use Domain\UseCase\ServiceInterface;
 use Domain\User\Aggregate\UserInterface;
 use Domain\User\Aggregate\UsersInterface;
 
@@ -26,27 +27,26 @@ interface UserRepositoryInterface
     public const CONFIRM_CODE = 'confirm_code';
     
     /**
+     * @param ServiceInterface|null $service
+     */
+    public function __construct(?ServiceInterface $service = null);
+    
+    /**
      * @param UserInterface $user
      * @return UserInterface
      */
     public function persist(UserInterface $user): UserInterface;
 
     /**
-     * @param array $filter
-     * @param array $sort
-     * @param array $limit
-     * @param array $fields
      * @return ?UsersInterface
-     * @noinspection PhpTooManyParametersInspection
      */
-    public function find(array $filter = [], array $sort = [], array $limit = [], array $fields = []): ?UsersInterface;
+    public function find(): ?UsersInterface;
 
     /**
      * @param int $id
-     * @param array $fields
      * @return ?UserInterface
      */
-    public function findById(int $id, array $fields = []): ?UserInterface;
+    public function findById(int $id): ?UserInterface;
 
     /**
      * @param int $id

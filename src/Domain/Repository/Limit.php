@@ -1,14 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace Domain\UseCase;
-
-use Webmozart\Assert\Assert;
+namespace Domain\Repository;
 
 /**
  *
  */
-class Limit
+class Limit implements LimitInterface
 {
     private int $limit = 0;
     private int $offset = 0;

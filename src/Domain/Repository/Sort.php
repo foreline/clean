@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace Domain\UseCase;
+namespace Domain\Repository;
 
 /**
  *
  */
-class Sort
+class Sort implements SortInterface
 {
     /** @var array<string,string>  */
     private array $sort = [];

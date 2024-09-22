@@ -4,13 +4,13 @@ declare(strict_types=1);
 namespace Domain\User\UseCase;
 
 use Domain\Exception\NotAuthorizedException;
-use Domain\UseCase\Fields;
-use Domain\UseCase\Filter;
-use Domain\UseCase\Limit;
-use Domain\UseCase\Sort;
+use Domain\UseCase\ServiceInterface;
 use Domain\User\Aggregate\UserCollection;
-use Domain\User\Infrastructure\Repository\GroupRepositoryInterface;
+use Domain\User\Infrastructure\Repository\UserFields;
+use Domain\User\Infrastructure\Repository\UserFilter;
+use Domain\User\Infrastructure\Repository\UserLimit;
 use Domain\User\Infrastructure\Repository\UserRepositoryInterface;
+use Domain\User\Infrastructure\Repository\UserSort;
 use Domain\User\Service\GetCurrentUser;
 use Exception;
 use InvalidArgumentException;
@@ -18,14 +18,15 @@ use InvalidArgumentException;
 /**
  *
  */
-class GetUserCollection
+class GetUserCollection implements ServiceInterface
 {
     //private UserRepositoryInterface $repository;
     public UserManager $manager;
-    public Filter $filter;
-    public Sort $sort;
-    public Limit $limit;
-    public Fields $fields;
+    
+    public UserFilter $filter;
+    public UserSort $sort;
+    public UserLimit $limit;
+    public UserFields $fields;
 
     /**
      *
@@ -33,12 +34,12 @@ class GetUserCollection
     public function __construct(/*UserRepositoryInterface $repository*/)
     {
         //$this->repository = $repository;
-        $this->manager = ( new UserManager() );
+        $this->manager = new UserManager(null, $this);
     
-        $this->filter = new Filter();
-        $this->sort = new Sort();
-        $this->limit = new Limit();
-        $this->fields = new Fields();
+        $this->filter   = $this->manager->filter;
+        $this->sort     = $this->manager->sort;
+        $this->limit    = $this->manager->limit;
+        $this->fields   = $this->manager->fields;
     }
     
     /**
@@ -92,61 +93,6 @@ class GetUserCollection
         }
         // @fixme @todo check permissions
     }
-    
-    /**
-     * @param int|int[] $id
-     * @param bool $inverse
-     * @return $this
-     */
-    public function filterById(int|array $id, bool $inverse = false): self
-    {
-        if ( $inverse ) {
-            $this->filter->not(UserRepositoryInterface::ID, $id);
-        } else {
-            $this->filter->add(UserRepositoryInterface::ID, $id);
-        }
-        return $this;
-    }
-
-    /**
-     * @param string|string[] $code
-     * @param bool $inverse
-     * @return $this
-     */
-    /*public function filterByCode(string|array $code, bool $inverse = false): self
-    {
-        if ( $inverse ) {
-            $this->filter->not(UserRepositoryInterface::CODE, $code);
-        } else {
-            $this->filter->add(UserRepositoryInterface::CODE, $code);
-        }
-        return $this;
-    }*/
-
-    /**
-     * @param string|string[] $role
-     * @return $this
-     */
-    public function filterByRole(string|array $role): self
-    {
-        $groupId = ( new GroupManager() )
-            ->setFields([GroupRepositoryInterface::ID])
-            ->filterByCode($role)
-            ->find()?->current()?->getId();
-        
-        $this->filter->add(UserRepositoryInterface::GROUPS, $groupId);
-        return $this;
-    }
-
-    /**
-     * @param bool|array $active
-     * @return $this
-     */
-    public function filterByActive(bool|array $active = true): self
-    {
-        $this->filter->add('active', $active);
-        return $this;
-    }
 
     /**
      * @return int
@@ -173,15 +119,6 @@ class GetUserCollection
     public function sort(array $sort): self
     {
         $this->sort->set($sort);
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    public function sortByRand(): self
-    {
-        $this->sort->byRand();
         return $this;
     }
     

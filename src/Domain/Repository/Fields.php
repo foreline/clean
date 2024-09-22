@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace Domain\UseCase;
+namespace Domain\Repository;
 
 /**
  *
  */
-class Fields
+class Fields implements FieldsInterface
 {
     /** @var string[] */
     private array $fields = [];
