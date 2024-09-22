@@ -3,14 +3,23 @@ declare(strict_types=1);
 
 namespace Domain\Repository;
 
+use Domain\UseCase\ServiceInterface;
+
 /**
  *
  */
 class Sort implements SortInterface
 {
+    private ?ServiceInterface $service;
+    
     /** @var array<string,string>  */
     private array $sort = [];
-
+    
+    public function __construct(?ServiceInterface $service = null)
+    {
+        $this->service = $service;
+    }
+    
     /**
      * @return self
      */
@@ -116,5 +125,10 @@ class Sort implements SortInterface
     {
         $this->sort = [];
         return $this;
+    }
+    
+    public function endSort(): ?ServiceInterface
+    {
+        return $this->service;
     }
 }

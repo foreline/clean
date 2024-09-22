@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Domain\Repository;
 
+use Domain\UseCase\ServiceInterface;
+
 /**
  *
  */
@@ -10,7 +12,18 @@ class Fields implements FieldsInterface
 {
     /** @var string[] */
     private array $fields = [];
-
+    
+    private ?ServiceInterface $service;
+    
+    /**
+     * @param ServiceInterface|null $service
+     */
+    public function __construct(?ServiceInterface $service = null)
+    {
+        $this->service = $service;
+    }
+    
+    
     /**
      * Задает поля для выборки
      * @param string[] $fields
@@ -39,4 +52,14 @@ class Fields implements FieldsInterface
         $this->fields = [];
         return $this;
     }
+    
+    /**
+     * @return ServiceInterface|null
+     */
+    public function endFields(): ?ServiceInterface
+    {
+        return $this->service;
+    }
+    
+    
 }

@@ -3,17 +3,29 @@ declare(strict_types=1);
 
 namespace Domain\Repository;
 
+use Domain\UseCase\ServiceInterface;
+
 /**
  *
  */
 class Filter implements FilterInterface
 {
+    private ?ServiceInterface $service;
+    
     public const EXPRESSION_INT_NOT = '!';
     public const EXPRESSION_STRING_LIKE = '%';
     
     /** @var array  */
     private array $filter = [];
-
+    
+    /**
+     * @param ServiceInterface|null $service
+     */
+    public function __construct(?ServiceInterface $service = null)
+    {
+        $this->service = $service;
+    }
+    
     /**
      * Returns filter parameters
      * @return array<string,mixed>
@@ -74,5 +86,13 @@ class Filter implements FilterInterface
     {
         $this->filter = [];
         return $this;
+    }
+    
+    /**
+     * @return ?ServiceInterface
+     */
+    public function endFilter(): ?ServiceInterface
+    {
+        return $this->service;
     }
 }

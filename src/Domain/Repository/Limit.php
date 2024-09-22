@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Domain\Repository;
 
+use Domain\UseCase\ServiceInterface;
+
 /**
  *
  */
@@ -11,6 +13,16 @@ class Limit implements LimitInterface
     private int $limit = 0;
     private int $offset = 0;
     private int $pageNum = 0;
+    
+    private ?ServiceInterface $service;
+    
+    /**
+     * @param ServiceInterface|null $service
+     */
+    public function __construct(?ServiceInterface $service = null)
+    {
+        $this->service = $service;
+    }
     
     /**
      * @param int $limit
@@ -104,5 +116,10 @@ class Limit implements LimitInterface
         $this->limit = 0;
         $this->offset = 0;
         return $this;
+    }
+    
+    public function endLimit(): ?ServiceInterface
+    {
+        return $this->service;
     }
 }
