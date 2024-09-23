@@ -45,6 +45,7 @@ class UserManager extends AbstractManager implements ServiceInterface
     {
         $this->service = $service ?? $this;
         $this->repository = $repository ?? new UserRepository($this->service);
+        
         parent::__construct();
         
         $this->filter   = $this->repository->filter;
@@ -215,7 +216,9 @@ class UserManager extends AbstractManager implements ServiceInterface
     {
         // @fixme не делать запрос
         $groupId = (new GroupManager() )
-            ->setFields([GroupRepositoryInterface::ID])
+            ->fields
+                ->set([GroupRepositoryInterface::ID])
+            ->endFields()
             ->filterByCode($groupCode)
             ->find()?->current()?->getId();
         $this
