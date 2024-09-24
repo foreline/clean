@@ -76,7 +76,7 @@ class UserManager extends AbstractManager implements ServiceInterface
             //throw new \InvalidArgumentException('Не задан ID пользователя');
             return null;
         }
-        $user = $this->repository->findById($userId, $this->getFields($fields));
+        $user = $this->repository->findById($userId, $this->fields->get($fields));
         $this->reset();
         return $user;
     }

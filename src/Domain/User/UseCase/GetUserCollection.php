@@ -113,7 +113,32 @@ class GetUserCollection implements ServiceInterface
     }
     
     /**
-     * @param array $sort
+     * @param int|int[] $id
+     * @param bool $inverse
+     * @return $this
+     */
+    public function filterById(int|array $id, bool $inverse = false): self
+    {
+        if ( $inverse ) {
+            $this->filter->not(UserRepositoryInterface::ID, $id);
+        } else {
+            $this->filter->add(UserRepositoryInterface::ID, $id);
+        }
+        return $this;
+    }
+    
+    /**
+     * @param bool|bool[] $active
+     * @return $this
+     */
+    public function filterByActive(bool|array $active = true): self
+    {
+        $this->filter->add(UserRepositoryInterface::ACTIVE, $active);
+        return $this;
+    }
+    
+    /**
+     * @param array<string,string> $sort
      * @return $this
      */
     public function sort(array $sort): self
@@ -123,12 +148,62 @@ class GetUserCollection implements ServiceInterface
     }
     
     /**
+     * @param string $field
+     * @param string $order
+     * @return $this
+     */
+    public function sortBy(string $field, string $order = 'asc'): self
+    {
+        $this->sort->by($field, $order);
+        return $this;
+    }
+    
+    /**
+     * @return $this
+     */
+    public function sortByRand(): self
+    {
+        $this->sort->byRand();
+        return $this;
+    }
+    
+    /**
      * @param array{limit: int, offset: int, pageNum: int} $limit
      * @return $this
      */
-    public function limit(array $limit): self
+    public function limits(array $limit): self
     {
         $this->limit->set((int)$limit['limit'], (int)$limit['offset'], (int)$limit['pageNum']);
+        return $this;
+    }
+    
+    /**
+     * @param int $limit
+     * @return $this
+     */
+    public function limit(int $limit): self
+    {
+        $this->limit->setLimit($limit);
+        return $this;
+    }
+    
+    /**
+     * @param int $offset
+     * @return $this
+     */
+    public function offset(int $offset): self
+    {
+        $this->limit->setOffset($offset);
+        return $this;
+    }
+    
+    /**
+     * @param int $pageNum
+     * @return $this
+     */
+    public function pageNum(int $pageNum): self
+    {
+        $this->limit->setPageNum($pageNum);
         return $this;
     }
     
