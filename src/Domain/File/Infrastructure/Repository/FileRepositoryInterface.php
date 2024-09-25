@@ -6,6 +6,7 @@ namespace Domain\File\Infrastructure\Repository;
 use Domain\File\Aggregate\File;
 use Domain\File\Aggregate\FileCollection;
 use Domain\Repository\RepositoryInterface;
+use JetBrains\PhpStorm\Deprecated;
 
 /**
  * File Repository Interface
@@ -32,7 +33,7 @@ interface FileRepositoryInterface extends RepositoryInterface
      * @param array $limit
      * @return ?FileCollection
      */
-    public function find(array $filter = [], array $sort = [], array $limit = []): ?FileCollection;
+    public function find(#[Deprecated]array $filter = [], #[Deprecated]array $sort = [], #[Deprecated]array $limit = []): ?FileCollection;
 
     /**
      * @param int $fileId

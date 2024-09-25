@@ -6,11 +6,16 @@ namespace Domain\File\UseCase;
 use Domain\Exception\NotAuthorizedException;
 use Domain\File\Aggregate\FileCollection;
 use Domain\File\Infrastructure\Repository\Bitrix\FileRepository;
+use Domain\File\Infrastructure\Repository\FileFields;
+use Domain\File\Infrastructure\Repository\FileFilter;
+use Domain\File\Infrastructure\Repository\FileLimit;
 use Domain\File\Infrastructure\Repository\FileRepositoryInterface;
+use Domain\File\Infrastructure\Repository\FileSort;
 use Domain\Repository\Fields;
 use Domain\Repository\Filter;
 use Domain\Repository\Limit;
 use Domain\Repository\Sort;
+use Domain\UseCase\ServiceInterface;
 use Domain\User\Service\GetCurrentUser;
 use Exception;
 use InvalidArgumentException;
@@ -18,14 +23,15 @@ use InvalidArgumentException;
 /**
  *
  */
-class GetFileCollection
+class GetFileCollection implements ServiceInterface
 {
     //private UserRepositoryInterface $repository;
     public FileManager $manager;
-    public Filter $filter;
-    public Sort $sort;
-    public Limit $limit;
-    public Fields $fields;
+    
+    public FileFilter $filter;
+    public FileSort $sort;
+    public FileLimit $limit;
+    public FileFields $fields;
 
     /**
      *
@@ -36,10 +42,10 @@ class GetFileCollection
         //$this->repository = $repository;
         $this->manager = new FileManager();
     
-        $this->filter = new Filter();
-        $this->sort = new Sort();
-        $this->limit = new Limit();
-        $this->fields = new Fields();
+        $this->filter   = $this->manager->filter;
+        $this->sort     = $this->manager->sort;
+        $this->limit    = $this->manager->limit;
+        $this->fields   = $this->manager->fields;
     }
 
     /**
@@ -95,36 +101,6 @@ class GetFileCollection
     }
 
     /**
-     * @param int|int[] $id
-     * @param bool $inverse
-     * @return $this
-     */
-    public function filterById(int|array $id, bool $inverse = false): self
-    {
-        if ( $inverse ) {
-            $this->filter->not(FileRepositoryInterface::ID, $id);
-        } else {
-            $this->filter->add(FileRepositoryInterface::ID, $id);
-        }
-        return $this;
-    }
-
-    /**
-     * @param string|string[] $code
-     * @param bool $inverse
-     * @return $this
-     */
-    public function filterByCode(string|array $code, bool $inverse = false): self
-    {
-        if ( $inverse ) {
-            $this->filter->not(FileRepositoryInterface::CODE, $code);
-        } else {
-            $this->filter->add(FileRepositoryInterface::CODE, $code);
-        }
-        return $this;
-    }
-
-    /**
      * @return int
      */
     public function getTotalCount(): int
@@ -141,6 +117,36 @@ class GetFileCollection
         $this->filter->set($filter);
         return $this;
     }
+    
+    /**
+     * @param int|int[] $id
+     * @param bool $inverse
+     * @return $this
+     */
+    public function filterById(int|array $id, bool $inverse = false): self
+    {
+        if ( $inverse ) {
+            $this->filter->not(FileRepositoryInterface::ID, $id);
+        } else {
+            $this->filter->add(FileRepositoryInterface::ID, $id);
+        }
+        return $this;
+    }
+    
+    /**
+     * @param string|string[] $code
+     * @param bool $inverse
+     * @return $this
+     */
+    public function filterByCode(string|array $code, bool $inverse = false): self
+    {
+        if ( $inverse ) {
+            $this->filter->not(FileRepositoryInterface::CODE, $code);
+        } else {
+            $this->filter->add(FileRepositoryInterface::CODE, $code);
+        }
+        return $this;
+    }
 
     /**
      * @param array $sort
@@ -151,14 +157,64 @@ class GetFileCollection
         $this->sort->set($sort);
         return $this;
     }
+    
+    /**
+     * @param string $field
+     * @param string $order
+     * @return $this
+     */
+    public function sortBy(string $field, string $order = 'asc'): self
+    {
+        $this->sort->by($field, $order);
+        return $this;
+    }
+    
+    /**
+     * @return $this
+     */
+    public function sortByRand(): self
+    {
+        $this->sort->byRand();
+        return $this;
+    }
 
     /**
      * @param array{limit: int, offset: int, pageNum: int} $limit
      * @return $this
      */
-    public function limit(array $limit): self
+    public function limits(array $limit): self
     {
         $this->limit->set((int)$limit['limit'], (int)$limit['offset'], (int)$limit['pageNum']);
+        return $this;
+    }
+    
+    /**
+     * @param int $limit
+     * @return $this
+     */
+    public function limit(int $limit): self
+    {
+        $this->limit->setLimit($limit);
+        return $this;
+    }
+    
+    /**
+     * @param int $offset
+     * @return $this
+     */
+    public function offset(int $offset): self
+    {
+        $this->limit->setOffset($offset);
+        return $this;
+    }
+    
+    /**
+     * @param int $pageNum
+     * @return $this
+     */
+    public function pageNum(int $pageNum): self
+    {
+        $this->limit->setPageNum($pageNum);
         return $this;
     }
 

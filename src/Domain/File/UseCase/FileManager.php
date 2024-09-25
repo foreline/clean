@@ -8,6 +8,7 @@ use Domain\File\Aggregate\FileCollection;
 use Domain\File\Infrastructure\Repository\Bitrix\FileRepository; // @fixme
 use Domain\File\Infrastructure\Repository\FileRepositoryInterface;
 use Domain\UseCase\AbstractManager;
+use Domain\UseCase\ServiceInterface;
 use Exception;
 use InvalidArgumentException;
 
@@ -15,11 +16,12 @@ use InvalidArgumentException;
  * Service for working with File Aggregate. Singleton Pattern.
  * Uploading a file is a responsibility of FileRepository.
  */
-class FileManager extends AbstractManager
+class FileManager extends AbstractManager implements ServiceInterface
 {
-    private FileRepositoryInterface $repository;
+    private ?ServiceInterface $service;
     
-    private static ?self $instance = null;
+    /** @var FileRepositoryInterface  */
+    private FileRepositoryInterface $repository;
     
     /** @var string Files upload Directory */
     private string $uploadDir = '';
@@ -27,27 +29,19 @@ class FileManager extends AbstractManager
     /**
      * @param FileRepositoryInterface|null $repository
      * @throws Exception
-     * @return self
-     * @deprecated
      */
-    public static function getInstance(FileRepositoryInterface $repository = null): self
+    public function __construct(FileRepositoryInterface $repository = null, ?ServiceInterface $service = null)
     {
-        if ( !self::$instance ) {
-            self::$instance = new self($repository);
-        }
-        return self::$instance;
-    }
-    
-    /**
-     * @param FileRepositoryInterface|null $repository
-     * @throws Exception
-     */
-    public function __construct(FileRepositoryInterface $repository = null)
-    {
-        $this->repository = $repository ?? new FileRepository(); // @fixme use DI
+        $this->service = $service ?? $this;
+        $this->repository = $repository ?? new FileRepository($this->service); // @fixme use DI
         $this->setUploadDir($_SERVER['DOCUMENT_ROOT'] . '/upload/files'); // @fixme
         
         parent::__construct();
+    
+        $this->filter   = $this->repository->filter;
+        $this->fields   = $this->repository->fields;
+        $this->sort     = $this->repository->sort;
+        $this->limit    = $this->repository->limit;
     }
     
     /**
