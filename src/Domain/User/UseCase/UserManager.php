@@ -7,7 +7,10 @@ use Bitrix\Main\Engine\CurrentUser;
 
 use CGroup;
 use CUser;
+use Domain\Repository\FieldsInterface;
 use Domain\Repository\FilterInterface;
+use Domain\Repository\LimitInterface;
+use Domain\Repository\SortInterface;
 use Domain\UseCase\AbstractManager;
 use Domain\UseCase\ServiceInterface;
 use Domain\User\Aggregate\User;
@@ -15,8 +18,11 @@ use Domain\User\Aggregate\UserInterface;
 use Domain\User\Aggregate\UserCollection;
 use Domain\User\Infrastructure\Repository\Bitrix\UserRepository;
 use Domain\User\Infrastructure\Repository\GroupRepositoryInterface;
+use Domain\User\Infrastructure\Repository\UserFields;
 use Domain\User\Infrastructure\Repository\UserFilter;
+use Domain\User\Infrastructure\Repository\UserLimit;
 use Domain\User\Infrastructure\Repository\UserRepositoryInterface;
+use Domain\User\Infrastructure\Repository\UserSort;
 use Exception;
 use InvalidArgumentException;
 use RuntimeException;
@@ -36,7 +42,10 @@ class UserManager extends AbstractManager implements ServiceInterface
     /** @var User|null  */
     private static ?User $currentUser = null;
     
-    public FilterInterface $filter;
+    public FilterInterface|UserFilter $filter;
+    public FieldsInterface|UserFields $fields;
+    public SortInterface|UserSort     $sort;
+    public LimitInterface|UserLimit   $limit;
     
     /**
      *
@@ -196,6 +205,16 @@ class UserManager extends AbstractManager implements ServiceInterface
         $this->offset = $offset;
         return $this;
     }
+    
+    /**
+     * @param bool|bool[] $active
+     * @return $this
+     */
+    public function filterByActive(bool|array $active = true): self
+    {
+        $this->filter->add(UserRepositoryInterface::ACTIVE, $active);
+        return $this;
+    }
 
     /**
      * @param int $groupId
@@ -207,7 +226,7 @@ class UserManager extends AbstractManager implements ServiceInterface
             ->filter->add(UserRepositoryInterface::GROUPS, $groupId);
         return $this;
     }
-
+    
     /**
      * @param string $groupCode
      * @return $this
@@ -215,14 +234,16 @@ class UserManager extends AbstractManager implements ServiceInterface
     public function filterByGroupCode(string $groupCode): self
     {
         // @fixme не делать запрос
-        $groupId = (new GroupManager() )
-            ->fields
-                ->set([GroupRepositoryInterface::ID])
-            ->endFields()
+        $groupManager = new GroupManager();
+        $groupManager->fields->set([GroupRepositoryInterface::ID]);
+        
+        $groupId = $groupManager
             ->filterByCode($groupCode)
             ->find()?->current()?->getId();
+        
         $this
             ->filter->add(UserRepositoryInterface::GROUPS, $groupId);
+        
         return $this;
     }
 
