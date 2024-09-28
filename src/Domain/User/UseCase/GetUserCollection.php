@@ -138,6 +138,16 @@ class GetUserCollection implements ServiceInterface
     }
     
     /**
+     * @param string|string[] $role
+     * @return $this
+     */
+    public function filterByRole(string|array $role): self
+    {
+        $this->filter->filterByRole($role);
+        return $this;
+    }
+    
+    /**
      * @param array<string,string> $sort
      * @return $this
      */
