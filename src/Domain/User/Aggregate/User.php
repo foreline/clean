@@ -28,10 +28,10 @@ class User extends UserEntity implements AggregateInterface, UserInterface
     
     /** @var string  */
     private string $addSlug = '';
-
+    
     /** @var string Внешний ID */
     private string $extId = '';
-
+    
     /**
      * @return string
      */
@@ -39,7 +39,7 @@ class User extends UserEntity implements AggregateInterface, UserInterface
     {
         return $this->slug;
     }
-
+    
     /**
      * @param string $slug
      * @return $this
@@ -49,7 +49,7 @@ class User extends UserEntity implements AggregateInterface, UserInterface
         $this->slug = $slug;
         return $this;
     }
-
+    
     /**
      * @return RoleCollection|null
      */
@@ -57,7 +57,7 @@ class User extends UserEntity implements AggregateInterface, UserInterface
     {
         return $this->roles;
     }
-
+    
     /**
      * @param Role $role
      * @return $this
@@ -80,7 +80,7 @@ class User extends UserEntity implements AggregateInterface, UserInterface
         $this->roles = $roles;
         return $this;
     }
-
+    
     /**
      * @param string|string[] ...$rolesCode
      * @return bool
@@ -90,26 +90,26 @@ class User extends UserEntity implements AggregateInterface, UserInterface
         if ( null === $userRoles = $this->getRoles() ) {
             return false;
         }
-    
+        
         if ( 0 === $userRoles->getCount() ) {
             return false;
         }
-    
+        
         // Convert multidimensional array to flat
         $roles = [];
         array_walk_recursive($rolesCode, function ($item, $key) use (&$roles) {
             $roles[$key] = $item;
         });
-    
+        
         foreach ( $roles as $roleCode ) {
             if ( in_array($roleCode, $userRoles->getCollection()) ) {
                 return true;
             }
         }
-    
+        
         return false;
     }
-
+    
     /**
      * @return GroupCollection|null
      */
@@ -117,7 +117,7 @@ class User extends UserEntity implements AggregateInterface, UserInterface
     {
         return $this->groups;
     }
-
+    
     /**
      * @param GroupCollection|null $groups
      * @return $this
@@ -127,7 +127,7 @@ class User extends UserEntity implements AggregateInterface, UserInterface
         $this->groups = $groups;
         return $this;
     }
-
+    
     /**
      * @param Group $group
      * @return $this
@@ -140,7 +140,7 @@ class User extends UserEntity implements AggregateInterface, UserInterface
         $this->groups->addItem($group);
         return $this;
     }
-
+    
     /**
      * @return File|null
      */
@@ -148,7 +148,7 @@ class User extends UserEntity implements AggregateInterface, UserInterface
     {
         return $this->avatar;
     }
-
+    
     /**
      * @param File|null $avatar
      * @return User
@@ -158,7 +158,7 @@ class User extends UserEntity implements AggregateInterface, UserInterface
         $this->avatar = $avatar;
         return $this;
     }
-
+    
     /**
      * Gets Entity add/edit page url
      * @return string
@@ -167,7 +167,7 @@ class User extends UserEntity implements AggregateInterface, UserInterface
     {
         return $this->addSlug;
     }
-
+    
     /**
      * Sets Entity add/edit page url
      * @param string $addSlug
@@ -178,7 +178,7 @@ class User extends UserEntity implements AggregateInterface, UserInterface
         $this->addSlug = $addSlug;
         return $this;
     }
-
+    
     /**
      * @return string
      */
@@ -186,7 +186,7 @@ class User extends UserEntity implements AggregateInterface, UserInterface
     {
         return $this->extId;
     }
-
+    
     /**
      * @param string $extId
      * @return User
@@ -205,8 +205,8 @@ class User extends UserEntity implements AggregateInterface, UserInterface
     {
         return [
             'entity_type'   => 'user',
-            'id'    => $this->getId(),
-            'name'  => $this->getFirstName(),
+            'id'        => $this->getId(),
+            'name'      => $this->getFirstName(),
             'lastName'  => $this->getLastName(),
             'fullName'  => $this->getFullName(),
             'active'    => $this->isActive(),

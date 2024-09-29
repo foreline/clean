@@ -12,20 +12,20 @@ class Role implements ValueObjectInterface
 {
     public const ADMIN = 'admin';
     
-    private string $role;
+    private string|array $role;
     
     private array $names = [
         self::ADMIN     => 'Администратор',
     ];
     
     /**
-     * @param string $role
+     * @param string|string[] $role
      */
-    public function __construct(string $role)
+    public function __construct(string|array $role = '')
     {
         $this->role = $role;
     }
-
+    
     /**
      * @return string
      */
@@ -33,7 +33,7 @@ class Role implements ValueObjectInterface
     {
         return $this->names[$this->role];
     }
-
+    
     /**
      * @return $this
      */
@@ -41,7 +41,7 @@ class Role implements ValueObjectInterface
     {
         return new self(self::ADMIN);
     }
-
+    
     /**
      * @return bool
      */
@@ -49,7 +49,7 @@ class Role implements ValueObjectInterface
     {
         return $this->equals(self::admin());
     }
-
+    
     /**
      * @return string
      */
@@ -57,7 +57,7 @@ class Role implements ValueObjectInterface
     {
         return $this->role;
     }
-
+    
     /**
      * @param Role $role
      * @return bool
@@ -66,7 +66,7 @@ class Role implements ValueObjectInterface
     {
         return $this->role === $role->role;
     }
-
+    
     /**
      * @param string $roleCode
      * @return bool
@@ -75,7 +75,7 @@ class Role implements ValueObjectInterface
     {
         return $this->getRole() === $roleCode;
     }
-
+    
     /**
      * @return array
      */
@@ -85,7 +85,7 @@ class Role implements ValueObjectInterface
             (new self(self::ADMIN)),
         ];
     }
-
+    
     /**
      * @return string
      */
