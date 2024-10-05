@@ -1,5 +1,6 @@
 {
   "name": "foreline/clean",
+  "description": "PHP clean architecture framework",
   "type": "project",
   "license": "MIT",
   "authors": [

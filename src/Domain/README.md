@@ -7,12 +7,11 @@
 ### Агрегаты / Aggregate Root
 
 Содержит в себе наборы вложенных сущностей и объектов-значений.
-Aggregates help to reduce the number of bidirectional associations among objects in the system because you are allowed to store references only to the root.
 
 ### Репозитории / Repositories
 
 Внешний объект хранилища, который сохраняет сущности. 
-Репозиторий это слой, находящийся между доменом и базой данных.
+Репозиторий это слой, находящийся между доменным слоем и инфраструктурным слоем базы данных.
 В доменном слое находятся только интерфейсы репозиториев. Сами репозитории находятся в Инфраструктурном слое.
 
 ### Сервисы / Service
@@ -40,3 +39,8 @@ Value objects are accessible by their value rather than identity. They are immut
 - не содержит сеттеров, задается через конструктор.
   
 Например, статус у какого-либо объекта, валюты, страны, даты.
+
+Предоставляются интерфейсы для следующих видов Объектов-значений:
+- `FloatValueObjectInterface` - для VO с типом значения `float`
+- `IntValueObjectInterface` - для VO с типом значения `int`
+- `StringValueObjectInterface` - для VO с типом значения `string`
