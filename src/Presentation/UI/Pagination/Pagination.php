@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Presentation\Helpers;
+namespace Presentation\UI\Pagination;
 
 use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Request;
