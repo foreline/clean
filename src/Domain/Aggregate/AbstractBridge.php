@@ -24,7 +24,7 @@ abstract class AbstractBridge
     private ?DateTimeImmutable $dateModified = null;
     
     /** @var bool Удалено */
-    private bool $deleted = false;
+    //private bool $deleted = false;
     
     
     /**
