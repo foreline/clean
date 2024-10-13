@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace Domain\User\ValueObject;
 
-use Domain\ValueObject\ValueObjectInterface;
+use Domain\ValueObject\StringValueObjectInterface;
 
 /**
  * Роль пользователя
  */
-class Role implements ValueObjectInterface
+class Role implements StringValueObjectInterface
 {
     public const ADMIN = 'admin';
     
