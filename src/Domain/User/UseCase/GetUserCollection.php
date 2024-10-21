@@ -148,6 +148,16 @@ class GetUserCollection implements ServiceInterface
     }
     
     /**
+     * @param string $email
+     * @return $this
+     */
+    public function filterByEmail(string $email): self
+    {
+        $this->filter->add(UserRepositoryInterface::EMAIL, $email);
+        return $this;
+    }
+    
+    /**
      * @param array<string,string> $sort
      * @return $this
      */
