@@ -168,7 +168,15 @@ class UserEntity
      */
     public function getFullName(): string
     {
-        return $this->lastName . ' ' . $this->firstName;
+        if ( !empty($this->lastName) || !empty($this->firstName) ) {
+            return $this->lastName . ' ' . $this->firstName;
+        } elseif ( !empty($this->email) ) {
+            return $this->email;
+        } elseif ( !empty($this->login) ) {
+            return $this->login;
+        } else {
+            return '';
+        }
     }
 
     /**
