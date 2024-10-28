@@ -110,7 +110,7 @@ trait IteratorTrait
     {
         return $this->valid()
             ? array_map(
-                fn(AggregateInterface $item): int => $item->getId(),
+                fn(AggregateInterface $item): ?int => $item->getId(),
                 $this->items
             ) : null;
     }
