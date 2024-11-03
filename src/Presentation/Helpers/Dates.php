@@ -3,6 +3,11 @@ declare(strict_types=1);
 
 namespace Presentation\Helpers;
 
+use DateInterval;
+use DateTime;
+use DateTimeImmutable;
+use InvalidArgumentException;
+
 /**
  * Класс для работы с датами
  */
@@ -442,54 +447,36 @@ class Dates {
     }
     
     /**
-     * Тестирование различных форматов дат.
+     * Returns a DateTimeImmutable object:
+     * - Offset from current time if input is in seconds (int)
+     * - Next day's time if current time exceeds given time (in HH:mm format) (string)
+     * - Current day's time otherwise
      *
-     * @return void
+     * @param int|string $input Either seconds or time in 'HH:mm' format
+     * @param DateTimeImmutable|null $currentTime
+     * @return DateTimeImmutable
      */
-    public static function test(): void
+    public static function getDateFromTime(int|string $input, ?DateTimeImmutable $currentTime = null): DateTimeImmutable
     {
+        if ( null === $currentTime ) {
+            $currentTime = new DateTimeImmutable();
+        }
         
-        /*
-        // ДД.ММ.ГГГГ
-        $date = '31.01.2001';
-        $date = '31/01/2001';
-        $date = '31-01-2001';
-
-        // ДД.М.ГГГГ
-        $date = '31/1/2001';
-        $date = '31.1.2001';
-        $date = '31-1-2001';
-
-        // Д.М.ГГГГ
-        $date = '1/1/2001';
-        $date = '1.1.2001';
-        $date = '1-1-2001';
-
-        // ГГГГ.ММ.ДД
-        $date = '1991.12.31';
-        $date = '1991/12/31';
-        $date = '1991-12-31';
-
-        // ГГГГ.ММ.Д
-        $date = '1991.12.1';
-        $date = '1991/12/1';
-        $date = '1991-12-1';
-
-        // ГГГГ.М.Д
-        $date = '1991.2.1';
-        $date = '1991/2/1';
-        $date = '1991-2-1';
-
-        // ГГГГ.М.ДД
-        $date = '1991.2.28';
-        $date = '1991/2/28';
-        $date = '1991-2-28';
-
-        // ДД.ММ.ГГ
-        $date = '31.01.98';
-        $date = '31/01/98';
-        $date = '31-01-98';
-        */
+        if ( is_int($input) ) {
+            return $currentTime->add(new DateInterval("PT{$input}S"));
+        }
+    
+        if (preg_match('/^\d{2}:\d{2}$/', $input)) {
+            // Input is time in HH:mm format
+            [$hour, $minute] = explode(':', $input);
+            $targetTime = $currentTime->setTime((int)$hour, (int)$minute);
+    
+            return ($currentTime > $targetTime)
+                ? $targetTime->modify('+1 day')
+                : $targetTime;
+        }
+        
+        throw new InvalidArgumentException('Неверный формат данных. Можно задать либо число в секундах, либо время в формате HH:mm.');
     }
     
 }

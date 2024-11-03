@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Domain\Repository;
 
-use Domain\UseCase\ServiceInterface;
+use Domain\Service\ServiceInterface;
 
 /**
  *

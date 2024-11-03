@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Domain\User\Infrastructure\Repository;
 
-use Domain\UseCase\ServiceInterface;
+use Domain\Service\ServiceInterface;
 use Domain\User\Aggregate\UserInterface;
 use Domain\User\Aggregate\UsersInterface;
 

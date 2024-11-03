@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Domain\UseCase;
+namespace Domain\Service;
 
 /**
- *
+ * Services should implement this interface
  */
 interface ServiceInterface
 {

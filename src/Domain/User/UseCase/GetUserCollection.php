@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Domain\User\UseCase;
 
 use Domain\Exception\NotAuthorizedException;
-use Domain\UseCase\ServiceInterface;
+use Domain\Service\ServiceInterface;
 use Domain\User\Aggregate\UserCollection;
 use Domain\User\Infrastructure\Repository\UserFields;
 use Domain\User\Infrastructure\Repository\UserFilter;

@@ -5,7 +5,7 @@ namespace Domain\Repository;
 
 use Domain\Aggregate\AggregateInterface;
 use Domain\Aggregate\IteratorInterface;
-use Domain\UseCase\ServiceInterface;
+use Domain\Service\ServiceInterface;
 
 /**
  * Repository Interface

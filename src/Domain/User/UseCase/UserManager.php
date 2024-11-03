@@ -4,18 +4,17 @@ declare(strict_types=1);
 namespace Domain\User\UseCase;
 
 use Bitrix\Main\Engine\CurrentUser;
-
 use CGroup;
 use CUser;
 use Domain\Repository\FieldsInterface;
 use Domain\Repository\FilterInterface;
 use Domain\Repository\LimitInterface;
 use Domain\Repository\SortInterface;
+use Domain\Service\ServiceInterface;
 use Domain\UseCase\AbstractManager;
-use Domain\UseCase\ServiceInterface;
 use Domain\User\Aggregate\User;
-use Domain\User\Aggregate\UserInterface;
 use Domain\User\Aggregate\UserCollection;
+use Domain\User\Aggregate\UserInterface;
 use Domain\User\Infrastructure\Repository\Bitrix\UserRepository;
 use Domain\User\Infrastructure\Repository\GroupRepositoryInterface;
 use Domain\User\Infrastructure\Repository\UserFields;

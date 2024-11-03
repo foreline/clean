@@ -5,12 +5,14 @@ namespace Domain\File\UseCase;
 
 use Domain\File\Aggregate\File;
 use Domain\File\Aggregate\FileCollection;
-use Domain\File\Infrastructure\Repository\Bitrix\FileRepository; // @fixme
+use Domain\File\Infrastructure\Repository\Bitrix\FileRepository;
 use Domain\File\Infrastructure\Repository\FileRepositoryInterface;
+use Domain\Service\ServiceInterface;
 use Domain\UseCase\AbstractManager;
-use Domain\UseCase\ServiceInterface;
 use Exception;
 use InvalidArgumentException;
+
+// @fixme
 
 /**
  * Service for working with File Aggregate. Singleton Pattern.
