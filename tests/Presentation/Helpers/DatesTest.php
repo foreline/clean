@@ -28,14 +28,14 @@ class DatesTest extends TestCase
         $expected = $expected->modify('-' . $expected->format('u') . ' usec');
         
         // Act
-        $actual = Dates::getDateFromTime(3600);
+        $actual = Dates::getDateFromTime('3600');
         $actual = $actual->modify('-' . $actual->format('u') . ' usec');
         
         // Assert
         $this->assertEquals(
             $expected,
             $actual,
-            "Should add 3600 seconds to current time"
+            'Should add 3600 seconds to current time'
         );
     }
     
@@ -52,6 +52,28 @@ class DatesTest extends TestCase
         
         // Act
         $actual = Dates::getDateFromTime('09:00', $now);
+        
+        // Assert
+        $this->assertEquals(
+            $expected,
+            $actual,
+            "Should return same day when current time is before target"
+        );
+    }
+    
+    /**
+     * @return void
+     */
+    public function testSameDayBeforeTargetTimeWithSeconds(): void
+    {
+        // Arrange
+        $now = new DateTimeImmutable();
+        $now = $now->setTime(8, 59, 59);
+        
+        $expected = $now->setTime(9, 0, 0);
+        
+        // Act
+        $actual = Dates::getDateFromTime('09:00:00', $now);
         
         // Assert
         $this->assertEquals(
@@ -81,7 +103,30 @@ class DatesTest extends TestCase
         $this->assertEquals(
             $expected,
             $actual,
-            "Should return next day when current time is after target"
+            'Should return next day when current time is after target'
+        );
+    }
+    
+    /**
+     * @return void
+     */
+    public function testFromString(): void
+    {
+        // Arrange
+        $input = '3600';
+        $now = new DateTimeImmutable();
+        
+        $expected = $now
+            ->add(new DateInterval('PT1H'));
+        
+        // Act
+        $actual = Dates::getDateFromTime($input, $now);
+        
+        // Assert
+        static::assertEquals(
+            $expected,
+            $actual,
+            'Should add 1 hour to current time'
         );
     }
     

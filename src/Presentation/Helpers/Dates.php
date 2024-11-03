@@ -66,8 +66,7 @@ class Dates {
     ];
     
     /**
-     * Парсит строку с датой и возвращает число,
-     * представляющее собой количество секунд,
+     * Парсит строку с датой и возвращает число, представляющее собой количество секунд,
      * истекших с полуночи 1 января 1970 года GMT+0 до даты, указанной в строке.
      *
      * @param string $date Строка с датой
@@ -141,7 +140,7 @@ class Dates {
     }
     
     /**
-     * Возвращает разницу в днях между двумя датами.
+     * Возвращает разницу полных дней между двумя датами.
      *
      * @param string $dateFrom Дата с
      * @param string $dateTo Дата по
@@ -160,13 +159,12 @@ class Dates {
     }
     
     /**
-     * Возвращает разницу в днях между заданными датами.
-     * Разницей считается количество переходов через полночь.
+     * Возвращает разницу в днях между заданными датами. Разницей считается количество переходов через полночь.
      *
      * @param string $dateFrom Дата с
      * @param string $dateTo Дата по
      *
-     * @return int $daysDiff
+     * @return int $daysDiff Количество переходов через полночь.
      */
     
     public static function daysDiff(string $dateFrom = '', string $dateTo = ''): int
@@ -186,7 +184,7 @@ class Dates {
     }
     
     /**
-     * Возвращает разницу в минутах между датами
+     * Возвращает разницу в минутах между датами.
      *
      * @param string $dateFrom Дата с
      * @param string $dateTo Дата по
@@ -205,7 +203,7 @@ class Dates {
     }
     
     /**
-     * Возвращает разницу в секундах между двумя датами
+     * Возвращает разницу в секундах между двумя датами.
      *
      * @param string $dateFrom Дата с
      * @param string $dateTo Дата по
@@ -300,8 +298,7 @@ class Dates {
     }
     
     /**
-     * Выводит отформатированную дату "сегодня в 7:00 | вчера в 19:35 | 1 сентября, 11:19".
-     * Время выводится, если задано.
+     * Выводит отформатированную дату и время (если задано) "сегодня в 7:00 | вчера в 19:35 | 1 сентября, 11:19".
      *
      * @param string $date Исходная дата
      * @param bool $today Заменять ли дату на "сегодня" и "вчера"
@@ -441,42 +438,43 @@ class Dates {
         $output .=
             '<span title="ч. мм:сс">' .
             (10 > $min ? '0' : '') .
-            $min . ':' . (10 > $sec ? '0' : '') . $sec . '</span>';
+            $min . ':' . (10 > $sec ? '0' : '') . $sec .
+            '</span>';
         
         return $output;
     }
     
     /**
      * Returns a DateTimeImmutable object:
-     * - Offset from current time if input is in seconds (int)
-     * - Next day's time if current time exceeds given time (in HH:mm format) (string)
+     * - Offset from current time if input is in seconds
+     * - Next day's time if current time exceeds given time (in H:i(:s) format)
      * - Current day's time otherwise
      *
-     * @param int|string $input Either seconds or time in 'HH:mm' format
+     * @param string $input Either seconds or time in 'HH:mm' format
      * @param DateTimeImmutable|null $currentTime
      * @return DateTimeImmutable
      */
-    public static function getDateFromTime(int|string $input, ?DateTimeImmutable $currentTime = null): DateTimeImmutable
+    public static function getDateFromTime(string $input, ?DateTimeImmutable $currentTime = null): DateTimeImmutable
     {
         if ( null === $currentTime ) {
             $currentTime = new DateTimeImmutable();
         }
         
-        if ( is_int($input) ) {
+        if ( preg_match('/^\d+$/', $input) ) {
             return $currentTime->add(new DateInterval("PT{$input}S"));
         }
     
-        if (preg_match('/^\d{2}:\d{2}$/', $input)) {
-            // Input is time in HH:mm format
-            [$hour, $minute] = explode(':', $input);
-            $targetTime = $currentTime->setTime((int)$hour, (int)$minute);
+        if ( preg_match('/^(?:\d{2}:\d{2}|(\d{2}:\d{2}:\d{2}))$/', $input) ) {
+            // Input is time in H:i(:s) format
+            $result = explode(':', $input);
+            $targetTime = $currentTime->setTime((int)$result[0], (int)$result[1], (int) ($result[2] ?? 0));
     
             return ($currentTime > $targetTime)
                 ? $targetTime->modify('+1 day')
                 : $targetTime;
         }
         
-        throw new InvalidArgumentException('Неверный формат данных. Можно задать либо число в секундах, либо время в формате HH:mm.');
+        throw new InvalidArgumentException('Неверный формат данных. Можно задать либо число в секундах, либо время в формате H:i (с ведущими нулями).');
     }
     
 }
