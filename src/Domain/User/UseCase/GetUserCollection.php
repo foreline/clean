@@ -158,6 +158,26 @@ class GetUserCollection implements ServiceInterface
     }
     
     /**
+     * @param string $extId
+     * @return $this
+     */
+    public function filterByExtId(string $extId): self
+    {
+        $this->filter->add(UserRepositoryInterface::EXT_ID, $extId);
+        return $this;
+    }
+    
+    /**
+     * @param string $extId
+     * @return $this
+     */
+    public function searchByExtId(string $extId): self
+    {
+        $this->filter->add(UserRepositoryInterface::EXT_ID, '%' . $extId . '%');
+        return $this;
+    }
+    
+    /**
      * @param array<string,string> $sort
      * @return $this
      */

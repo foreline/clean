@@ -25,6 +25,7 @@ interface UserRepositoryInterface
     public const POSITION = 'work_position';
     public const GROUPS = 'group_id';
     public const CONFIRM_CODE = 'confirm_code';
+    public const EXT_ID = 'xml_id';
     
     /**
      * @param ServiceInterface|null $service
