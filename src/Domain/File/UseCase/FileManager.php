@@ -12,8 +12,6 @@ use Domain\UseCase\AbstractManager;
 use Exception;
 use InvalidArgumentException;
 
-// @fixme
-
 /**
  * Service for working with File Aggregate. Singleton Pattern.
  * Uploading a file is a responsibility of FileRepository.
@@ -130,25 +128,36 @@ class FileManager extends AbstractManager implements ServiceInterface
     }
     
     /**
-     * @param string $filePath
+     * Загружает файл по переданному пути (локальный файл, либо ссылка) и возвращает объект User.
+     * @param string $fileLocalPathOrUrl
      * @param string $name
      * @param string $description
      * @return File
      * @throws Exception
      */
-    public function upload(string $filePath, string $name = '', string $description = ''): File
+    public function upload(string $fileLocalPathOrUrl, string $name = '', string $description = ''): File
     {
-        if ( empty($filePath) ) {
-            throw new InvalidArgumentException('Не задан файл');
+        if ( empty($fileLocalPathOrUrl) ) {
+            throw new InvalidArgumentException('Не задан путь до файла');
         }
         
-        if ( !is_file($filePath) ) {
-            throw new Exception('Не является файлом');
+        $name = $name ?: basename($fileLocalPathOrUrl);
+        
+        if ( $this->isUrl($fileLocalPathOrUrl) ) {
+            // Загружаем файл по URL
+            $tempFile = tempnam(sys_get_temp_dir(), 'tmp_');
+            $result = file_put_contents($tempFile, fopen($fileLocalPathOrUrl, 'r'));
+            if ( false === $result ) {
+                throw new Exception('Ошибка при загрузке файла по URL: "' . $fileLocalPathOrUrl . '"');
+            }
+            $fileLocalPathOrUrl = $tempFile;
+        } elseif ( !is_file($fileLocalPathOrUrl) ) {
+            throw new Exception('Не является файлом: "' . $fileLocalPathOrUrl . '"');
         }
         
         $file = new File();
         $file->setOriginalName($name);
-        $file->setTmpName($filePath);
+        $file->setTmpName($fileLocalPathOrUrl);
         $file->setFileName($name);
         $file->setDescription($description);
         
@@ -157,6 +166,15 @@ class FileManager extends AbstractManager implements ServiceInterface
         $file->setNewlyUploaded(true);
         
         return $file;
+    }
+    
+    /**
+     * @param string $path
+     * @return bool
+     */
+    private function isUrl(string $path): bool
+    {
+        return str_starts_with($path, 'http://') || str_starts_with($path, 'https://');
     }
     
     /**
