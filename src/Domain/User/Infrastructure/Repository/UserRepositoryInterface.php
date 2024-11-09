@@ -26,6 +26,7 @@ interface UserRepositoryInterface
     public const GROUPS = 'group_id';
     public const CONFIRM_CODE = 'confirm_code';
     public const EXT_ID = 'xml_id';
+    public const AVATAR = 'personal_photo';
     
     /**
      * @param ServiceInterface|null $service
