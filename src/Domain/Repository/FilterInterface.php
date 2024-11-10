@@ -12,7 +12,9 @@ interface FilterInterface
 {
     public function __construct(?ServiceInterface $service = null);
     
-    public function reset(): self;
+    public function reset(): static;
     
     public function endFilter(): ?ServiceInterface;
+    
+    public function byCondition(): ?ConditionFilterInterface;
 }

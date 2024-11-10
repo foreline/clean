@@ -28,21 +28,6 @@ class UserFilter extends Filter implements FilterInterface
     }
     
     /**
-     * @param string|string[] $code
-     * @param bool $inverse
-     * @return $this
-     */
-    /*public function filterByCode(string|array $code, bool $inverse = false): self
-    {
-        if ( $inverse ) {
-            $this->not(UserRepositoryInterface::CODE, $code);
-        } else {
-            $this->add(UserRepositoryInterface::CODE, $code);
-        }
-        return $this;
-    }*/
-    
-    /**
      * @param string|string[] $role
      * @return $this
      */
@@ -67,5 +52,13 @@ class UserFilter extends Filter implements FilterInterface
     {
         $this->add(UserRepositoryInterface::ACTIVE, $active);
         return $this;
+    }
+    
+    /**
+     * @return UserConditionFilter
+     */
+    public function byCondition(): UserConditionFilter
+    {
+        return new UserConditionFilter($this);
     }
 }

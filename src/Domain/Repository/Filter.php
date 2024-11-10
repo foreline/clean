@@ -8,7 +8,7 @@ use Domain\Service\ServiceInterface;
 /**
  *
  */
-class Filter implements FilterInterface
+class Filter
 {
     private ?ServiceInterface $service;
     
@@ -82,7 +82,7 @@ class Filter implements FilterInterface
      * Resets filter parameters
      * @return self
      */
-    public function reset(): self
+    public function reset(): static
     {
         $this->filter = [];
         return $this;
