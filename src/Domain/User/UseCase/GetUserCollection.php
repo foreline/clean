@@ -168,6 +168,27 @@ class GetUserCollection implements ServiceInterface
     }
     
     /**
+     * Задает фильтр поиска
+     * @param string $term
+     * @return $this
+     */
+    public function search(string $term): self
+    {
+        $this->filter
+            ->byCondition()
+                ->searchByLastName($term)
+                ->searchByName($term)
+                ->searchByEmail($term)
+                ->searchByPosition($term)
+                ->searchByDepartment($term)
+                ->searchByLogin($term)
+                ->searchByPhone($term)
+            ->endCondition()
+        ;
+        return $this;
+    }
+    
+    /**
      * @param string $extId
      * @return $this
      */
