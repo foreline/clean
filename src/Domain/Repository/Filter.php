@@ -8,7 +8,7 @@ use Domain\Service\ServiceInterface;
 /**
  *
  */
-class Filter
+class Filter implements FilterInterface
 {
     private ?ServiceInterface $service;
     
@@ -94,5 +94,13 @@ class Filter
     public function endFilter(): ?ServiceInterface
     {
         return $this->service;
+    }
+    
+    /**
+     * @return ConditionFilterInterface|null
+     */
+    public function byCondition(): ?ConditionFilterInterface
+    {
+        return new ConditionFilter($this);
     }
 }
