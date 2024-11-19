@@ -30,6 +30,7 @@ job-phpstan:
   script:
     - php ./vendor/bin/phpstan analyze -c phpstan.neon --no-progress --error-format gitlab > ./phpstan-report.json
   artifacts:
+    untracked: true
     paths:
       - phpstan-report.json
     expire_in: 1 hour
