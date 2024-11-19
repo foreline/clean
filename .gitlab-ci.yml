@@ -1,0 +1,44 @@
+image: php:8.2
+
+stages:
+  - build
+  - test
+
+variables:
+  COMPOSER_CACHE_DIR: $CI_PROJECT_DIR/.composer/cache
+  GIT_CLEAN_FLAGS: -ffdx -e vendor/
+
+cache:
+  key: ${COMPOSER_CACHE_DIR}-composer.lock
+  paths:
+    - ${COMPOSER_CACHE_DIR}/repo
+    - ${COMPOSER_CACHE_DIR}/files
+
+#############
+job-composer:
+  stage: build
+  before_script:
+    - echo "Running Composer Job"
+  script:
+    - apt-get update -yq && apt-get install -y unzip git libzip-dev
+    - docker-php-ext-install zip
+    - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+    - composer config cache-files-dir $COMPOSER_CACHE_DIR
+    - composer install --prefer-dist --no-progress --no-suggest
+  artifacts:
+    untracked: true
+    paths:
+      - vendor/
+      - .composer/
+  after_script:
+    - ls -la
+    - echo "After script build-${CI_COMMIT_REF_SLUG}"
+
+#############
+job-test:
+  stage: test
+  before_script:
+    - echo "Running Test Job"
+    - ls -lha
+  script:
+    - php ./vendor/bin/phpunit tests
