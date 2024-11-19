@@ -36,7 +36,7 @@ class Filter implements FilterInterface
     }
 
     /**
-     * Sets filter parameters
+     * Sets (overwrites) filter parameters
      * @param array<string,mixed> $filter
      * @return self
      */
@@ -62,6 +62,20 @@ class Filter implements FilterInterface
     }
     
     /**
+     * Unsets filter parameter
+     * @param string $field
+     * @param string $prefix
+     * @param string $suffix
+     * @return $this
+     */
+    public function remove(string $field, string $prefix = '', string $suffix = ''): self
+    {
+        unset($this->filter[$prefix . $field . $suffix]);
+        return $this;
+    }
+    
+    /**
+     * Inverses filter
      * @param string $field
      * @param $value
      * @return $this
@@ -89,6 +103,7 @@ class Filter implements FilterInterface
     }
     
     /**
+     * Returns service
      * @return ?ServiceInterface
      */
     public function endFilter(): ?ServiceInterface
@@ -97,6 +112,7 @@ class Filter implements FilterInterface
     }
     
     /**
+     * Returns condition filter
      * @return ConditionFilterInterface|null
      */
     public function byCondition(): ?ConditionFilterInterface
