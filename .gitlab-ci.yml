@@ -23,6 +23,14 @@ job-composer:
     - echo "After script build-${CI_COMMIT_REF_SLUG}"
 
 #############
+job-phpstan:
+  stage: test
+  before_script:
+    - echo "Running PHPStan code quality analyse
+  script:
+    - php ./vendor/bin/phpstan analyze -c phpstan.neon
+
+#############
 job-test:
   stage: test
   before_script:
