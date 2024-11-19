@@ -12,7 +12,7 @@ composer.json:
   "repositories": [
     {
       "type": "git",
-      "url": "https://github.com/foreline/clean.git"
+      "url": "https://gitlab.foreline.ru/foreline/clean.git"
     }
   ]
 }

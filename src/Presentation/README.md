@@ -5,4 +5,4 @@
 ### Компоненты
 
 #### UI - элементы пользовательского интерфейса
-[Domain Layer](./UI/README.md)
+[User Interface](./UI/README.md)
