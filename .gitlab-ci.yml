@@ -18,6 +18,7 @@ job-composer:
     untracked: true
     paths:
       - vendor/
+      - composer.lock
   after_script:
     - ls -la
     - echo "After script build-${CI_COMMIT_REF_SLUG}"
@@ -26,7 +27,7 @@ job-composer:
 job-phpstan:
   stage: test
   before_script:
-    - echo "Running PHPStan code quality analyse
+    - echo "Running PHPStan code quality analysis job"
   script:
     - pwd
     - php ./vendor/bin/phpstan analyze -c phpstan.neon --no-progress --error-format gitlab > ./phpstan-report.json
@@ -34,7 +35,7 @@ job-phpstan:
   artifacts:
     untracked: true
     paths:
-      - phpstan-report.json
+      - ./phpstan-report.json
     expire_in: 1 hour
     when: always
     reports:
@@ -45,7 +46,7 @@ job-phpstan:
 job-test:
   stage: test
   before_script:
-    - echo "Running Test Job"
+    - echo "Running PHPUnit Test Job"
     - ls -lha
   script:
     - php ./vendor/bin/phpunit tests

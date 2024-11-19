@@ -1,4 +1,6 @@
-# Core Domain, Infrastructure and Presentation Layers interfaces and classes
+# PHP clean framework
+
+Core Domain, Infrastructure and Presentation Layers interfaces and classes.
 
 ## Installation
 
