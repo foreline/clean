@@ -28,12 +28,14 @@ job-phpstan:
   before_script:
     - echo "Running PHPStan code quality analyse
   script:
-    - php ./vendor/bin/phpstan analyze -c phpstan.neon --no-progress --error-format gitlab > phpstan.json
+    - php ./vendor/bin/phpstan analyze -c phpstan.neon --no-progress --error-format gitlab > ./phpstan-report.json
   artifacts:
     paths:
-      - phpstan.json
+      - phpstan-report.json
     expire_in: 1 hour
     when: always
+    reports:
+      codequality: "./phpstan-report.json"
   allow_failure: true
 
 #############
