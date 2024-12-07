@@ -5,18 +5,15 @@ namespace Domain\Repository;
 
 use Domain\Service\ServiceInterface;
 
-/**
- *
- */
-interface FieldsInterface
+interface GroupInterface
 {
     public function __construct(?ServiceInterface $service = null);
     
     /**
-     * Сбрасывает выбираемые поля
+     * Сбрасывает группируемые поля
      * @return $this
      */
     public function reset(): self;
     
-    public function endFields(): ?ServiceInterface;
+    public function endGroup(): ?ServiceInterface;
 }
