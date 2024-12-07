@@ -7,6 +7,8 @@ use Domain\Repository\Fields;
 use Domain\Repository\FieldsInterface;
 use Domain\Repository\Filter;
 use Domain\Repository\FilterInterface;
+use Domain\Repository\Group;
+use Domain\Repository\GroupInterface;
 use Domain\Repository\Limit;
 use Domain\Repository\LimitInterface;
 use Domain\Repository\Sort;
@@ -25,16 +27,18 @@ abstract class AbstractValueObjectManager
     public SortInterface $sort;
     public LimitInterface $limit;
     public FieldsInterface $fields;
+    public GroupInterface $group;
 
     /**
      *
      */
     public function __construct()
     {
-        $this->filter = new Filter();
-        $this->sort = new Sort();
-        $this->limit = new Limit();
-        $this->fields = new Fields();
+        $this->filter   = new Filter();
+        $this->sort     = new Sort();
+        $this->limit    = new Limit();
+        $this->fields   = new Fields();
+        $this->group    = new Group();
     }
 
     /**
@@ -76,9 +80,19 @@ abstract class AbstractValueObjectManager
         $this->fields = $fields;
         return $this;
     }
+    
+    /**
+     * @param GroupInterface $group
+     * @return $this
+     */
+    public function group(GroupInterface $group): self
+    {
+        $this->group = $group;
+        return $this;
+    }
 
     /**
-     * Сбрасывает параметры фильтрации, сортировки, ограничения выборки и выбираемых полей
+     * Сбрасывает параметры фильтрации, сортировки, ограничения выборки, выбираемых полей и группировки
      * @return self
      */
     public function reset(): self
@@ -87,6 +101,7 @@ abstract class AbstractValueObjectManager
         $this->sort->reset();
         $this->fields->reset();
         $this->limit->reset();
+        $this->group->reset();
         
         return $this;
     }
