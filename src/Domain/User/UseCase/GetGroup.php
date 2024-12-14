@@ -35,6 +35,22 @@ class GetGroup
     
         return ( new GroupManager() )->findById($id);
     }
+    
+    /**
+     * @param string $code
+     * @return Group|null
+     * @throws NotAuthorizedException
+     */
+    public function getByCode(string $code): ?Group
+    {
+        if ( !$group = (new GroupManager())->filterByCode($code)->find()?->current() ) {
+            return null;
+        }
+        
+        $this->checkPermissions($group->getId());
+        
+        return $group;
+    }
 
     /**
      * @throws NotAuthorizedException
