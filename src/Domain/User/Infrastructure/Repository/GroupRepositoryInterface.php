@@ -19,6 +19,7 @@ interface GroupRepositoryInterface
     public const SORT = 'c_sort';
     public const ANONYMOUS = 'anonymous';
     public const PRIVILEGED = 'privileged';
+    public const EXT_ID = 'xml_id';
     
     /**
      * @param Group $group

@@ -3,19 +3,35 @@ declare(strict_types=1);
 
 namespace Domain\User\UseCase;
 
+use Domain\Repository\FieldsInterface;
+use Domain\Repository\FilterInterface;
+use Domain\Repository\LimitInterface;
+use Domain\Repository\SortInterface;
+use Domain\Service\ServiceInterface;
 use Domain\UseCase\AbstractManager;
 use Domain\User\Aggregate\Group;
 use Domain\User\Aggregate\GroupCollection;
 use Domain\User\Infrastructure\Repository\Bitrix\GroupRepository;
+use Domain\User\Infrastructure\Repository\GroupFields;
+use Domain\User\Infrastructure\Repository\GroupFilter;
+use Domain\User\Infrastructure\Repository\GroupLimit;
 use Domain\User\Infrastructure\Repository\GroupRepositoryInterface;
+use Domain\User\Infrastructure\Repository\GroupSort;
 
 /**
  *
  */
 class GroupManager extends AbstractManager
 {
+    private ?ServiceInterface $service;
+    
     private static ?self $instance = null;
     private GroupRepositoryInterface $repository;
+    
+    public FilterInterface|GroupFilter $filter;
+    public SortInterface|GroupSort $sort;
+    public LimitInterface|GroupLimit $limit;
+    public FieldsInterface|GroupFields $fields;
     
     /**
      * @param GroupRepositoryInterface|null $repository
@@ -33,9 +49,10 @@ class GroupManager extends AbstractManager
     /**
      * @param GroupRepositoryInterface|null $repository
      */
-    public function __construct(GroupRepositoryInterface $repository = null)
+    public function __construct(GroupRepositoryInterface $repository = null, ?ServiceInterface $service = null)
     {
-        $this->repository = $repository ?? new GroupRepository();
+        $this->service = $service ?? $this;
+        $this->repository = $repository ?? new GroupRepository($this->service);
         parent::__construct();
     }
 
