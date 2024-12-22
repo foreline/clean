@@ -21,7 +21,7 @@ use Domain\User\Infrastructure\Repository\GroupSort;
 /**
  *
  */
-class GroupManager extends AbstractManager
+class GroupManager extends AbstractManager implements ServiceInterface
 {
     private ?ServiceInterface $service;
     
