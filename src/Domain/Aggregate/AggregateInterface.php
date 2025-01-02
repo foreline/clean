@@ -9,7 +9,7 @@ use Domain\Entity\ToArrayInterface;
 /**
  * Aggregate Interface
  */
-interface AggregateInterface extends EntityInterface, ToArrayInterface, ConvertableInterface
+interface AggregateInterface extends EntityInterface, ConvertableInterface
 {
 
 }
