@@ -31,8 +31,12 @@ class GetUser
      */
     public function get(int $id): ?User
     {
-        $this->checkPermissions($id);
-        return ( new UserManager() )->findById($id);
+        try {
+            $this->checkPermissions($id);
+            return ( new UserManager() )->findById($id);
+        } catch ( NotAuthorizedException $e ) {
+            return null;
+        }
     }
     
     /**
