@@ -271,20 +271,4 @@ abstract class AbstractEntity
     {
         return ($this->getModifiedBy() && $userId === $this->getModifiedBy()->getId());
     }
-
-    /**
-     * @param array $fields
-     * @return array
-     */
-    public function getArray(array $fields = []): array
-    {
-        return [
-            'id'            => $this->getId(),
-            'name'          => $this->getName(),
-            'createdBy'     => $this->getCreatedBy()?->toArray(),
-            'modifiedBy'    => $this->getModifiedBy()?->toArray(),
-            'dateCreated'   => $this->getDateCreated()?->format('Y.m.d H:i:s'),
-            'dateModified'  => $this->getDateModified()?->format('Y.m.d H:i:s'),
-        ];
-    }
 }

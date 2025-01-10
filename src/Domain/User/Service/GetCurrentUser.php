@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Domain\User\Service;
 
-use Domain\User\Aggregate\User;
+use Domain\User\Aggregate\UserInterface;
 use Domain\User\UseCase\UserManager;
 use Exception;
 
@@ -12,32 +12,33 @@ use Exception;
  */
 class GetCurrentUser
 {
-    private static ?User $currentUser = null;
+    private static ?UserInterface $currentUser = null;
     
     /**
-     * @return User|null
+     * @return UserInterface|null
      * @throws Exception
      */
-    public function __invoke(): ?User
+    public function __invoke(): ?UserInterface
     {
         return $this->get();
     }
-
+    
     /**
-     * @return User|null
+     * Возвращает текущего пользователя
+     * @return UserInterface|null
      * @throws Exception
      */
-    public function get(): ?User
+    public function get(): ?UserInterface
     {
         return self::$currentUser ?? ( new UserManager() )->getCurrent();
     }
-
+    
     /**
-     * May be used as authorize method
-     * @param User $user
+     * Авторизация и деавторизация пользователя
+     * @param ?UserInterface $user
      * @return $this
      */
-    public function set(User $user): self
+    public function set(?UserInterface $user): self
     {
         self::$currentUser = $user;
         return $this;
