@@ -23,7 +23,6 @@ class Fields implements FieldsInterface
         $this->service = $service;
     }
     
-    
     /**
      * Задает поля для выборки
      * @param string[] $fields
@@ -31,7 +30,7 @@ class Fields implements FieldsInterface
      */
     public function set(array $fields = []): self
     {
-        $this->fields = $fields;
+        $this->fields = array_unique($fields);
         return $this;
     }
 
