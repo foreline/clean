@@ -30,7 +30,10 @@ class GetCurrentUser
      */
     public function get(): ?UserInterface
     {
-        return self::$currentUser ?? ( new UserManager() )->getCurrent();
+        if ( null === self::$currentUser ) {
+            self::$currentUser = ( new UserManager() )->getCurrent();
+        }
+        return self::$currentUser;
     }
     
     /**
