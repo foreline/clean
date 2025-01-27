@@ -36,6 +36,10 @@ class UserDto
         if ( empty($fields) || array_key_exists('lastName', $fields) ) {
             $dto['lastName'] = $user->getLastName();
         }
+        
+        if ( empty($fields) || array_key_exists('secondName', $fields) ) {
+            $dto['secondName'] = $user->getSecondName();
+        }
     
         if ( empty($fields) || array_key_exists('email', $fields) ) {
             $dto['email'] = $user->getEmail();
@@ -70,6 +74,10 @@ class UserDto
     
         if ( array_key_exists('lastName', $data) ) {
             $user->setLastName((string)$data['lastName']);
+        }
+        
+        if ( array_key_exists('secondName', $data) ) {
+            $user->setSecondName((string)$data['secondName']);
         }
     
         if ( array_key_exists('email', $data) ) {

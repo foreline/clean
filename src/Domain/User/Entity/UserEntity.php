@@ -10,18 +10,44 @@ use Webmozart\Assert\Assert;
  */
 class UserEntity
 {
+    /** @var int|null ID */
     private ?int $id = null;
+    
+    /** @var string Имя */
     private string $firstName = '';
+    
+    /** @var string Фамилия */
     private string $lastName = '';
+    
+    /** @var string Отчество */
+    private string $secondName = '';
+    
+    /** @var bool Активность */
     private bool $active = true;
     private bool $admin = false;
+    
+    /** @var string Е-мейл */
     private string $email = '';
+    
+    /** @var string Логин */
     private string $login = '';
+    
+    /** @var string Телефон */
     private string $phone = '';
+    
+    /** @var string Отдел */
     private string $department = '';
+    
+    /** @var string Должность */
     private string $position = '';
+    
+    /** @var string Пароль */
     private string $password = '';
+    
+    /** @var string Подтверждение пароля */
     private string $confirmPassword = '';
+    
+    /** @var array Пользовательские поля */
     private array $userFields = [];
     
     /** @var string Код подтверждения емейла */
@@ -104,6 +130,22 @@ class UserEntity
     {
         $this->lastName = $lastName;
         return $this;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getSecondName(): string
+    {
+        return $this->secondName;
+    }
+    
+    /**
+     * @param string $secondName
+     */
+    public function setSecondName(string $secondName): void
+    {
+        $this->secondName = $secondName;
     }
     
     /**
