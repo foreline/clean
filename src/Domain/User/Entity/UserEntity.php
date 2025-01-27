@@ -24,6 +24,8 @@ class UserEntity
     
     /** @var bool Активность */
     private bool $active = true;
+    
+    /** @var bool Администратор */
     private bool $admin = false;
     
     /** @var string Е-мейл */
