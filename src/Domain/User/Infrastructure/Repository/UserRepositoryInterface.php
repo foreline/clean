@@ -19,6 +19,7 @@ interface UserRepositoryInterface
     public const CONFIRM_PASSWORD = 'confirm_password';
     public const NAME = 'name';
     public const LAST_NAME = 'last_name';
+    public const SECOND_NAME = 'second_name';
     public const ACTIVE = 'active';
     public const PHONE = 'personal_phone';
     public const DEPARTMENT = 'work_department';

@@ -46,6 +46,15 @@ class UserConditionFilter extends ConditionFilter implements ConditionFilterInte
         return $this;
     }
     
+    /**
+     * @param string $secondName
+     * @return $this
+     */
+    public function searchBySecondName(string $secondName): self
+    {
+        $this->condition[UserRepositoryInterface::SECOND_NAME] = '%' . $secondName . '%';
+        return $this;
+    }
     
     /**
      * @param string $email
