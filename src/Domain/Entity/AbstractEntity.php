@@ -31,8 +31,25 @@ abstract class AbstractEntity
     /** @var string Название */
     private string $name = '';
 
+    /**
+     * @var string
+     * @deprecated
+     */
     private string $detailPageUrl = '';
+    
+    /** @var string Ссылка на элемент */
+    private string $slug = '';
+    
+    /**
+     * @var string
+     * @deprecated
+     */
     private string $listUrl = '';
+    
+    /**
+     * @var string
+     * @deprecated
+     */
     private string $addUrl = '';
     
     /**
@@ -183,7 +200,7 @@ abstract class AbstractEntity
      */
     public function getSlug(): string
     {
-        return $this->getDetailPageUrl();
+        return $this->slug ?: $this->getDetailPageUrl();
     }
 
     /**
