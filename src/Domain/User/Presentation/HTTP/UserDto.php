@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Domain\User\Presentation\HTTP;
 
+use Domain\File\Presentation\HTTP\FileDto;
 use Domain\User\Aggregate\User;
 
 /**
@@ -40,13 +41,33 @@ class UserDto
         if ( empty($fields) || array_key_exists('secondName', $fields) ) {
             $dto['secondName'] = $user->getSecondName();
         }
+        
+        if ( empty($fields) || array_key_exists('secondName', $fields) ) {
+            $dto['secondName'] = $user->getSecondName();
+        }
     
         if ( empty($fields) || array_key_exists('email', $fields) ) {
             $dto['email'] = $user->getEmail();
         }
+        
+        if ( empty($fields) || array_key_exists('phone', $fields) ) {
+            $dto['phone'] = $user->getPhone();
+        }
     
         if ( empty($fields) || array_key_exists('login', $fields) ) {
             $dto['login'] = $user->getLogin();
+        }
+        
+        if ( empty($fields) || array_key_exists('avatar', $fields) ) {
+            $dto['avatar'] = FileDto::toArray($user->getAvatar());
+        }
+        
+        if ( empty($fields) || array_key_exists('position', $fields) ) {
+            $dto['position'] = $user->getPosition();
+        }
+    
+        if ( empty($fields) || array_key_exists('department', $fields) ) {
+            $dto['department'] = $user->getDepartment();
         }
         
         return $dto;
@@ -83,6 +104,8 @@ class UserDto
         if ( array_key_exists('email', $data) ) {
             $user->setEmail((string)$data['email']);
         }
+        
+        // @todo
         
         return $user;
     }
