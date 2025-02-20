@@ -1,4 +1,6 @@
-/.idea
-/vendor
-/composer.lock
+.idea
+vendor
+composer.lock
 .phpunit.result.cache
+.uml
+.proj2file

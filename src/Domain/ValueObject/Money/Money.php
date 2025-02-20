@@ -25,7 +25,7 @@ class Money implements MultipleValueObjectInterface
      * @param string $currencyCode
      */
     //public function __construct(float $amount, Currency $currency)
-    public function __construct(float $amount, string $currencyCode)
+    public function __construct(float $amount, string $currencyCode = '')
     {
         $this->amount = (int) round($amount * self::MULTIPLIER);
         $this->currency = (new Currency($currencyCode));

@@ -23,7 +23,7 @@ class Currency implements StringValueObjectInterface
      * @param string $currencyCode
      * @throws InvalidArgumentException
      */
-    public function __construct(string $currencyCode)
+    public function __construct(string $currencyCode = self::DEFAULT_CURRENCY_CODE)
     {
         $currencyCode = mb_strtoupper(trim($currencyCode));
         
