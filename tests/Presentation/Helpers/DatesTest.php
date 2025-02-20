@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Presentation\Helpers;
+namespace Tests\Presentation\Helpers;
 
 use DateInterval;
 use DateTimeImmutable;

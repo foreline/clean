@@ -26,5 +26,10 @@
       "Infrastructure\\": "src/Infrastructure",
       "Presentation\\": "src/Presentation"
     }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests"
+    }
   }
 }

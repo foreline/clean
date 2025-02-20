@@ -18,7 +18,7 @@ class Utils
         preg_match_all('!([A-Z][A-Z0-9]*(?=$|[A-Z][a-z0-9])|[A-Za-z][a-z0-9]+)!', $input, $matches);
         $ret = $matches[0];
         foreach ( $ret as &$match ) {
-            $match = $match == strtoupper($match) ? strtolower($match) : lcfirst($match);
+            $match = $match == mb_strtoupper($match) ? mb_strtolower($match) : lcfirst($match);
         }
         $result = implode('_', $ret);
         
@@ -36,12 +36,37 @@ class Utils
      */
     public static function snakeToCamel(string $string, bool $capitalizeFirstCharacter = false): string
     {
-        $str = str_replace('_', '', ucwords($string, '_'));
+        $string = mb_strtolower($string);
+        
+        $result = str_replace('_', '', ucwords($string, '_'));
         
         if ( !$capitalizeFirstCharacter ) {
-            $str = lcfirst($str);
+            $result = lcfirst($result);
         }
         
-        return $str;
+        return $result;
+    }
+    
+    /**
+     * @param string $string
+     * @return string
+     */
+    public static function lcfirst(string $string): string
+    {
+        if ( empty($string) ) {
+            return '';
+        }
+        
+        $second = mb_substr($string, 1, 1);
+        
+        if ( mb_strtoupper($second) === $second ) {
+            return $string;
+        }
+        
+        if ( function_exists('mb_lcfirst') ) {
+            return mb_lcfirst($string);
+        }
+        
+        return lcfirst($string);
     }
 }
