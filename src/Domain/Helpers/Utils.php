@@ -36,7 +36,7 @@ class Utils
      */
     public static function snakeToCamel(string $string, bool $capitalizeFirstCharacter = false): string
     {
-        $string = mb_strtolower($string);
+        //$string = mb_strtolower($string);
         
         $result = str_replace('_', '', ucwords($string, '_'));
         

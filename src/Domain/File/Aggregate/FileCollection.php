@@ -72,4 +72,23 @@ class FileCollection implements IteratorInterface
         return $this->valid() ? $this->items[$this->position] : null;
     }
     
+    /**
+     * @param bool $withUrl
+     * @param string $delimiter
+     * @return string
+     */
+    public function toString(bool $withUrl = true, string $delimiter = ', '): string
+    {
+        if ( !$this->valid() ) {
+            return '';
+        }
+        
+        return implode(
+            $delimiter,
+            array_map(
+                fn (AggregateInterface $item): string => $withUrl ? $item->getDownloadLink() : $item->getName()
+                ,$this->items
+            )
+        );
+    }
 }

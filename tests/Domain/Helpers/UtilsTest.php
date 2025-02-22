@@ -70,8 +70,8 @@ class UtilsTest extends TestCase
             'snake_case_long'   => 'snakeCaseLong',
             'SNAKE_CASE'        => 'snakeCase',
             'SNAKE_CASE_LONG'   => 'snakeCaseLong',
-            //'змеиная_нотация'   => 'змеинаяНотация',
-            //'ЗМЕИНАЯ_НОТАЦИЯ'   => 'змеинаяНотация',
+            //'змеиная_нотация'   => 'змеинаяНотация', // @fixme
+            //'ЗМЕИНАЯ_НОТАЦИЯ'   => 'змеинаяНотация', // @fixme
         ];
     
         // Act
