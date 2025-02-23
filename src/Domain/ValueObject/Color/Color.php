@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Domain\ValueObject\Color;
 
+use Domain\Entity\FromArrayInterface;
+use Domain\Entity\ToArrayInterface;
 use Domain\ValueObject\StringValueObjectInterface;
 use Domain\ValueObject\ValueObjectInterface;
 use Exception;
@@ -11,7 +13,7 @@ use Webmozart\Assert\Assert;
 /**
  * Color ValueObject
  */
-class Color implements ValueObjectInterface, StringValueObjectInterface
+class Color implements ValueObjectInterface, StringValueObjectInterface, ToArrayInterface, FromArrayInterface
 {
     private int $red;
     private int $green;
@@ -43,10 +45,10 @@ class Color implements ValueObjectInterface, StringValueObjectInterface
             $alpha = 100;
         }
         
-        $this->red = (int)$red;
-        $this->green = (int)$green;
-        $this->blue = (int)$blue;
-        $this->alpha = (int)$alpha;
+        $this->red      = (int)$red;
+        $this->green    = (int)$green;
+        $this->blue     = (int)$blue;
+        $this->alpha    = (int)$alpha;
     }
     
     /**
@@ -154,4 +156,51 @@ class Color implements ValueObjectInterface, StringValueObjectInterface
         // @fixme
         return [new self('')];
     }
+    
+    /**
+     * Returns array presentation of Color
+     *
+     * @param array $fields
+     * @return ?array
+     */
+    public function toArray(array $fields = []): ?array
+    {
+        return [
+            'red'   => $this->getRed(),
+            'green' => $this->getGreen(),
+            'blue'  => $this->getBlue(),
+            'alfa'  => $this->getAlpha(),
+        ];
+    }
+    
+    /**
+     * Restores Color from array presentation
+     *
+     * @param array $data
+     * @return Color
+     * @throws Exception
+     */
+    public function fromArray(array $data = []): self
+    {
+        // Проверяем наличие необходимых ключей в массиве
+        Assert::keyExists($data, 'red', 'Ключ "red" должен присутствовать в массиве');
+        Assert::keyExists($data, 'green', 'Ключ "green" должен присутствовать в массиве');
+        Assert::keyExists($data, 'blue', 'Ключ "blue" должен присутствовать в массиве');
+    
+        // Получаем значения из массива
+        $red    = (int)$data['red'];
+        $green  = (int)$data['green'];
+        $blue   = (int)$data['blue'];
+        $alpha  = isset($data['alfa']) ? (int)$data['alfa'] : 100;
+    
+        // Return Color object
+        return new self(sprintf(
+            '#%02x%02x%02x%02x',
+            $red,
+            $green,
+            $blue,
+            $alpha
+        ));
+    }
+    
 }
