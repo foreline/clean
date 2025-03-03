@@ -44,6 +44,15 @@ class File extends FileEntity implements AggregateInterface
     }
     
     /**
+     * Returns md5 hash of file content
+     * @return string
+     */
+    public function getHash(): string
+    {
+        return md5($this->getContent());
+    }
+    
+    /**
      * @return string
      */
     public function getDetailPageUrl(): string
