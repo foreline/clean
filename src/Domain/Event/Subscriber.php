@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Domain\Event;
 
 /**
- * Подписка на события
+ * Event subscription
  */
 class Subscriber implements SubscriberInterface
 {

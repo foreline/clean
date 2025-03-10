@@ -6,7 +6,7 @@ namespace Domain\Event;
 use DateTimeImmutable;
 
 /**
- * Хранимое событие
+ * Stored event
  */
 class StoredEvent implements EventInterface
 {

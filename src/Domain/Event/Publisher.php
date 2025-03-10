@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Domain\Event;
 
 /**
- * Подписка и публикация событий
+ * Event subscription and publication
  */
 class Publisher
 {
@@ -33,7 +33,7 @@ class Publisher
     }
 
     /**
-     * Подписка на событие
+     * Event subscription
      * @param Subscriber $subscriber
      */
     public function subscribe(SubscriberInterface $subscriber): void

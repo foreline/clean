@@ -10,7 +10,7 @@ use Domain\Event\Event;
 use Iterator;
 
 /**
- * Events Collection
+ * Events collection
  */
 class EventCollection implements IteratorInterface
 {
