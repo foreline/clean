@@ -7,6 +7,6 @@ namespace Domain\Aggregate;
  */
 interface SortableInterface
 {
-    public function setSort(): self;
+    public function setSort(int $sort): self;
     public function getSort(): int;
 }
