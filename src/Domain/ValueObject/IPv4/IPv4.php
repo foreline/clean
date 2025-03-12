@@ -4,27 +4,31 @@ declare(strict_types=1);
 namespace Domain\ValueObject\IPv4;
 
 use Domain\ValueObject\IntValueObjectInterface;
-use Domain\ValueObject\StringValueObjectInterface;
+use Domain\ValueObject\ValueObjectInterface;
 use InvalidArgumentException;
 
 /**
  *
  */
-class IPv4 implements IntValueObjectInterface, StringValueObjectInterface
+class IPv4 implements ValueObjectInterface, IntValueObjectInterface
 {
     private int $ip;
     
     /**
-     * @param string $address
+     * @param string|int $address
      * @throws InvalidArgumentException
      */
-    public function __construct(string $address)
+    public function __construct(string|int $address)
     {
-        if ( !filter_var($address, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) ) {
-            throw new InvalidArgumentException('Invalid IPv4 address: "' . $address . '"');
+        if ( is_string($address) ) {
+            if ( !filter_var($address, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) ) {
+                throw new InvalidArgumentException('Invalid IPv4 address: "' . $address . '"');
+            }
+            
+            $this->ip = ip2long($address);
+        } else {
+            $this->ip = $address;
         }
-        
-        $this->ip = ip2long($address);
     }
     
     /**
@@ -57,5 +61,29 @@ class IPv4 implements IntValueObjectInterface, StringValueObjectInterface
     public function __toString(): string
     {
         return long2ip($this->ip);
+    }
+    
+    /**
+     * @return int
+     */
+    public function __toInteger(): int
+    {
+        return $this->ip;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return long2ip($this->ip);
+    }
+    
+    /**
+     * @return array|ValueObjectInterface[]
+     */
+    public static function getAll(): array
+    {
+        return [];
     }
 }
