@@ -103,6 +103,11 @@ class IPv4Mask implements ValueObjectInterface, StringValueObjectInterface
         return $this->cidrNotation;
     }
     
+    public function getCIDR(): int
+    {
+        return (int) str_replace('/', '', $this->getCIDRNotation());
+    }
+    
     public function getDottedDecimal(): string
     {
         return $this->dottedDecimal;
