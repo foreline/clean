@@ -5,6 +5,7 @@ namespace Domain\ValueObject\Money;
 
 use Domain\ValueObject\MultipleValueObjectInterface;
 use Domain\ValueObject\ValueObjectInterface;
+use InvalidArgumentException;
 
 /**
  *
@@ -24,11 +25,10 @@ class Money implements MultipleValueObjectInterface
      * @param float $amount
      * @param string $currencyCode
      */
-    //public function __construct(float $amount, Currency $currency)
     public function __construct(float $amount, string $currencyCode = '')
     {
         $this->amount = (int) round($amount * self::MULTIPLIER);
-        $this->currency = (new Currency($currencyCode));
+        $this->currency = new Currency($currencyCode);
     }
     
     /**
@@ -45,6 +45,28 @@ class Money implements MultipleValueObjectInterface
     public function getCurrency(): Currency
     {
         return $this->currency;
+    }
+    
+    /**
+     * @param Money $money
+     * @return Money
+     */
+    public function plus(Money $money): Money
+    {
+        if ( $money->getCurrency()->getCode() !== $this->getCurrency()->getCode() ) {
+            throw new InvalidArgumentException('Валюта не соответствует');
+        }
+        
+        $sumAmount = $this->getAmount() + $money->getAmount();
+        return new self($sumAmount, $this->getCurrency()->getCode());
+    }
+    
+    /**
+     * @return Money
+     */
+    public function invert(): Money
+    {
+        return new self(-1 * $this->getAmount(), $this->getCurrency()->getCode());
     }
     
     /**

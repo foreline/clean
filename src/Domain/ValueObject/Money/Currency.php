@@ -3,6 +3,11 @@ declare(strict_types=1);
 
 namespace Domain\ValueObject\Money;
 
+use Domain\ValueObject\Money\Currency\BYN;
+use Domain\ValueObject\Money\Currency\CNY;
+use Domain\ValueObject\Money\Currency\EUR;
+use Domain\ValueObject\Money\Currency\RUB;
+use Domain\ValueObject\Money\Currency\USD;
 use Domain\ValueObject\StringValueObjectInterface;
 use InvalidArgumentException;
 
@@ -11,7 +16,7 @@ use InvalidArgumentException;
  */
 class Currency implements StringValueObjectInterface
 {
-    private const DEFAULT_CURRENCY_CODE = 'RUB';
+    private const DEFAULT_CURRENCY_CODE = RUB::CODE;
     
     private string $name;
     private string $code;
@@ -105,11 +110,11 @@ class Currency implements StringValueObjectInterface
     public static function getAll(): array
     {
         return [
-            new self('RUB'),
-            new self('USD'),
-            new self('BYN'),
-            new self('EUR'),
-            new self('CNY'),
+            new self(RUB::CODE),
+            new self(USD::CODE),
+            new self(BYN::CODE),
+            new self(EUR::CODE),
+            new self(CNY::CODE),
         ];
     }
 }
