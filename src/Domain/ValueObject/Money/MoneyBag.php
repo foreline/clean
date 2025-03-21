@@ -16,12 +16,18 @@ class MoneyBag implements ValueObjectInterface
     /**
      * Adds a Money object to the MoneyBag.
      *
-     * @param Money $money The Money object to add.
+     * @param Money|MoneyBag $money The Money object to add.
      * @return $this Returns the current instance for method chaining.
      */
-    public function add(Money $money): self
+    public function add(Money|MoneyBag $money): self
     {
-        $this->amounts[] = $money;
+        if ( $money instanceof MoneyBag ) {
+            foreach ( $money->amounts as $amount ) {
+                $this->amounts[] = $amount;
+            }
+        } else {
+            $this->amounts[] = $money;
+        }
         return $this;
     }
     
