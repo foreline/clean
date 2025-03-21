@@ -23,6 +23,7 @@ class Currency implements StringValueObjectInterface
     private int $numericCode;
     private int $scale;
     private string $shortHand;
+    private string $symbol;
     
     /**
      * @param string $currencyCode
@@ -54,6 +55,7 @@ class Currency implements StringValueObjectInterface
         $this->numericCode = $currency->getNumericCode();
         $this->scale = $currency->getScale();
         $this->shortHand = $currency->getShorthand();
+        $this->symbol = $currency->getSymbol();
     }
     
     /**
@@ -94,6 +96,14 @@ class Currency implements StringValueObjectInterface
     public function getShorthand(): string
     {
         return $this->shortHand;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getSymbol(): string
+    {
+        return $this->symbol;
     }
     
     /**
