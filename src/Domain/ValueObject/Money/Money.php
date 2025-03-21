@@ -82,6 +82,9 @@ class Money implements MultipleValueObjectInterface
      */
     public function __toString(): string
     {
-        return number_format($this->getAmount(), 0, '.', '&nbsp;') . '&nbsp;' . $this->getCurrency()->getSymbol();
+        return
+            number_format($this->getAmount(), 0, '.', '&nbsp;') .
+            '&nbsp;' .
+            ( $this->getCurrency()->getSymbol() ?: $this->getCurrency()->getShorthand() ?: $this->getCurrency()->getCode() );
     }
 }

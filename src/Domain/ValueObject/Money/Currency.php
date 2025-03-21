@@ -9,12 +9,13 @@ use Domain\ValueObject\Money\Currency\EUR;
 use Domain\ValueObject\Money\Currency\RUB;
 use Domain\ValueObject\Money\Currency\USD;
 use Domain\ValueObject\StringValueObjectInterface;
+use Domain\ValueObject\ValueObjectInterface;
 use InvalidArgumentException;
 
 /**
  *
  */
-class Currency implements StringValueObjectInterface
+class Currency implements ValueObjectInterface, StringValueObjectInterface
 {
     private const DEFAULT_CURRENCY_CODE = RUB::CODE;
     
@@ -104,6 +105,15 @@ class Currency implements StringValueObjectInterface
     public function getSymbol(): string
     {
         return $this->symbol;
+    }
+    
+    /**
+     * @param string|Currency $currencyCode
+     * @return bool
+     */
+    public function is(string|Currency $currencyCode): bool
+    {
+        return (string)$currencyCode === $this->getCode();
     }
     
     /**

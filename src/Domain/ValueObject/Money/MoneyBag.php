@@ -58,9 +58,11 @@ class MoneyBag implements ValueObjectInterface
         }
         
         $money = new Money(0, $currency->getCode());
+        
         foreach ( $this->amounts as $amount ) {
             $money = $money->plus($amount);
         }
+        
         return $money;
     }
     

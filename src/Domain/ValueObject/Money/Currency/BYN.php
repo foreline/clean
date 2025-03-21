@@ -12,9 +12,9 @@ class BYN implements CurrencyInterface
 {
     public const NAME = 'Белорусский рубль';
     public const CODE = 'BYN';
-    public const NUMERIC_CODE = 2;
-    public const SCALE = 933;
-    public const SYMBOL = '';
+    public const NUMERIC_CODE = 933;
+    public const SCALE = 2;
+    public const SYMBOL = 'Br';
     public const SHORTHAND = 'руб.';
     
     public function getName(): string
