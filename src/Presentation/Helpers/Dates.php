@@ -73,7 +73,6 @@ class Dates {
      * @param bool $recursion
      * @return ?int $timestamp
      */
-    
     public static function parse(string $date = '', bool $recursion = false): ?int
     {
         if ( 8 > strlen($date) ) {
@@ -147,7 +146,6 @@ class Dates {
      *
      * @return int $fullDays Количество полных дней между датами
      */
-    
     public static function dateDiff(string $dateFrom, string $dateTo): int
     {
         $timeStampFrom  = self::parse($dateFrom);
@@ -166,7 +164,6 @@ class Dates {
      *
      * @return int $daysDiff Количество переходов через полночь.
      */
-    
     public static function daysDiff(string $dateFrom = '', string $dateTo = ''): int
     {
         $tsDateFrom = self::parse($dateFrom);
@@ -191,7 +188,6 @@ class Dates {
      *
      * @return int $minDiff Разница в минутах между датами
      */
-    
     public static function minDiff(string $dateFrom, string $dateTo): int
     {
         $timeStampFrom  = self::parse($dateFrom);
@@ -210,7 +206,6 @@ class Dates {
      *
      * @return int $secDiff Разница в секундах между датами
      */
-    
     public static function secDiff(string $dateFrom, string $dateTo): int
     {
         $timeStampFrom  = self::parse($dateFrom);
@@ -306,10 +301,9 @@ class Dates {
      *
      * @return string $formattedDate
      */
-    
-    public static function dateTimeFormat(string $date, bool $today = true, bool $weekDays = false): string
+    public static function dateTimeFormat(?string $date = null, bool $today = true, bool $weekDays = false): string
     {
-        if ( empty($date) ) {
+        if ( !$date || empty($date) ) {
             return '';
         }
         
@@ -321,8 +315,6 @@ class Dates {
         $hour   = date('H', $timeStamp);
         $min    = date('i', $timeStamp);
         //$sec    = date('s', $timeStamp);
-        
-        //$dateDiff = self::dateDiff($date, date('d.m.Y H:i:s'));
         
         // Определяем сегодняшнее ли это дата/время
         $isToday = false;
@@ -356,7 +348,12 @@ class Dates {
         } else {
             $formattedDate = $day . '&nbsp;' . self::$months[$month]
                 . ( date('Y') !== $year ? ' ' . $year : '' )
-                . ( 0 < strlen($hour) && 0 < strlen($min) ? ', '  . $hour . ':' . $min : '');
+                . (
+                    //( 0 < strlen($hour) && 0 < strlen($min) )
+                ( "00" !== $hour && "00" !== $min )
+                    ? ', '  . $hour . ':' . $min
+                    : ''
+                );
         }
         
         if ( true === $weekDays ) {
@@ -372,7 +369,6 @@ class Dates {
      * @param int $minutes минуты
      * @return string $timeFormat
      */
-    
     public static function timeFromMinutes(int $minutes, $showDays = false): string
     {
         if ( 0 >= $minutes ) {
@@ -409,7 +405,6 @@ class Dates {
      * @param int $seconds минуты
      * @return string $timeFormat
      */
-    
     public static function timeFromSeconds(int $seconds, $showHours = false): string
     {
         if ( 0 >= $seconds ) {
@@ -463,12 +458,12 @@ class Dates {
         if ( preg_match('/^\d+$/', $input) ) {
             return $currentTime->add(new DateInterval("PT{$input}S"));
         }
-    
+        
         if ( preg_match('/^(?:\d{2}:\d{2}|(\d{2}:\d{2}:\d{2}))$/', $input) ) {
             // Input is time in H:i(:s) format
             $result = explode(':', $input);
             $targetTime = $currentTime->setTime((int)$result[0], (int)$result[1], (int) ($result[2] ?? 0));
-    
+            
             return ($currentTime > $targetTime)
                 ? $targetTime->modify('+1 day')
                 : $targetTime;
