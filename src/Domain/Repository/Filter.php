@@ -14,6 +14,7 @@ class Filter implements FilterInterface
     
     public const EXPRESSION_INT_NOT = '!';
     public const EXPRESSION_STRING_LIKE = '%';
+    public const EXPRESSION_STRING_NOT = '!';
     
     /** @var array  */
     private array $filter = [];
@@ -34,7 +35,7 @@ class Filter implements FilterInterface
     {
         return $this->filter;
     }
-
+    
     /**
      * Sets (overwrites) filter parameters
      * @param array<string,mixed> $filter
@@ -45,7 +46,7 @@ class Filter implements FilterInterface
         $this->filter = $filter;
         return $this;
     }
-
+    
     /**
      * Adds filter parameter
      * @param string $field
@@ -84,6 +85,8 @@ class Filter implements FilterInterface
     {
         if ( 'integer' === gettype($value) ) {
             $prefix = self::EXPRESSION_INT_NOT;
+        } elseif ( 'string' === gettype($value) ) {
+            $prefix = self::EXPRESSION_STRING_NOT;
         } else {
             $prefix = ''; // @fixme implement all types
         }
@@ -91,7 +94,7 @@ class Filter implements FilterInterface
         $this->add($field, $value, $prefix);
         return $this;
     }
-
+    
     /**
      * Resets filter parameters
      * @return self
