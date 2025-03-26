@@ -135,4 +135,20 @@ trait IteratorTrait
     {
         sort($this->items);
     }
+    
+    /**
+     * @param $sortFunction
+     */
+    public function sort($sortFunction): void
+    {
+        if ( !is_callable($sortFunction) ) {
+            return;
+        }
+        
+        if ( !$this->valid() ) {
+            return;
+        }
+        
+        usort($this->items, $sortFunction);
+    }
 }
