@@ -10,7 +10,7 @@ use ReturnTypeWillChange;
 /**
  * Flexible version of \Iterator Interface
  */
-interface IteratorInterface extends Iterator, ToArrayInterface
+interface CollectionInterface extends Iterator
 {
     /**
      * Return the current element
@@ -70,10 +70,10 @@ interface IteratorInterface extends Iterator, ToArrayInterface
     
     /**
      * Add elements to collection
-     * @param IteratorInterface $items
+     * @param CollectionInterface $items
      * @return $this
      */
-    public function addItems(IteratorInterface $items): self;
+    public function addItems(CollectionInterface $items): self;
     
     /**
      * @param ?Iterator $items

@@ -6,7 +6,7 @@ namespace Domain\ValueObject;
 /**
  *
  */
-trait IteratorTrait
+trait CollectionTrait
 {
     /** @var int  */
     private int $position;
@@ -24,10 +24,10 @@ trait IteratorTrait
     }
     
     /**
-     * @return IteratorInterface
+     * @return CollectionInterface
      */
     #[ReturnTypeWillChange]
-    public function next(): IteratorInterface
+    public function next(): CollectionInterface
     {
         ++ $this->position;
         return $this;
@@ -50,10 +50,10 @@ trait IteratorTrait
     }
     
     /**
-     * @return IteratorInterface
+     * @return CollectionInterface
      */
     #[ReturnTypeWillChange]
-    public function rewind(): IteratorInterface
+    public function rewind(): CollectionInterface
     {
         $this->position = 0;
         return $this;
