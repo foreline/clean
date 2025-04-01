@@ -9,14 +9,14 @@ use Domain\Aggregate\IteratorTrait;
 use Iterator;
 
 /**
- * User Collection
+ * User collection
  */
 class UserCollection implements UsersInterface, IteratorInterface
 {
     use IteratorTrait;
     
-    /** @var ?User[]  */
-    private ?array $items;
+    /** @var User[]  */
+    private array $items;
     
     /**
      *
@@ -24,7 +24,7 @@ class UserCollection implements UsersInterface, IteratorInterface
     public function __construct()
     {
         $this->position = 0;
-        $this->items = null;
+        $this->items = [];
     }
     
     /**
@@ -41,7 +41,7 @@ class UserCollection implements UsersInterface, IteratorInterface
      */
     public function setItems(null|Iterator|UsersInterface $users): self
     {
-        $this->items = null;
+        $this->items = [];
         
         foreach ( $users as $user ) {
             $this->addItem($user);
@@ -56,10 +56,10 @@ class UserCollection implements UsersInterface, IteratorInterface
      */
     public function addItem(UserInterface|AggregateInterface $user): self
     {
-        if ( null === $this->items ) {
-            $this->items = [];
+        if ( !$this->contains($user) ) {
+            $this->items[] = $user;
         }
-        $this->items[] = $user;
+        
         return $this;
     }
 
@@ -86,7 +86,7 @@ class UserCollection implements UsersInterface, IteratorInterface
                 static function($user) {
                     return $user->getEmail();
                 },
-                (array)$this->items
+                $this->items
             )
             : null;
     }
@@ -118,7 +118,21 @@ class UserCollection implements UsersInterface, IteratorInterface
             static function($user) use ($fields) {
                 return $user->toArray($fields);
             },
-            (array)$this->items
+            $this->items
         ) : null;
+    }
+    
+    /**
+     * @param UserInterface $user
+     * @return bool
+     */
+    public function contains(UserInterface $user): bool
+    {
+        foreach ( $this->getCollection() as $collectionItem ) {
+            if ( $collectionItem->getId() === $user->getId() ) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -8,7 +8,6 @@ namespace Domain\User\Aggregate;
  */
 interface UserInterface
 {
-
     /**
      * @return int|null
      */
