@@ -15,8 +15,8 @@ class FileCollection implements IteratorInterface
 {
     use IteratorTrait;
     
-    /** @var File[]  */
-    private array $items;
+    /** @var ?File[]  */
+    private ?array $items;
     
     /**
      *

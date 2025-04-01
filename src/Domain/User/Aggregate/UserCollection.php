@@ -16,7 +16,7 @@ class UserCollection implements UsersInterface, IteratorInterface
     use IteratorTrait;
     
     /** @var User[]  */
-    private array $items;
+    private ?array $items;
     
     /**
      *

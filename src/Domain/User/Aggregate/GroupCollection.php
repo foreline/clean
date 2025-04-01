@@ -15,8 +15,8 @@ class GroupCollection implements IteratorInterface
 {
     use IteratorTrait;
     
-    /** @var Group[]  */
-    private array $items;
+    /** @var ?Group[]  */
+    private ?array $items;
     
     /**
      *
@@ -36,11 +36,11 @@ class GroupCollection implements IteratorInterface
     }
 
     /**
-     * @return ?Group[]
+     * @return Group[]
      */
-    public function getCollection(): ?array
+    public function getCollection(): array
     {
-        return $this->valid() ? $this->items : null;
+        return $this->valid() ? $this->items : [];
     }
 
     /**
