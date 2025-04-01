@@ -9,7 +9,7 @@ use Domain\File\Entity\FileEntity;
 /**
  * File Aggregate
  */
-class File extends FileEntity implements AggregateInterface
+class File extends FileEntity implements AggregateInterface, FileInterface
 {
     /** @var string  */
     private string $slug = '';
@@ -17,7 +17,7 @@ class File extends FileEntity implements AggregateInterface
     /** @var string  */
     private string $addSlug = '';
 
-    /** @var string Внешний ID */
+    /** @var string External ID */
     private string $extId = '';
     
     /**
@@ -117,6 +117,7 @@ class File extends FileEntity implements AggregateInterface
     /**
      * @param array $fields
      * @return ?array
+     * @deprecated
      */
     public function toArray(array $fields = []): ?array
     {

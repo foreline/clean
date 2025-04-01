@@ -15,8 +15,8 @@ class FileCollection implements IteratorInterface
 {
     use IteratorTrait;
     
-    /** @var ?File[]  */
-    private ?array $items;
+    /** @var File[]  */
+    private array $items;
     
     /**
      *
@@ -24,7 +24,7 @@ class FileCollection implements IteratorInterface
     public function __construct()
     {
         $this->position = 0;
-        $this->items = null;
+        $this->items = [];
     }
     
     /**
@@ -41,7 +41,7 @@ class FileCollection implements IteratorInterface
      */
     public function setItems(?Iterator $items): FileCollection
     {
-        $this->items = null;
+        $this->items = [];
         
         foreach ( $items as $file ) {
             $this->addItem($file);
@@ -55,10 +55,10 @@ class FileCollection implements IteratorInterface
      */
     public function addItem(File|AggregateInterface $file): self
     {
-        if ( null === $this->items ) {
-            $this->items = [];
+        if ( !$this->contains($file) ) {
+            $this->items[] = $file;
         }
-        $this->items[] = $file;
+        
         return $this;
     }
     
@@ -90,5 +90,19 @@ class FileCollection implements IteratorInterface
                 ,$this->items
             )
         );
+    }
+    
+    /**
+     * @param FileInterface $file
+     * @return bool
+     */
+    public function contains(FileInterface $file): bool
+    {
+        foreach ( $this->getCollection() as $collectionItem ) {
+            if ( $collectionItem->getId() === $file->getId() ) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -66,9 +66,9 @@ class FileEntity
     
     /**
      * @param int|null $id
-     * @return self
+     * @return $this
      */
-    public function setId(?int $id): self
+    public function setId(?int $id): static
     {
         $this->id = $id;
         return $this;
