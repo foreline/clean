@@ -37,9 +37,9 @@ class GroupEntity
 
     /**
      * @param int|null $id
-     * @return GroupEntity
+     * @return $this
      */
-    public function setId(?int $id): GroupEntity
+    public function setId(?int $id): static
     {
         $this->id = $id;
         return $this;
@@ -55,9 +55,9 @@ class GroupEntity
 
     /**
      * @param bool $active
-     * @return GroupEntity
+     * @return $this
      */
-    public function setActive(bool $active): GroupEntity
+    public function setActive(bool $active): static
     {
         $this->active = $active;
         return $this;
@@ -73,9 +73,9 @@ class GroupEntity
 
     /**
      * @param string $name
-     * @return GroupEntity
+     * @return $this
      */
-    public function setName(string $name): GroupEntity
+    public function setName(string $name): static
     {
         $this->name = $name;
         return $this;
@@ -91,9 +91,9 @@ class GroupEntity
 
     /**
      * @param int $sort
-     * @return GroupEntity
+     * @return $this
      */
-    public function setSort(int $sort): GroupEntity
+    public function setSort(int $sort): static
     {
         $this->sort = $sort;
         return $this;
@@ -109,9 +109,9 @@ class GroupEntity
 
     /**
      * @param string $code
-     * @return GroupEntity
+     * @return $this
      */
-    public function setCode(string $code): GroupEntity
+    public function setCode(string $code): static
     {
         $this->code = $code;
         return $this;
@@ -127,9 +127,9 @@ class GroupEntity
 
     /**
      * @param bool $anonymous
-     * @return GroupEntity
+     * @return $this
      */
-    public function setAnonymous(bool $anonymous): GroupEntity
+    public function setAnonymous(bool $anonymous): static
     {
         $this->anonymous = $anonymous;
         return $this;
@@ -145,9 +145,9 @@ class GroupEntity
 
     /**
      * @param bool $privileged
-     * @return GroupEntity
+     * @return $this
      */
-    public function setPrivileged(bool $privileged): GroupEntity
+    public function setPrivileged(bool $privileged): static
     {
         $this->privileged = $privileged;
         return $this;
@@ -163,9 +163,9 @@ class GroupEntity
 
     /**
      * @param string $description
-     * @return GroupEntity
+     * @return $this
      */
-    public function setDescription(string $description): GroupEntity
+    public function setDescription(string $description): static
     {
         $this->description = $description;
         return $this;

@@ -9,7 +9,7 @@ use Domain\User\Entity\GroupEntity;
 /**
  * Group aggregate
  */
-class Group extends GroupEntity implements AggregateInterface
+class Group extends GroupEntity implements AggregateInterface, GroupInterface
 {
     /** @var string Внешний ID */
     private string $extId = '';
