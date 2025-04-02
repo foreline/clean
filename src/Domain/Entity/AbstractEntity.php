@@ -72,10 +72,10 @@ abstract class AbstractEntity
             return $this;
         }
         
-        // ID должен быть положительным числом
+        // ID must be positive integer
         Assert::positiveInteger($id, 'ID должен быть положительным');
         
-        // ID нельзя менять
+        // ID cannot be changed
         if ( 0 < $this->id && $id !== $this->id ) {
             throw new InvalidArgumentException('ID не может быть изменен');
         }

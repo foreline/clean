@@ -7,7 +7,7 @@ use DateTimeImmutable;
 use Domain\User\Aggregate\User;
 
 /**
- *
+ * Bridge entities are used for maintaining relations between entities
  */
 abstract class AbstractBridge
 {
@@ -25,7 +25,6 @@ abstract class AbstractBridge
     
     /** @var bool Удалено */
     //private bool $deleted = false;
-    
     
     /**
      * @return User|null
@@ -102,18 +101,18 @@ abstract class AbstractBridge
     /**
      * @return bool
      */
-    public function isDeleted(): bool
+    /*public function isDeleted(): bool
     {
         return $this->deleted;
-    }
+    }*/
     
     /**
      * @param bool $deleted
      * @return AbstractBridge
      */
-    public function setDeleted(bool $deleted): AbstractBridge
+    /*public function setDeleted(bool $deleted): AbstractBridge
     {
         $this->deleted = $deleted;
         return $this;
-    }
+    }*/
 }

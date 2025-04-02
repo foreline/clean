@@ -8,7 +8,8 @@ use Iterator;
 use ReturnTypeWillChange;
 
 /**
- * Flexible version of \Iterator Interface
+ * Flexible version of \Iterator Interface.
+ * Entities Typed collections should implement this interface.
  */
 interface IteratorInterface extends Iterator, ToArrayInterface
 {

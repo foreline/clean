@@ -10,11 +10,9 @@ use Domain\Entity\AbstractEntity;
  */
 abstract class AbstractAggregate extends AbstractEntity implements AggregateInterface
 {
-
     /**
      * @param array $fields
      * @return array|null
      */
     abstract public function toArray(array $fields = []): ?array;
-    
 }

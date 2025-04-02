@@ -1,6 +1,6 @@
-# PHP clean framework
+# Pristine - PHP Clean Architecture framework
 
-Core Domain, Infrastructure and Presentation Layers interfaces and classes.
+Core Domain, Infrastructure and Presentation Layers interfaces and classes for building Clean Architecture applications.
 
 ## Installation
 

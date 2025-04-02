@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Domain\Aggregate;
 
@@ -7,6 +8,14 @@ namespace Domain\Aggregate;
  */
 interface SortableInterface
 {
+    /**
+     * @param int $sort
+     * @return $this
+     */
     public function setSort(int $sort): self;
+    
+    /**
+     * @return int
+     */
     public function getSort(): int;
 }
