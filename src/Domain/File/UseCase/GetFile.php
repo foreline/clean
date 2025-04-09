@@ -34,9 +34,6 @@ class GetFile
         if ( $checkPermissions ) {
             $this->checkPermissions($id);
         }
-        if ( !$id ) {
-            throw new InvalidArgumentException('File ID is missing');
-        }
         return ( new FileManager() )->findById($id);
     }
 
