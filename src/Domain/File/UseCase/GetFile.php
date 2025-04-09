@@ -29,10 +29,14 @@ class GetFile
      * @throws InvalidArgumentException
      * @throws Exception
      */
-    public function get(int $id): ?File
+    public function get(int $id, bool $checkPermissions = true): ?File
     {
-        $this->checkPermissions($id);
-    
+        if ( $checkPermissions ) {
+            $this->checkPermissions($id);
+        }
+        if ( !$id ) {
+            throw new InvalidArgumentException('File ID is missing');
+        }
         return ( new FileManager() )->findById($id);
     }
 

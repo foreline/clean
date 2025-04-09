@@ -29,10 +29,12 @@ class GetUser
      * @throws InvalidArgumentException
      * @throws Exception
      */
-    public function get(int $id): ?User
+    public function get(int $id, bool $checkPermissions = true): ?User
     {
         try {
-            $this->checkPermissions($id);
+            if ( $checkPermissions ) {
+                $this->checkPermissions($id);
+            }
             return ( new UserManager() )->findById($id);
         } catch ( NotAuthorizedException $e ) {
             return null;
