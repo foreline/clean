@@ -41,6 +41,30 @@ class Fields implements FieldsInterface
     {
         return $this->fields;
     }
+    
+    /**
+     * @param string $field
+     * @return $this
+     */
+    public function add(string $field): self
+    {
+        if ( !in_array($field, $this->fields, true) ) {
+            $this->fields[] = $field;
+        }
+        return $this;
+    }
+    
+    /**
+     * @param string $field
+     * @return $this
+     */
+    public function remove(string $field): self
+    {
+        if ( in_array($field, $this->fields, true) ) {
+            unset($this->fields[array_search($field, $this->fields, true)]);
+        }
+        return $this;
+    }
 
     /**
      * Сбрасывает выбираемые поля
