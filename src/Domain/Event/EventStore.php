@@ -40,7 +40,7 @@ class EventStore
      */
     public function append(EventInterface $event): void
     {
-        $storedEvent = new StoredEventInterface(
+        $storedEvent = new StoredEvent(
             get_class($event),
             $event->occurredOn(),
             $this->serialize($event)
@@ -87,7 +87,7 @@ class EventStore
             return null;
         }
 
-        $arEvent = $this->result->fetch();
+        $event = $this->result->fetch();
 
         //$event = new Event();
 
@@ -113,9 +113,9 @@ class EventStore
     }
 
     /**
-     * @return array
+     * @return ?EventCollection
      */
-    public function getEvents(): array
+    public function getEvents(): ?EventCollection
     {
         return $this->events;
     }

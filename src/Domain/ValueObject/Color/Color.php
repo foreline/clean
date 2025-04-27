@@ -101,7 +101,7 @@ class Color implements ValueObjectInterface, StringValueObjectInterface, ToArray
             . str_pad(dechex($blue), 2, '0', STR_PAD_LEFT)
             . str_pad(dechex($alpha), 2, '0', STR_PAD_LEFT);
         
-        return new static($hexColor);
+        return new self($hexColor);
     }
     
     /**

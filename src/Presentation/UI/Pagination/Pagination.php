@@ -7,7 +7,7 @@ use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Формирование постраничной навигации
+ * Page navigation
  */
 class Pagination
 {
