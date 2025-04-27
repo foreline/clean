@@ -4,7 +4,7 @@ stages:
   - build
   - test
 
-#############
+# Install composer dependencies
 job-composer:
   stage: build
   before_script:
@@ -23,7 +23,18 @@ job-composer:
     - ls -la
     - echo "After script build-${CI_COMMIT_REF_SLUG}"
 
-#############
+# Check php syntax
+job-syntax-check:
+  stage: lint
+  before_script:
+    - echo "Running PHP syntax check"
+  script:
+    - find . -name "*.php" -exec php -l {} \;
+  allow_failure: false
+  dependencies:
+    - job-composer
+
+# Run PHPStan code quality analysis
 job-phpstan:
   stage: test
   before_script:
@@ -42,7 +53,7 @@ job-phpstan:
       codequality: "./phpstan-report.json"
   allow_failure: true
 
-#############
+# Run PHPUnit tests
 job-test:
   stage: test
   before_script:
