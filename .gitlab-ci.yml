@@ -2,6 +2,8 @@ image: php:8.2
 
 stages:
   - build
+  - lint
+  - check
   - test
 
 # Install composer dependencies
@@ -36,7 +38,7 @@ job-syntax-check:
 
 # Run PHPStan code quality analysis
 job-phpstan:
-  stage: test
+  stage: check
   before_script:
     - echo "Running PHPStan code quality analysis job"
   script:
