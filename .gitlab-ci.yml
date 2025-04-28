@@ -59,7 +59,22 @@ job-phpstan:
 job-test:
   stage: test
   before_script:
-    - echo "Running PHPUnit Test Job"
-    - ls -lha
+    - echo "Running Test Job"
+    - pecl install xdebug
+    - docker-php-ext-enable xdebug
+    - echo xdebug.mode=coverage > /usr/local/etc/php/conf.d/xdebug.ini
   script:
-    - php ./vendor/bin/phpunit tests
+    - php ./vendor/bin/phpunit tests --do-not-cache-result --log-junit phpunit-report.xml --coverage-cobertura phpunit-coverage.xml --coverage-text --colors=never
+  artifacts:
+    paths:
+      - phpunit-report.xml
+      - phpunit-coverage.xml
+    expire_in: 1 hour
+    when: always
+    reports:
+      junit: phpunit-report.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: phpunit-coverage.xml
+  coverage: '/^\s*Lines:\s*\d+.\d+\%/'
+  allow_failure: false
