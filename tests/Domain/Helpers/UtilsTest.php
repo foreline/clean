@@ -75,11 +75,11 @@ class UtilsTest extends TestCase
         ];
     
         // Act
-        foreach ( $inputs as $key => $input) {
-            $result = Utils::snakeToCamel($key);
+        foreach ( $inputs as $input => $expected) {
+            $result = Utils::snakeToCamel($input);
         
             // Assert
-            static::assertEquals($result === $input, 'Failed asserting that ' . $input . ' equals ' . $result);
+            static::assertEquals($expected, $result, 'Failed asserting that ' . $result . ' equals ' . $expected);
         }
     }
 }
