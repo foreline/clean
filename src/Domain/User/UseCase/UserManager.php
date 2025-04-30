@@ -221,8 +221,7 @@ class UserManager extends AbstractManager implements ServiceInterface
      */
     public function filterByGroupId(int $groupId): self
     {
-        $this
-            ->filter->add(UserRepositoryInterface::GROUPS, $groupId);
+        $this->filter->add(UserRepositoryInterface::GROUPS, $groupId);
         return $this;
     }
     
@@ -240,9 +239,18 @@ class UserManager extends AbstractManager implements ServiceInterface
             ->filterByCode($groupCode)
             ->find()?->current()?->getId();
         
-        $this
-            ->filter->add(UserRepositoryInterface::GROUPS, $groupId);
+        $this->filter->add(UserRepositoryInterface::GROUPS, $groupId);
         
+        return $this;
+    }
+    
+    /**
+     * @param string $login
+     * @return $this
+     */
+    public function filterByLogin(string $login): self
+    {
+        $this->filter->add(UserRepositoryInterface::LOGIN, $login);
         return $this;
     }
 
@@ -292,10 +300,8 @@ class UserManager extends AbstractManager implements ServiceInterface
      */
     public function sortByName(string $order = 'asc'): self
     {
-        $this
-            ->sort->add('last_name', $order);
-        $this
-            ->sort->add('name', $order);
+        $this->sort->add('last_name', $order);
+        $this->sort->add('name', $order);
         return $this;
     }
 
@@ -306,8 +312,7 @@ class UserManager extends AbstractManager implements ServiceInterface
     public function filterByRole(string $roleCode): self
     {
         // @fixme
-        $this
-            ->filter->add(UserRepositoryInterface::GROUPS, $roleCode);
+        $this->filter->add(UserRepositoryInterface::GROUPS, $roleCode);
         return $this;
     }
 
@@ -318,8 +323,7 @@ class UserManager extends AbstractManager implements ServiceInterface
     public function filterByRoles(string ...$rolesCode): self
     {
         // @fixme
-        $this
-            ->filter->add(UserRepositoryInterface::GROUPS, $rolesCode);
+        $this->filter->add(UserRepositoryInterface::GROUPS, $rolesCode);
         return $this;
     }
 
