@@ -22,12 +22,12 @@ composer.json:
 
 ## Domain Layer
 
-[Domain Layer](./src/Domain/README.md)
+[Domain Layer](./docs/domain/index.md)
 
 ## Infrastructure Layer
 
-[Infrastructure Layer](./src/Infrastructure/README.md)
+[Infrastructure Layer](./docs/infrastructure/index.md)
 
 ## Presentation Layer
 
-[Presentation Layer](./src/Presentation/README.md)
+[Presentation Layer](./docs/presentation/index.md)

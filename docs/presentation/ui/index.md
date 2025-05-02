@@ -1,7 +1,7 @@
 # Элементы пользовательского интерфейса
 
 ## Dropdown - выпадающий список
-[Dropdown](./Dropdown/README.md)
+[Dropdown](./dropdown/README.md)
 
 ## Pagination - постраничная навигация
-[Pagination](./Pagination/README.md)
+[Pagination](./pagination/README.md)
