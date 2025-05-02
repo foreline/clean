@@ -7,7 +7,7 @@ use Domain\ValueObject\ValueObjectInterface;
 use ReturnTypeWillChange;
 
 /**
- *
+ * @deprecated use CollectionTrait instead
  */
 trait IteratorTrait
 {

@@ -10,6 +10,7 @@ interface ValueObjectInterface
 {
     /**
      * @return ValueObjectInterface[]
+     * @deprecated Use EnumValueObjectInterface::map() instead.
      */
     public static function getAll(): array;
 }

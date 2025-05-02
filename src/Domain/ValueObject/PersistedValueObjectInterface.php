@@ -6,6 +6,7 @@ namespace Domain\ValueObject;
 /**
  * Though Value-Objects are immutable and ID agnostic,
  * in some cases we need to store values somewhere.
+ * @deprecated Use PersistableValueObjectInterface
  */
 interface PersistedValueObjectInterface extends ValueObjectInterface
 {
