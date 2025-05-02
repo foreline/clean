@@ -15,7 +15,7 @@ use Domain\Repository\Sort;
 use Domain\Repository\SortInterface;
 
 /**
- * Parent class for Value-Objects
+ * Parent class for Value-Object Manager
  */
 abstract class AbstractValueObjectManager
 {

@@ -7,7 +7,7 @@ use Domain\Aggregate\AggregateInterface;
 use Domain\Aggregate\IteratorInterface;
 
 /**
- * Parent class for Aggregates
+ * Parent class for Entity Manager
  */
 abstract class AbstractManager extends AbstractValueObjectManager
 {
