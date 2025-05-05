@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Domain\Aggregate;
 
-use Domain\ValueObject\ValueObjectInterface;
 use Iterator;
 use ReturnTypeWillChange;
 
@@ -63,10 +62,10 @@ interface CollectionInterface extends Iterator
     
     /**
      * Add element to collection
-     * @param ValueObjectInterface $item
+     * @param AggregateInterface $item
      * @return self
      */
-    public function addItem(ValueObjectInterface $item): self;
+    public function addItem(AggregateInterface $item): self;
     
     /**
      * Add elements to collection

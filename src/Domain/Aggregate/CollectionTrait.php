@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Domain\Aggregate;
 
-use Domain\ValueObject\ValueObjectInterface;
+use ReturnTypeWillChange;
 
 /**
  *
@@ -13,7 +13,7 @@ trait CollectionTrait
     /** @var int  */
     private int $position;
     
-    /** @var ?ValueObjectInterface[] */
+    /** @var ?AggregateInterface[] */
     private ?array $items;
     
     /**
@@ -70,10 +70,10 @@ trait CollectionTrait
     }
     
     /**
-     * @param ValueObjectInterface $item
+     * @param AggregateInterface $item
      * @return bool
      */
-    public function has(ValueObjectInterface $item): bool
+    public function has(AggregateInterface $item): bool
     {
         if ( null === !$this->items ) {
             return false;
