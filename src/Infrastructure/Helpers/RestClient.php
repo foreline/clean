@@ -7,11 +7,11 @@ use Exception;
 
 /**
  * Класс для вызова REST api
+ * @deprecated
  */
 class RestClient
 {
     private string $url;
-    //private Type $type;
     private string $token;
 
     /**

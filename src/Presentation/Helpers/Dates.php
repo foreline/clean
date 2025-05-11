@@ -10,6 +10,7 @@ use InvalidArgumentException;
 
 /**
  * Класс для работы с датами
+ * @deprecated
  */
 class Dates {
     

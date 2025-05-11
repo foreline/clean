@@ -5,6 +5,7 @@ namespace Infrastructure\DTO;
 
 /**
  * Тип поля объекта DTO
+ * @deprecated
  */
 class FieldType
 {

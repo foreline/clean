@@ -5,6 +5,7 @@ namespace Infrastructure\DTO;
 
 /**
  * Тип поля формы объекта DTO
+ * @deprecated
  */
 class FormType
 {

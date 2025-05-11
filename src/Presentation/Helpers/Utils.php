@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Presentation\Helpers;
 
 /**
- *
+ * @deprecated
  */
 class Utils
 {

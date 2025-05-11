@@ -6,7 +6,7 @@ namespace Domain\UseCase;
 use Domain\Aggregate\IteratorInterface;
 
 /**
- * Интерфейс для сервиса выборки коллекции сущностей
+ * Interface for the service of selecting a collection of entities
  */
 interface GetCollectionInterface
 {

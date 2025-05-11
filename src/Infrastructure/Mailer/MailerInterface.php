@@ -1,17 +1,16 @@
 <?php
-    declare(strict_types=1);
-    
-    namespace Infrastructure\Mailer;
+declare(strict_types=1);
 
+namespace Infrastructure\Mailer;
+
+/**
+ * Mail service Interface
+ */
+interface MailerInterface
+{
     /**
-     * Mail service Interface
+     * @param MessageInterface $message
+     * @return void
      */
-    interface MailerInterface
-    {
-        /**
-         * @param MessageInterface $message
-         * @return void
-         */
-        public function send(MessageInterface $message): void;
-        
-    }
+    public function send(MessageInterface $message): void;
+}

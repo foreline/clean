@@ -7,8 +7,8 @@ namespace Domain\Event;
 /**
  *
  */
-interface SubscriberInterface {
-
+interface SubscriberInterface
+{
     /**
      * @param Event $event
      */
@@ -21,4 +21,11 @@ interface SubscriberInterface {
      */
     public function isSubscribedTo(Event $event): bool;
     //public function isSubscribedTo(EventInterface $event): bool;
+    
+    /**
+     * Checks the criteria for whether an event should be processed.
+     * @param Event $event
+     * @return bool
+     */
+    //public function isHandled(Event $event): bool;
 }

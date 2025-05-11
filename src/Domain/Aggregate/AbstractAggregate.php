@@ -13,6 +13,7 @@ abstract class AbstractAggregate extends AbstractEntity implements AggregateInte
     /**
      * @param array $fields
      * @return array|null
+     * @deprecated
      */
     abstract public function toArray(array $fields = []): ?array;
 }

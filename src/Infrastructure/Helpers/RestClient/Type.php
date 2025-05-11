@@ -6,7 +6,7 @@ namespace Infrastructure\Helpers\RestClient;
 use InvalidArgumentException;
 
 /**
- *
+ * @deprecated
  */
 class Type
 {

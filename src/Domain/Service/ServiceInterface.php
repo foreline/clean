@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Domain\Service;
 
 /**
- * Services should implement this interface
+ * Services must implement ServiceInterface
  */
 interface ServiceInterface
 {

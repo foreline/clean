@@ -21,8 +21,7 @@ abstract class AbstractManager extends AbstractValueObjectManager
      * @return AggregateInterface|null
      */
     //abstract public function findById(int $id): ?AggregateInterface;
-
-
+    
     /**
      *
      */
