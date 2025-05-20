@@ -11,6 +11,9 @@ use Domain\File\Entity\FileEntity;
  */
 class File extends FileEntity implements AggregateInterface, FileInterface
 {
+    /** @var int Количество */
+    private int $aggregatedCount = 1;
+    
     /** @var string  */
     private string $slug = '';
     
@@ -19,6 +22,22 @@ class File extends FileEntity implements AggregateInterface, FileInterface
 
     /** @var string External ID */
     private string $extId = '';
+    
+    /**
+     * @return int
+     */
+    public function getAggregatedCount(): int
+    {
+        return $this->aggregatedCount;
+    }
+    
+    /**
+     * @param int $aggregatedCount
+     */
+    public function setAggregatedCount(int $aggregatedCount): void
+    {
+        $this->aggregatedCount = $aggregatedCount;
+    }
     
     /**
      * HTML tag for file download

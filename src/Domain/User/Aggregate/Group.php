@@ -11,6 +11,9 @@ use Domain\User\Entity\GroupEntity;
  */
 class Group extends GroupEntity implements AggregateInterface, GroupInterface
 {
+    /** @var int Количество */
+    private int $aggregatedCount = 1;
+    
     /** @var string Внешний ID */
     private string $extId = '';
     
@@ -19,6 +22,22 @@ class Group extends GroupEntity implements AggregateInterface, GroupInterface
     
     /** @var string  */
     private string $addSlug = '';
+    
+    /**
+     * @return int
+     */
+    public function getAggregatedCount(): int
+    {
+        return $this->aggregatedCount;
+    }
+    
+    /**
+     * @param int $aggregatedCount
+     */
+    public function setAggregatedCount(int $aggregatedCount): void
+    {
+        $this->aggregatedCount = $aggregatedCount;
+    }
 
     /**
      * @return string

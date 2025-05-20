@@ -30,7 +30,10 @@ abstract class AbstractEntity
     
     /** @var string Название */
     private string $name = '';
-
+    
+    /** @var int Количество */
+    private int $aggregatedCount = 1;
+    
     /**
      * @var string
      * @deprecated
@@ -59,7 +62,7 @@ abstract class AbstractEntity
     {
         return $this->id;
     }
-
+    
     /**
      * @param ?int $id
      * @return self
@@ -82,7 +85,7 @@ abstract class AbstractEntity
         $this->id = $id;
         return $this;
     }
-
+    
     /**
      * @return string
      */
@@ -90,7 +93,7 @@ abstract class AbstractEntity
     {
         return $this->name;
     }
-
+    
     /**
      * @param string $name
      * @return self
@@ -104,7 +107,7 @@ abstract class AbstractEntity
         $this->name = $name;
         return $this;
     }
-
+    
     /**
      * @return ?User
      */
@@ -112,7 +115,7 @@ abstract class AbstractEntity
     {
         return $this->createdBy;
     }
-
+    
     /**
      * @param User|null $createdBy
      * @return self
@@ -122,7 +125,7 @@ abstract class AbstractEntity
         $this->createdBy = $createdBy;
         return $this;
     }
-
+    
     /**
      * @return ?User
      */
@@ -130,7 +133,7 @@ abstract class AbstractEntity
     {
         return $this->modifiedBy;
     }
-
+    
     /**
      * @param User|null $modifiedBy
      * @return self
@@ -140,7 +143,7 @@ abstract class AbstractEntity
         $this->modifiedBy = $modifiedBy;
         return $this;
     }
-
+    
     /**
      * @return ?DateTimeImmutable
      */
@@ -148,7 +151,7 @@ abstract class AbstractEntity
     {
         return $this->dateCreated;
     }
-
+    
     /**
      * @param DateTimeImmutable $dateCreated
      * @return self
@@ -158,7 +161,7 @@ abstract class AbstractEntity
         $this->dateCreated = $dateCreated;
         return $this;
     }
-
+    
     /**
      * @return ?DateTimeImmutable
      */
@@ -166,7 +169,7 @@ abstract class AbstractEntity
     {
         return $this->dateModified;
     }
-
+    
     /**
      * @param DateTimeImmutable $dateModified
      * @return self
@@ -184,7 +187,7 @@ abstract class AbstractEntity
     {
         return $this->detailPageUrl;
     }
-
+    
     /**
      * @param string $detailPageUrl
      * @return self
@@ -194,7 +197,7 @@ abstract class AbstractEntity
         $this->detailPageUrl = $detailPageUrl;
         return $this;
     }
-
+    
     /**
      * @return string
      */
@@ -202,7 +205,7 @@ abstract class AbstractEntity
     {
         return $this->slug ?: $this->getDetailPageUrl();
     }
-
+    
     /**
      * @param string $slug
      * @return $this
@@ -212,7 +215,7 @@ abstract class AbstractEntity
         $this->detailPageUrl = $slug;
         return $this;
     }
-
+    
     /**
      * @return string
      */
@@ -220,7 +223,7 @@ abstract class AbstractEntity
     {
         return $this->listUrl;
     }
-
+    
     /**
      * @param string $listUrl
      * @return self
@@ -230,7 +233,7 @@ abstract class AbstractEntity
         $this->listUrl = $listUrl;
         return $this;
     }
-
+    
     /**
      * @return string
      */
@@ -238,7 +241,7 @@ abstract class AbstractEntity
     {
         return $this->addUrl;
     }
-
+    
     /**
      * @param string $addSlug
      * @return $this
@@ -248,7 +251,7 @@ abstract class AbstractEntity
         $this->addUrl = $addSlug;
         return $this;
     }
-
+    
     /**
      * @return string
      * @deprecated
@@ -257,7 +260,7 @@ abstract class AbstractEntity
     {
         return $this->addUrl;
     }
-
+    
     /**
      * @param string $addUrl
      * @return self
@@ -268,7 +271,7 @@ abstract class AbstractEntity
         $this->addUrl = $addUrl;
         return $this;
     }
-
+    
     /**
      * Проверяет создан ли элемент указанным пользователем
      * @param int $userId
@@ -278,7 +281,7 @@ abstract class AbstractEntity
     {
         return ($this->getCreatedBy() && $userId === $this->getCreatedBy()->getId());
     }
-
+    
     /**
      * Проверяет изменен ли элемент указанным пользователем
      * @param int $userId
@@ -287,5 +290,23 @@ abstract class AbstractEntity
     public function isModifiedBy(int $userId): bool
     {
         return ($this->getModifiedBy() && $userId === $this->getModifiedBy()->getId());
+    }
+    
+    /**
+     * @return int
+     */
+    public function getAggregatedCount(): int
+    {
+        return $this->aggregatedCount;
+    }
+    
+    /**
+     * @param int $aggregatedCount
+     * @return AbstractEntity
+     */
+    public function setAggregatedCount(int $aggregatedCount): AbstractEntity
+    {
+        $this->aggregatedCount = $aggregatedCount;
+        return $this;
     }
 }

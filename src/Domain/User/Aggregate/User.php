@@ -23,6 +23,9 @@ class User extends UserEntity implements AggregateInterface, UserInterface
     /** @var File|null Аватар */
     private ?File $avatar = null;
     
+    /** @var int Количество */
+    private int $aggregatedCount = 1;
+    
     /** @var string  */
     private string $slug = '';
     
@@ -156,6 +159,24 @@ class User extends UserEntity implements AggregateInterface, UserInterface
     public function setAvatar(?File $avatar): User
     {
         $this->avatar = $avatar;
+        return $this;
+    }
+    
+    /**
+     * @return int
+     */
+    public function getAggregatedCount(): int
+    {
+        return $this->aggregatedCount;
+    }
+    
+    /**
+     * @param int $aggregatedCount
+     * @return User
+     */
+    public function setAggregatedCount(int $aggregatedCount): User
+    {
+        $this->aggregatedCount = $aggregatedCount;
         return $this;
     }
     
