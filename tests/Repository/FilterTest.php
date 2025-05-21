@@ -56,7 +56,7 @@ class FilterTest extends TestCase
     /**
      * Tests the add() method for adding a new filter parameter.
      */
-    public function testAddAddsNewFilterParameter(): void
+    public function testAddAddsNewFilterStringParameter(): void
     {
         // Arrange
         $field = 'key';
@@ -74,7 +74,88 @@ class FilterTest extends TestCase
     /**
      * Tests the add() method for adding a new filter parameter.
      */
-    public function testAddAddsNewFilterParameters(): void
+    public function testAddAddsNewFilterIntParameter(): void
+    {
+        // Arrange
+        $field = 'id';
+        $value = 15;
+        
+        // Act
+        $this->filter->add($field, $value);
+        $result = $this->filter->get();
+        
+        // Assert
+        $this->assertArrayHasKey($field, $result, 'Expected the filter to contain the added key.');
+        $this->assertSame($value, $result[$field], 'Expected the filter value to match the added value.');
+    }
+    
+    /**
+     * Tests the restrict() method for restricting a filter parameter.
+     */
+    public function testRestrictRestrictsManyFilterIntParameter(): void
+    {
+        // Arrange
+        $field = 'id';
+        
+        $addValue = 15;
+        $restrictValue = 15;
+        
+        // Act
+        $this->filter->add($field, $addValue);
+        $this->filter->restrict($field, $restrictValue);
+        
+        $result = $this->filter->get();
+        
+        // Assert
+        $this->assertArrayHasKey($field, $result, 'Expected the filter to contain the restricted key.');
+        $this->assertSame($addValue, $result[$field], 'Expected the filter value to match the restricted value.');
+    }
+    
+    /**
+     * Tests the restrict() method for restricting a filter parameter.
+     */
+    public function testRestrictRestrictsAddedFilterIntParameter(): void
+    {
+        // Arrange
+        $field = 'id';
+        
+        $addValue = 12;
+        $restrictValue = 15;
+        
+        // Act
+        $this->filter->add($field, $addValue);
+        $this->filter->restrict($field, $restrictValue);
+        
+        $result = $this->filter->get();
+        
+        // Assert
+        $this->assertArrayHasKey($field, $result, 'Expected the filter to contain the restricted key.');
+        $this->assertSame($restrictValue, $result[$field], 'Expected the filter value to match the restricted value.');
+    }
+    
+    /**
+     * Tests the restrict() method for restricting a filter parameter.
+     */
+    public function testRestrictWithoutAddFilterIntParameter(): void
+    {
+        // Arrange
+        $field = 'id';
+        $restrictValue = 18;
+        
+        // Act
+        $this->filter->restrict($field, $restrictValue);
+        
+        $result = $this->filter->get();
+        
+        // Assert
+        $this->assertArrayHasKey($field, $result, 'Expected the filter to contain the restricted key.');
+        $this->assertSame($restrictValue, $result[$field], 'Expected the filter value to match the restricted value.');
+    }
+    
+    /**
+     * Tests the add() method for adding a new filter parameter.
+     */
+    public function testAddAddsNewFilterArrayParameter(): void
     {
         // Arrange
         $field = 'id';
@@ -92,7 +173,7 @@ class FilterTest extends TestCase
     /**
      * Tests the restrict() method for restricting a filter parameter.
      */
-    public function testRestrictRestrictsManyFilterParameter(): void
+    public function testRestrictRestrictsManyFilterArrayParameter(): void
     {
         // Arrange
         $field = 'id';
@@ -114,7 +195,7 @@ class FilterTest extends TestCase
     /**
      * Tests the restrict() method for restricting a filter parameter.
      */
-    public function testRestrictRestrictsAddedFilterParameter(): void
+    public function testRestrictRestrictsAddedFilterArrayParameter(): void
     {
         // Arrange
         $field = 'id';
@@ -136,7 +217,7 @@ class FilterTest extends TestCase
     /**
      * Tests the restrict() method for restricting a filter parameter.
      */
-    public function testRestrictRestrictsOneFilterParameter(): void
+    public function testRestrictRestrictsOneFilterArrayParameter(): void
     {
         // Arrange
         $field = 'id';
@@ -158,7 +239,7 @@ class FilterTest extends TestCase
     /**
      * Tests the restrict() method for restricting a filter parameter.
      */
-    public function testRestrictWithoutAddFilterParameter(): void
+    public function testRestrictWithoutAddFilterArrayParameter(): void
     {
         // Arrange
         $field = 'id';

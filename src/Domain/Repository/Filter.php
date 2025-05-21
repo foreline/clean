@@ -43,9 +43,44 @@ class Filter implements FilterInterface
             } elseif ( !isset($this->filter[$field]) ) {
                 $result[$field] = $this->restrictions[$field];
             } else {
-                $result[$field] =
-                    array_intersect($this->restrictions[$field], $this->filter[$field])
-                    ?: $this->restrictions[$field];
+                
+                if (
+                    is_array($this->restrictions[$field])
+                    && is_array($this->filter[$field])
+                ) {
+                    $result[$field] =
+                        array_intersect($this->restrictions[$field], $this->filter[$field])
+                            ?: $this->restrictions[$field];
+                } elseif (
+                    is_array($this->restrictions[$field])
+                    && !is_array($this->filter[$field])
+                ) {
+                    
+                    if ( in_array($this->filter[$field], $this->restrictions[$field], true) ) {
+                        $result[$field] = $this->filter[$field];
+                    } else {
+                        $result[$field] = $this->restrictions[$field];
+                    }
+                    
+                } elseif (
+                    !is_array($this->restrictions[$field])
+                    && is_array($this->filter[$field])
+                ) {
+                    
+                    if ( in_array($this->restrictions[$field], $this->filter[$field], true) ) {
+                        $result[$field] = $this->filter[$field];
+                    } else {
+                        $result[$field] = $this->restrictions[$field];
+                    }
+                    
+                } else {
+                    
+                    if ( $this->filter[$field] === $this->restrictions[$field] ) {
+                        $result[$field] = $this->filter[$field];
+                    } else {
+                        $result[$field] = $this->restrictions[$field];
+                    }
+                }
             }
         }
         
