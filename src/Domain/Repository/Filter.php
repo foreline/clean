@@ -6,7 +6,7 @@ namespace Domain\Repository;
 use Domain\Service\ServiceInterface;
 
 /**
- *
+ * Filter class
  */
 class Filter implements FilterInterface
 {
@@ -18,6 +18,8 @@ class Filter implements FilterInterface
     
     /** @var array  */
     private array $filter = [];
+    /** @var array  */
+    private array $restrictions = [];
     
     /**
      * @param ServiceInterface|null $service
@@ -28,16 +30,30 @@ class Filter implements FilterInterface
     }
     
     /**
-     * Returns filter parameters
+     * Returns filter parameters with their values
      * @return array<string,mixed>
      */
     public function get(): array
     {
-        return $this->filter;
+        $result = [];
+        
+        foreach ( array_merge($this->filter, $this->restrictions) as $field => $value ) {
+            if ( !isset($this->restrictions[$field]) ) {
+                $result[$field] = $this->filter[$field];
+            } elseif ( !isset($this->filter[$field]) ) {
+                $result[$field] = $this->restrictions[$field];
+            } else {
+                $result[$field] =
+                    array_intersect($this->restrictions[$field], $this->filter[$field])
+                    ?: $this->restrictions[$field];
+            }
+        }
+        
+        return $result;
     }
     
     /**
-     * Sets (overwrites) filter parameters
+     * Sets (overwrites all) filter parameters
      * @param array<string,mixed> $filter
      * @return self
      */
@@ -48,7 +64,7 @@ class Filter implements FilterInterface
     }
     
     /**
-     * Adds filter parameter
+     * Adds filter parameter. If parameter was already set, it will be overwritten with given value
      * @param string $field
      * @param $value
      * @param string $prefix
@@ -59,6 +75,23 @@ class Filter implements FilterInterface
     public function add(string $field, $value, string $prefix = '', string $suffix = ''): self
     {
         $this->filter[$prefix . $field . $suffix] = $value;
+        return $this;
+    }
+    
+    /**
+     * Restricts filter parameter by given value.
+     * If a parameter was already set, and contains the restrictions it will not be overwritten.
+     * If a parameter was not set, it will be added with given value.
+     * @param string $field
+     * @param $value
+     * @param string $prefix
+     * @param string $suffix
+     * @return $this
+     * @noinspection PhpTooManyParametersInspection
+     */
+    public function restrict(string $field, $value, string $prefix = '', string $suffix = ''): self
+    {
+        $this->restrictions[$prefix . $field . $suffix] = $value;
         return $this;
     }
     
