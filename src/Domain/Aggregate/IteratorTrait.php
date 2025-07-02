@@ -108,7 +108,8 @@ trait IteratorTrait
      */
     public function getIds(): ?array
     {
-        return $this->valid()
+        //return $this->valid()
+        return 0 < count($this->items)
             ? array_map(
                 fn(AggregateInterface $item): ?int => $item->getId(),
                 $this->items
