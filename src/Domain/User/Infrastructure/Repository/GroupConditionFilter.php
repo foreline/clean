@@ -20,6 +20,7 @@ class GroupConditionFilter extends ConditionFilter implements ConditionFilterInt
      */
     public function __construct(GroupFilter|FilterInterface $groupFilter)
     {
+        parent::__construct($groupFilter);
         $this->condition['LOGIC'] = 'OR';
         $this->groupFilter = $groupFilter;
     }

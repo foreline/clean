@@ -28,7 +28,7 @@ class UserUpdatedEvent extends Event
     /**
      * @return UserInterface
      */
-    public function getUser(): UserInterface
+    public function getUpdatedUser(): UserInterface
     {
         return $this->user;
     }

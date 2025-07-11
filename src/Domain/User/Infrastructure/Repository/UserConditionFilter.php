@@ -20,6 +20,7 @@ class UserConditionFilter extends ConditionFilter implements ConditionFilterInte
      */
     public function __construct(UserFilter|FilterInterface $filter)
     {
+        parent::__construct($filter);
         $this->condition['LOGIC'] = 'OR';
         $this->userFilter = $filter;
     }

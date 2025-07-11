@@ -38,7 +38,7 @@ class StoredEvent implements EventInterface
     /**
      * @return int
      */
-    public function eventId(): int
+    public function getId(): int
     {
         return $this->id;
     }

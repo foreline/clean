@@ -74,17 +74,16 @@ class UserManager extends AbstractManager implements ServiceInterface
 
     /**
      * @param int $userId
-     * @param array $fields
      * @return ?UserInterface
      * @throws Exception
      */
-    public function findById(int $userId, array $fields = []): ?UserInterface
+    public function findById(int $userId): ?UserInterface
     {
         if ( 0 >= $userId ) {
             //throw new \InvalidArgumentException('Не задан ID пользователя');
             return null;
         }
-        $user = $this->repository->findById($userId, $this->fields->get($fields));
+        $user = $this->repository->findById($userId);
         $this->reset();
         return $user;
     }
@@ -96,10 +95,10 @@ class UserManager extends AbstractManager implements ServiceInterface
     public function find(): ?UserCollection
     {
         $users = $this->repository->find(
-            $this->filter->get(),
+            /*$this->filter->get(),
             $this->sort->get(),
             $this->limit->getLimits(),
-            $this->fields->get()
+            $this->fields->get()*/
         );
         
         $this->reset();

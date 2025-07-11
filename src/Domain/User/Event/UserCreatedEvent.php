@@ -28,7 +28,7 @@ class UserCreatedEvent extends Event
     /**
      * @return UserInterface
      */
-    public function getUser(): UserInterface
+    public function getCreatedUser(): UserInterface
     {
         return $this->user;
     }

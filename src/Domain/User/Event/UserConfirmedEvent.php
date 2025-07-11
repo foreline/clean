@@ -26,7 +26,7 @@ class UserConfirmedEvent extends Event implements EventInterface
     /**
      * @return UserInterface
      */
-    public function getUser(): UserInterface
+    public function getConfirmedUser(): UserInterface
     {
         return $this->user;
     }
