@@ -25,22 +25,26 @@
 ### Доменные события / Domain Events
 
 События это объекты, созданные и инициализируемые (raised) из сущности, либо из сервиса.
-Domain events can make the system more scalable and avoid any coupling - one aggregate should not determine what the other aggregates should do, and temporal coupling - the successful completion of payment doesn't depend on all the processes to be available at the same time.
+Доменные события позволяют сделать систему более масштабируемой и избежать избыточных связей — один агрегат не должен определять, что должны делать другие агрегаты. Также это помогает избежать временной связанности — успешное завершение оплаты не зависит от доступности всех процессов одновременно.
 
 ### Объекты-значения / ValueObjects
 
-VOs have no conceptual identity. 
-That doesn't mean that they shouldn't have persistence identity. 
-Don't let persistence implementation cloud your understanding of Entities vs VOs.
+Объекты-значения не имеют концептуальной идентичности. Это не означает, что у них не может быть идентификатора для хранения. Реализации хранения данных не должна затмевать понимание различий между Сущностями и Объектами-значениями.
 
-Value objects are accessible by their value rather than identity. They are immutable objects. Their values don't change (or change rarely) and have no lifecycle.
+Объекты-значения доступны по своему значению, а не по идентификатору (ID). Они являются неизменяемыми объектами. Их значения не меняются (или меняются крайне редко) и не имеют жизненного цикла.
+
+Объекты-значения:
 - не имеет идентификатора
 - не сохраняется никуда отдельно
-- не содержит сеттеров, задается через конструктор.
+- не имеют сеттеров, значения задаются через конструктор (immutable).
   
 Например, статус у какого-либо объекта, валюты, страны, даты.
 
-Предоставляются интерфейсы для следующих видов Объектов-значений:
+Фреймворк предоставляет интерфейсы для следующих видов Объектов-значений:
 - `FloatValueObjectInterface` - для VO с типом значения `float`
 - `IntValueObjectInterface` - для VO с типом значения `int`
 - `StringValueObjectInterface` - для VO с типом значения `string`
+
+### Задания / Task Scheduler
+
+Регулярные задания [выполняемые планировщиком](./scheduler/index.md).
