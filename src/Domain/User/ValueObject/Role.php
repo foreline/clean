@@ -12,18 +12,72 @@ class Role implements StringValueObjectInterface
 {
     public const ADMIN = 'admin';
     
-    private string|array $role;
+    private string $role;
     
     private array $names = [
         self::ADMIN     => 'Администратор',
     ];
     
     /**
-     * @param string|string[] $role
+     * @param string $role
      */
-    public function __construct(string|array $role = '')
+    public function __construct(string $role = '')
     {
         $this->role = $role;
+    }
+    
+    /**
+     * Get role inheritance hierarchy
+     * Override this method in child classes to define role inheritance
+     * 
+     * @return array Array of role inheritance mappings [parent_role => [child_roles]]
+     */
+    protected function getInheritedRoles(): array
+    {
+        return [];
+    }
+    
+    /**
+     * Get all roles that this role inherits (including itself)
+     * 
+     * @return array
+     */
+    public function getAllInheritedRoles(): array
+    {
+        $allRoles = [$this->role];
+        $inheritance = $this->getInheritedRoles();
+        
+        if (isset($inheritance[$this->role])) {
+            foreach ($inheritance[$this->role] as $inheritedRole) {
+                $roleInstance = new static($inheritedRole);
+                $allRoles = array_merge($allRoles, $roleInstance->getAllInheritedRoles());
+            }
+        }
+        
+        return array_unique($allRoles);
+    }
+    
+    /**
+     * Check if this role has (or inherits) a specific role
+     * 
+     * @param string $roleCode
+     * @return bool
+     */
+    public function hasRole(string $roleCode): bool
+    {
+        return in_array($roleCode, $this->getAllInheritedRoles(), true);
+    }
+    
+    /**
+     * Check if this role has any of the specified roles (or inherits them)
+     * 
+     * @param array $roleCodes
+     * @return bool
+     */
+    public function hasAnyRole(array $roleCodes): bool
+    {
+        $inheritedRoles = $this->getAllInheritedRoles();
+        return !empty(array_intersect($roleCodes, $inheritedRoles));
     }
     
     /**
@@ -31,7 +85,7 @@ class Role implements StringValueObjectInterface
      */
     public function getName(): string
     {
-        return $this->names[$this->role];
+        return $this->names[$this->role] ?? $this->role;
     }
     
     /**

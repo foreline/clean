@@ -23,6 +23,43 @@ Should be under `src/Domain/Scheduler` directory.
   - Full documentation
   - Helper utilities and reporting tools
 
+- [x] **User Role model** ✅ **COMPLETED**.
+Users and Groups are stored in a database, so they have their own Repository classes. A `User` can belong to one or many `Groups`. The `Role` is a `ValueObject` which can be extended by inheriting another `Roles`. The `Role` by itself represents a `Group`, but also can accumulate another `Roles` giving more flexible design.
+  - ✅ A `Role` can contain a collection of other `Roles`
+  - ✅ Also a `Role` can be extended as a class
+  - ✅ A `Role` class contains string contants, which represents a `Group`
+  - ✅ A `Group` can exist independently of `Role`, but a `Role` should be matched to `Group`
+  - ✅ All permissions should be Role-based. A permission logic is a responsibility of Permission service
+  - ✅ A `Role` is a ValueObject and should not be stored in database
+  - ✅ A `User` can belong to `Group` or `Groups` but also can have `Role`. But `Role` defines user permissions
+  - ✅ A `User::in()` method needs enhancement: it should check for both direct Roles and inherited Roles with support of namespace-specific roles
+**Implementation includes**:
+  - Enhanced Role ValueObject with automatic inheritance via role hierarchy
+  - BlogPostRole example demonstrating AUTHOR → COMMENTER → REVIEWER inheritance
+  - Enhanced User::in() method supporting Role objects, constants, and inheritance
+  - Comprehensive test suite covering all role scenarios
+  - Documentation and demonstration examples
+  - Backward compatibility with existing string-based role system
+For example in a Blog application we create a `BlogPostRole` ValueObject which extends our base `Role` ValueObject:
+```php
+namespace App\Blog\Post;
+class Role extends \Domain\User\Role
+{
+  public const REVIEWER = 'reviewer';
+  public const COMMENTER = 'commenter';
+  public const AUTHOR = 'author';
+
+  protected function getInheritedRoles(): array {
+        return [
+            self::AUTHOR => [self::COMMENTER, self::REVIEWER],
+            self::COMMENTER => [self::REVIEWER]
+        ];
+    }
+  // rest of the implementation
+}
+```
+We also have `Groups` with codes `reviewer` and `author` besides the basic `admin` group. To decide whether a user can create a blog post we can check it by `$user->in(\App\Blog\Post\Role::AUTHOR)` expression. **IMPORTANT**: the main goal is that an AUTHOR should be also a COMMENTER and REVIEWER.
+
 ## Executive Summary
 
 This code review evaluates the "Pristine" PHP Clean Architecture framework. The project demonstrates a solid foundation for implementing Clean Architecture principles but contains several areas requiring attention for production readiness and long-term maintainability.

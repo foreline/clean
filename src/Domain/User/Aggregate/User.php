@@ -85,32 +85,69 @@ class User extends UserEntity implements AggregateInterface, UserInterface
     }
     
     /**
-     * @param string|string[] ...$rolesCode
+     * Check if user has any of the specified roles (supports inheritance and namespace-specific roles)
+     * 
+     * @param string|string[]|Role ...$rolesCode Role codes, class constants, or Role instances
      * @return bool
      */
-    public function in(string|array ...$rolesCode): bool
+    public function in(string|array|Role ...$rolesCode): bool
     {
-        if ( null === $userRoles = $this->getRoles() ) {
+        if (null === $userRoles = $this->getRoles()) {
             return false;
         }
         
-        if ( 0 === $userRoles->getCount() ) {
+        if (0 === $userRoles->getCount()) {
             return false;
         }
         
-        // Convert multidimensional array to flat
-        $roles = [];
-        array_walk_recursive($rolesCode, function ($item, $key) use (&$roles) {
-            $roles[$key] = $item;
+        // Convert multidimensional array to flat and resolve role codes
+        $rolesToCheck = [];
+        array_walk_recursive($rolesCode, function ($item) use (&$rolesToCheck) {
+            if ($item instanceof Role) {
+                $rolesToCheck[] = $item->getRole();
+            } elseif (is_string($item)) {
+                // Handle namespace-specific role constants (e.g., \App\Blog\Post\Role::AUTHOR)
+                $rolesToCheck[] = $this->resolveRoleConstant($item);
+            }
         });
         
-        foreach ( $roles as $roleCode ) {
-            if ( in_array($roleCode, $userRoles->getCollection()) ) {
-                return true;
+        // Check each user role against requested roles (with inheritance)
+        foreach ($userRoles->getCollection() as $userRole) {
+            if ($userRole instanceof Role) {
+                // Check if user role has any of the requested roles (including inherited)
+                if ($userRole->hasAnyRole($rolesToCheck)) {
+                    return true;
+                }
+            } elseif (is_string($userRole)) {
+                // Backward compatibility: check direct string match
+                if (in_array($userRole, $rolesToCheck, true)) {
+                    return true;
+                }
             }
         }
         
         return false;
+    }
+    
+    /**
+     * Resolve role constant from string (supports namespace-specific constants)
+     * 
+     * @param string $roleCode
+     * @return string
+     */
+    private function resolveRoleConstant(string $roleCode): string
+    {
+        // If it's a class constant reference like \App\Blog\Post\Role::AUTHOR
+        if (str_contains($roleCode, '::')) {
+            [$className, $constantName] = explode('::', $roleCode, 2);
+            
+            if (defined($className . '::' . $constantName)) {
+                return constant($className . '::' . $constantName);
+            }
+        }
+        
+        // Return as-is if not a class constant
+        return $roleCode;
     }
     
     /**
