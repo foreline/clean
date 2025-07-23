@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Tests\ValueObject\Role;
+namespace Tests\Domain\User\ValueObject;
 
 use Domain\User\ValueObject\Role;
 use PHPUnit\Framework\TestCase;

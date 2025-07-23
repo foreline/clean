@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Tests\User\Aggregate;
+namespace Tests\Domain\User\Aggregate;
 
 use Domain\User\Aggregate\User;
+use Tests\Domain\User\ValueObject\BlogPostRole;
 use Domain\User\ValueObject\Role;
-use Domain\User\ValueObject\BlogPostRole;
 use Domain\User\ValueObject\RoleCollection;
 use PHPUnit\Framework\TestCase;
 

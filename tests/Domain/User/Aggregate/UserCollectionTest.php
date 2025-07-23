@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Tests\User\Aggregate;
+namespace Tests\Domain\User\Aggregate;
 
 use Domain\User\Aggregate\User;
 use Domain\User\Aggregate\UserCollection;
