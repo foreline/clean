@@ -78,10 +78,7 @@ composer install
 ```
 your-project/
 ├── src/
-│   ├── Domain/           # Доменный слой
-│   ├── Infrastructure/   # Инфраструктурный слой
-│   └── Presentation/     # Слой представления
-├── app/                  # Ваше приложение
+│   └── Blog/            # Исходный код приложения
 └── vendor/              # Зависимости Composer
 ```
 
@@ -90,7 +87,7 @@ your-project/
 Создайте простую сущность:
 ```php
 <?php
-// app/Domain/User/Entity/UserEntity.php
+// src/Blog/Domain/User/Entity/UserEntity.php
 
 namespace App\Domain\User\Entity;
 
