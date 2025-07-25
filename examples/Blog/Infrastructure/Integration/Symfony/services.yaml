@@ -1,0 +1,32 @@
+# config/services.yaml
+# Register Pristine services directly in Symfony
+
+services:
+    # Repository Implementation
+    App\Infrastructure\Post\Repository\DatabasePostRepository:
+        public: false
+
+    # Bind interface to implementation  
+    App\Domain\Post\Repository\PostRepositoryInterface:
+        alias: App\Infrastructure\Post\Repository\DatabasePostRepository
+        public: false
+
+    # Domain Manager with autowired dependencies
+    App\Domain\Post\UseCase\PostManager:
+        arguments:
+            $repository: '@App\Domain\Post\Repository\PostRepositoryInterface'
+        public: true
+        tags: ['pristine.domain_service']
+
+    # Auto-register all Pristine use cases
+    App\Domain\:
+        resource: '../src/Domain/'
+        exclude:
+            - '../src/Domain/*/Entity/'
+            - '../src/Domain/*/ValueObject/'
+            - '../src/Domain/*/Event/'
+
+parameters:
+    # Pristine-specific parameters
+    pristine.post.storage_path: '%kernel.project_dir%/var/posts'
+    pristine.cache.enabled: true

@@ -9,15 +9,23 @@ use App\Domain\Post\Repository\PostRepositoryInterface;
 
 /**
  * Post Manager - Handles basic CRUD operations
+ * 
+ * This class demonstrates proper dependency injection for EntityManager classes.
+ * The repository interface is injected via constructor, maintaining Clean Architecture
+ * by depending on abstractions rather than concrete implementations.
  */
 class PostManager
 {
     private PostRepositoryInterface $repository;
 
-    public function __construct(?PostRepositoryInterface $repository = null)
+    /**
+     * @param PostRepositoryInterface $repository Repository implementation will be
+     *                                           injected by DI container based on
+     *                                           configuration bindings
+     */
+    public function __construct(PostRepositoryInterface $repository)
     {
-        // You should use a dependency injection container
-        $this->repository = $repository ?? new \App\Infrastructure\Post\Repository\PostRepository();
+        $this->repository = $repository;
     }
 
     public function persist(Post $post): Post
@@ -30,7 +38,7 @@ class PostManager
         return $this->repository->findById($id);
     }
 
-    public function find(): ?PostCollection
+    public function findAll(): ?PostCollection
     {
         return $this->repository->find();
     }
@@ -53,5 +61,7 @@ class PostManager
     public function delete(int $id): bool
     {
         return $this->repository->delete($id);
+    }
+}
     }
 }
