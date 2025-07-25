@@ -16,7 +16,7 @@
 
 ## Entity vs Aggregate
 
-**Основное правило:** Используйте Entity для простых контейнеров данных, Aggregate для бизнес-логики.
+**Основное правило:** Используйте Entity в качество простого контейнера для данных, Aggregate для связи с другими сущностями.
 
 ### 🔹 Когда использовать Entity
 
@@ -32,7 +32,6 @@
 - ✅ Объектов с бизнес-правилами
 - ✅ Управления связанными сущностями
 - ✅ Инкапсуляции сложных операций
-- ✅ Генерации доменных событий
 
 ### Паттерн: Entity → Aggregate
 
@@ -45,8 +44,7 @@ class PostEntity implements EntityInterface
     private ?int $id = null;
     private string $title;
     private string $content;
-    private int $authorId;
-    private \DateTime $createdAt;
+    private \DateTimeImmutable $createdAt;
 
     // Только простые геттеры и сеттеры
     public function getId(): ?int { return $this->id; }
@@ -57,42 +55,29 @@ class PostEntity implements EntityInterface
     
     public function getContent(): string { return $this->content; }
     public function setContent(string $content): self { $this->content = $content; return $this; }
-    
-    public function getAuthorId(): int { return $this->authorId; }
-    public function setAuthorId(int $authorId): self { $this->authorId = $authorId; return $this; }
-    
-    public function getCreatedAt(): \DateTime { return $this->createdAt; }
-    public function setCreatedAt(\DateTime $createdAt): self { $this->createdAt = $createdAt; return $this; }
+
+    public function getCreatedAt(): \DateTimeImmutable { return $this->createdAt; }
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self { $this->createdAt = $createdAt; return $this; }
 }
 ```
 
-**Шаг 2:** Расширьте Entity до Aggregate с бизнес-логикой
+**Шаг 2:** Расширьте простую сущность до агрегата добавляя связи с другими агрегатами
 ```php
 use Domain\Aggregate\AggregateInterface;
 
 class Post extends PostEntity implements AggregateInterface 
 {
+    private UserInterface $author;
     private CommentCollection $comments;
     private CategoryCollection $categories;
     private PostStatus $status;
-    private array $domainEvents = [];
 
     public function __construct()
     {
         $this->comments = new CommentCollection();
         $this->categories = new CategoryCollection();
         $this->status = PostStatus::draft();
-        $this->setCreatedAt(new \DateTime());
-    }
-
-    /**
-     * Бизнес-правило: публикация поста
-     */
-    public function publish(): void
-    {
-        $this->validateCanPublish();
-        $this->status = PostStatus::published();
-        $this->raiseEvent(new PostPublishedEvent($this->getId()));
+        $this->setCreatedAt(new \DateTimeImmutable());
     }
 
     /**
@@ -105,15 +90,29 @@ class Post extends PostEntity implements AggregateInterface
         }
 
         $this->comments->addItem($comment);
-        $this->raiseEvent(new CommentAddedEvent($this->getId(), $comment->getId()));
     }
 
     /**
      * Назначение категорий
      */
-    public function assignCategories(CategoryCollection $categories): void
+    public function setCategories(CategoryCollection $categories): self
     {
-        $this->categories = $categories;
+        $this->categories = new CategoryCollection();
+        foreach ( $categories as $category ) {
+            $this->addCategory($category);
+        }
+        return $this;
+    }
+
+    public function addCategory(Category $category): self
+    {
+        $this->categories->addItem($category);
+        return $this;
+    }
+
+    public function getCategories(): CategoryCollection
+    {
+        return $this->categories;
     }
 
     public function isPublished(): bool
@@ -121,48 +120,7 @@ class Post extends PostEntity implements AggregateInterface
         return $this->status->equals(PostStatus::published());
     }
 
-    private function validateCanPublish(): void
-    {
-        if (empty($this->title) || empty($this->content)) {
-            throw new \DomainException('Пост должен иметь заголовок и содержимое');
-        }
-
-        if ($this->isPublished()) {
-            throw new \DomainException('Пост уже опубликован');
-        }
-    }
-
-    private function raiseEvent(DomainEventInterface $event): void
-    {
-        $this->domainEvents[] = $event;
-    }
-
-    public function getEvents(): array
-    {
-        return $this->domainEvents;
-    }
-
-    public function clearEvents(): void
-    {
-        $this->domainEvents = [];
-    }
-
-    /**
-     * Конверсия в массив для сохранения
-     */
-    public function toArray(): array
-    {
-        return [
-            'id' => $this->getId(),
-            'title' => $this->getTitle(),
-            'content' => $this->getContent(),
-            'author_id' => $this->getAuthorId(),
-            'status' => $this->status->getValue(),
-            'created_at' => $this->getCreatedAt()->format('Y-m-d H:i:s'),
-            'comments_count' => $this->comments->count(),
-            'categories' => $this->categories->toArray(),
-        ];
-    }
+    // ...
 }
 ```
 
@@ -174,14 +132,14 @@ class Post extends PostEntity implements AggregateInterface
 
 ### Реализация коллекции
 
-Используйте `Domain\Aggregate\CollectionInterface` и трейт `IteratorTrait`:
+Используйте `Domain\Aggregate\CollectionInterface` и трейт `CollectionTrait`:
 
 ```php
 use Domain\Aggregate\CollectionInterface;
 
 class PostCollection implements CollectionInterface
 {
-    use \Domain\Aggregate\IteratorTrait;
+    use \Domain\Aggregate\CollectionTrait;
 
     /** @var Post[] */
     private array $items = [];
@@ -310,14 +268,6 @@ class PostCollection implements CollectionInterface
         }
         return $byAuthor;
     }
-
-    /**
-     * Конверсия в массив
-     */
-    public function toArray(): array
-    {
-        return array_map(fn($post) => $post->toArray(), $this->items);
-    }
 }
 ```
 
@@ -356,16 +306,15 @@ public function addItem(Post $item): self  // Строгая типизация
 ```
 
 ---
-```
 
 ## Структура директорий
 
-**Рекомендуемая** организация кода по ограниченным контекстам:
+**Рекомендуемая** организация кода с ограниченными контекстами:
 
 ```
 App/Blog/
 ├── Post/                              # Контекст управления постами
-│   ├── Entity/PostEntity.php         # Простая сущность
+│   ├── Entity/PostEntity.php          # Простая сущность
 │   ├── Aggregate/Post.php             # Агрегат с бизнес-логикой
 │   ├── Aggregate/PostCollection.php   # Типизированная коллекция
 │   ├── UseCase/                       # Бизнес-сценарии
@@ -419,13 +368,13 @@ App/Blog/
 
 ## EntityManager vs UseCase
 
-**EntityManager** отвечает за базовые CRUD операции, **UseCase** - за бизнес-сценарии.
+**EntityManager** отвечает за базовые CRUD операции с сущностью, **UseCase** - за бизнес-сценарии.
 
 ### EntityManager (Менеджер сущностей)
 
 **Назначение:**
 - ✅ Базовые CRUD операции
-- ✅ Единственная точка взаимодействия с Repository
+- ✅ Единственная точка взаимодействия с репозиторием (Repository)
 - ✅ Простая логика без бизнес-правил
 - ✅ Техническая абстракция над хранилищем
 
@@ -485,7 +434,7 @@ class PostManager
 ### UseCase (Сценарии использования)
 
 **Назначение:**
-- ✅ Реализация бизнес-сценариев
+- ✅ Реализация простых бизнес-сценариев
 - ✅ Проверка разрешений и валидация
 - ✅ Координация между агрегатами
 - ✅ Генерация доменных событий
@@ -604,10 +553,7 @@ class CreatePost {
 }
 ```
 
----
-```
-
-An example of `CreatePost` UseCase.
+Пример сценария создания поста `CreatePost`:
 ```php
 class CreatePost
 {
@@ -634,7 +580,7 @@ class CreatePost
 }
 ```
 
-An example of `PostPermissions` class:
+Пример класса отвечающего за права доступа `PostPermissions` class:
 
 ```php
 namespace App\Blog\Post\UseCase;
@@ -644,9 +590,7 @@ class PostPermissions
 	/**
 	 * @param ?Post $post
 	 * @return void
-	 * @throws NotAuthorizedException
-	 * @throws NotPermittedException
-	 * @throws Exception
+	 * @throws NotAuthorizedException|NotPermittedException
 	 */
 	public function canCreate(?Post $post = null): void
 	{
@@ -678,9 +622,7 @@ class PostPermissions
 	/**
 	 * @param ?Post $post
 	 * @return void
-	 * @throws NotAuthorizedException
-	 * @throws NotPermittedException
-	 * @throws Exception
+	 * @throws NotAuthorizedException|NotPermittedException
 	 */
 	public function canUpdate(?Post $post = null): void
 	{
@@ -718,9 +660,7 @@ class PostPermissions
 	/**
 	 * @param ?Post $post
 	 * @return void
-	 * @throws NotAuthorizedException
-	 * @throws NotPermittedException
-	 * @throws Exception
+	 * @throws NotAuthorizedException|NotPermittedException
 	 */
 	public function canDelete(?Post $post = null): void
 	{
@@ -753,9 +693,7 @@ class PostPermissions
 	/**
 	 * @param ?Post $post
 	 * @return void
-	 * @throws NotAuthorizedException
-	 * @throws NotPermittedException
-	 * @throws Exception
+	 * @throws NotAuthorizedException|NotPermittedException
 	 */
 	public function canGet(?Post $post): void
 	{
@@ -786,9 +724,7 @@ class PostPermissions
 	/**
 	 * @param ?GetPostCollection $service
 	 * @return void
-	 * @throws NotAuthorizedException
-	 * @throws NotPermittedException
-	 * @throws Exception
+	 * @throws NotAuthorizedException|NotPermittedException
 	 */
 	public function canGetCollection(?GetPostCollection $service = null): void
 	{
@@ -820,6 +756,9 @@ class PostPermissions
 }
 ```
 
+## Сервисы
+Непосредственно за бизнес-логику отвечают сервисы (Services). В то время как UseCases отвечают за простейшие типовые операции (создание, обновление, удаление, получение сущностей).
+
 ## Dealing with forms
 A suggested way for dealing with forms is to have a separate class i.e. `PostForm` which is responsible for restoring and validating an Aggregate from a form.
 
@@ -835,6 +774,8 @@ Notice that class constants are recomended for usign in form inputs name attribu
 
 A form example:
 ```php
+namespace App\Blog\Post\Presentation;
+
 /**
  * PostForm DTO and Validation
  */
@@ -982,7 +923,7 @@ class PostRepository extends PostProxy implements RepositoryInterface
 ## Cross-boundary communication
 
 ### Restoring aggregates from persistence layer
-As an aggregate may consist of another aggregates we need somehow to restore and hydrate it from persistance layer i.e. a database. This should be done in Repository by calling another aggregates managers.
+As an aggregate may consist of another aggregates we need somehow to restore and hydrate it from persistance layer i.e. a database. This should be done in Repository by calling another aggregates managers. But this depends heavy on repository type or choosen ORM.
 
 ### Event based communication
-Boundaries should communicate with each other by Domain Events. One boundary raises events. Another boundaries may subscribe to this events via Subscribers.
+Boundaries should communicate with each other by Domain Events. One boundary (UseCase or Service) raises events. Another boundaries may subscribe to this events implementing Subscribers.
