@@ -7,44 +7,34 @@
 ## 🎯 Основные принципы
 
 ### 1. Независимость от внешних слоев
-Доменный слой **НЕ знает** о:
+Доменный слой **НЕ знает** (и не должен знать) о:
 - Базах данных и способах хранения
 - HTTP-запросах и веб-фреймворках  
 - UI и способах отображения
 - Внешних API и сервисах
 
-### 2. Выражение бизнес-логики
-Код должен **читаться как спецификация**:
+### 2. Анемичная доменная модель
+Хотя фреймворк и не диктует четких правил насчет выбора типа модели, рекомендуется использовать анемичную модель (Anemic Entity vs Rich Entity).
+Объекты содержат **только данные**, а за поведение отвечают UseCases и сервисы:
 ```php
-// ✅ Хорошо: код выражает бизнес-правила
-$user->changeEmail($newEmail);
-$post->publish();
-$order->calculateDiscount();
-
-// ❌ Плохо: технические детали вместо бизнес-логики  
-$user->setEmail($newEmail);
-$post->setStatus('published');
-$order->setPrice($price * 0.9);
-```
-
-### 3. Богатая доменная модель
-Объекты содержат **поведение, а не только данные**:
-```php
-// ❌ Анемичная модель
+// ✅ Анемичная модель
 class User {
-    public function setEmail(string $email) { $this->email = $email; }
-}
+    private ?Email $email;
 
-// ✅ Богатая модель
-class User {
-    public function changeEmail(string $email): void {
-        $this->validateEmailFormat($email);
-        $this->ensureEmailIsUnique($email);
+    public function setEmail(Email $email): self
+    { 
         $this->email = $email;
-        $this->raiseEvent(new EmailChangedEvent($this->id, $email));
+        return $this;
+    }
+
+    public function getEmail(): ?Email
+    {
+        return $this-email;
     }
 }
 ```
+
+Такой подход позволяет сузить круг ответственности сущности и не превращать сущность в класс, отвечающий за валидацию, доменные события, взаимодействие с другими сервисами или даже с репозитоориями. Сущность отвечает только за состояние своих данных.
 
 ---
 
@@ -62,6 +52,8 @@ class User {
 
 #### Пример сущности:
 ```php
+namespace App\Blog\Post\Entity;
+
 use Domain\Entity\EntityInterface;
 
 class PostEntity implements EntityInterface
@@ -84,21 +76,18 @@ class PostEntity implements EntityInterface
 
 #### Когда использовать:
 - Простые объекты без сложной бизнес-логики
-- DTO для передачи данных между слоями
 - Базовые классы для расширения в Aggregates
 
 ---
 
 ### [Агрегаты (Aggregates)](./aggregates.md)
 
-**Агрегаты** - расширение сущностей с бизнес-логикой и управлением связями.
+**Агрегаты** - расширение сущностей с добавлением связей с другими агрегатами.
 
 #### Характеристики:
 - ✅ Наследуют от Entity
-- ✅ Содержат бизнес-правила и валидацию
-- ✅ Управляют связанными объектами
-- ✅ Инкапсулируют сложные операции
-- ✅ Генерируют доменные события
+- ✅ Содержат минимальные бизнес-правила и валидацию
+- ✅ Содержат связанные сущности
 
 #### Пример агрегата:
 ```php
@@ -109,23 +98,6 @@ class Post extends PostEntity implements AggregateInterface
     private CommentCollection $comments;
     private CategoryCollection $categories;
     private PostStatus $status;
-
-    /**
-     * Бизнес-правило: публикация поста
-     */
-    public function publish(): void
-    {
-        if (empty($this->title) || empty($this->content)) {
-            throw new \DomainException('Пост должен иметь заголовок и содержимое');
-        }
-
-        if ($this->status->equals(PostStatus::PUBLISHED)) {
-            throw new \DomainException('Пост уже опубликован');
-        }
-
-        $this->status = PostStatus::PUBLISHED;
-        $this->raiseEvent(new PostPublishedEvent($this->id));
-    }
 
     /**
      * Добавление комментария с проверками
@@ -139,24 +111,11 @@ class Post extends PostEntity implements AggregateInterface
         $this->comments->addItem($comment);
         $this->raiseEvent(new CommentAddedEvent($this->id, $comment->getId()));
     }
-
-    public function toArray(): array
-    {
-        return [
-            'id' => $this->getId(),
-            'title' => $this->getTitle(),
-            'content' => $this->getContent(),
-            'status' => $this->status->getValue(),
-            'comments_count' => $this->comments->count(),
-        ];
-    }
 }
 ```
 
 #### Когда использовать:
-- Объекты со сложной бизнес-логикой
-- Координация между связанными сущностями
-- Инкапсуляция доменных правил
+- Объекты, связанные с другими сущностями
 
 ---
 
@@ -176,6 +135,7 @@ class Post extends PostEntity implements AggregateInterface
 - `IntValueObjectInterface` - для целых чисел  
 - `FloatValueObjectInterface` - для дробных чисел
 - `EnumValueObjectInterface` - для перечислений
+- `MixedValueObjectInterface` - 
 
 #### Примеры Value Objects:
 ```php

@@ -126,7 +126,7 @@ class Post extends PostEntity implements AggregateInterface
 
 ---
 
-## Коллекции агрегатов
+## Типизированные коллекции агрегатов
 
 **Коллекции** обеспечивают типизированную работу с наборами доменных объектов.
 
@@ -135,6 +135,8 @@ class Post extends PostEntity implements AggregateInterface
 Используйте `Domain\Aggregate\CollectionInterface` и трейт `CollectionTrait`:
 
 ```php
+namespace App\Blog\Post\Aggregate;
+
 use Domain\Aggregate\CollectionInterface;
 
 class PostCollection implements CollectionInterface
@@ -273,6 +275,17 @@ class PostCollection implements CollectionInterface
 
 ### Лучшие практики коллекций
 
+#### ✅ Коллекцию можно использовать как массив
+
+```php
+$posts = new PostCollection();
+$posts->addItem(new Post());
+
+foreach ( $posts as $post ) {
+    // ...
+}
+```
+
 #### ✅ Добавляйте методы фильтрации
 ```php
 public function getByCategory(int $categoryId): self
@@ -309,11 +322,12 @@ public function addItem(Post $item): self  // Строгая типизация
 
 ## Структура директорий
 
-**Рекомендуемая** организация кода с ограниченными контекстами:
+**Рекомендуемая** организация кода с ограниченными контекстами.
+Предлагаемая организация позволяет осуществлять быструю навигацию по всему проекту.
 
 ```
 App/Blog/
-├── Post/                              # Контекст управления постами
+├── Post/                              # Контекст постов
 │   ├── Entity/PostEntity.php          # Простая сущность
 │   ├── Aggregate/Post.php             # Агрегат с бизнес-логикой
 │   ├── Aggregate/PostCollection.php   # Типизированная коллекция
@@ -335,7 +349,7 @@ App/Blog/
 │   │   └── BlogRole.php
 │   └── Exception/                     # Доменные исключения
 │       └── PostNotFoundException.php
-├── Comment/                           # Контекст управления комментариями
+├── Comment/                           # Контекст комментариев
 │   ├── Entity/CommentEntity.php
 │   ├── Aggregate/Comment.php
 │   ├── UseCase/...
@@ -373,9 +387,9 @@ App/Blog/
 ### EntityManager (Менеджер сущностей)
 
 **Назначение:**
-- ✅ Базовые CRUD операции
-- ✅ Единственная точка взаимодействия с репозиторием (Repository)
-- ✅ Простая логика без бизнес-правил
+- ✅ Единственная точка взаимодействия слоев со слоем репозитория (Repository)
+- ✅ Выполняет базовые CRUD операции над сущностью
+- ✅ Простая логика без бизнес-правил и проверки прав доступа
 - ✅ Техническая абстракция над хранилищем
 
 #### Пример PostManager:
@@ -451,110 +465,15 @@ class PostManager
 
 #### Пример CreatePost UseCase:
 ```php
-class CreatePost
-{
-    private PostManager $postManager;
-    private UserRepositoryInterface $userRepository;
-    private EventDispatcherInterface $eventDispatcher;
+namespace App\Blog\Post\UseCase;
 
-    public function __construct(
-        PostManager $postManager,
-        UserRepositoryInterface $userRepository,
-        EventDispatcherInterface $eventDispatcher
-    ) {
-        $this->postManager = $postManager;
-        $this->userRepository = $userRepository;
-        $this->eventDispatcher = $eventDispatcher;
-    }
+use App\Blog\Post\Aggregate\Post;
+use App\Blog\Post\UseCase\PostManager;
+use App\Blog\Post\UseCase\PostPermissions;
+use App\Blog\Post\Event\PostCreatedEvent;
+use App\Blog\Post\Presentation\PostForm;
+use Domain\Event\Publisher;
 
-    /**
-     * Создание поста с полной валидацией
-     */
-    public function execute(
-        string $title,
-        string $content,
-        int $authorId,
-        array $categoryIds = []
-    ): Post {
-        // 1. Проверка разрешений
-        $this->checkPermissions($authorId);
-        
-        // 2. Валидация данных
-        $this->validateData($title, $content);
-        
-        // 3. Создание агрегата
-        $post = new Post();
-        $post->setTitle($title);
-        $post->setContent($content);
-        $post->setAuthorId($authorId);
-        
-        // 4. Назначение категорий
-        if (!empty($categoryIds)) {
-            $categories = $this->getCategoriesByIds($categoryIds);
-            $post->assignCategories($categories);
-        }
-        
-        // 5. Сохранение через менеджер
-        $savedPost = $this->postManager->persist($post);
-        
-        // 6. Обработка событий
-        $this->eventDispatcher->dispatch(
-            new PostCreatedEvent($savedPost->getId(), $authorId)
-        );
-        
-        return $savedPost;
-    }
-
-    private function checkPermissions(int $authorId): void
-    {
-        $user = $this->userRepository->findById($authorId);
-        if (!$user) {
-            throw new \DomainException('Пользователь не найден');
-        }
-
-        if (!$user->canCreatePosts()) {
-            throw new \DomainException('Недостаточно прав для создания постов');
-        }
-    }
-
-    private function validateData(string $title, string $content): void
-    {
-        if (empty(trim($title))) {
-            throw new \InvalidArgumentException('Заголовок не может быть пустым');
-        }
-
-        if (empty(trim($content))) {
-            throw new \InvalidArgumentException('Содержимое не может быть пустым');
-        }
-
-        if (strlen($title) > 255) {
-            throw new \InvalidArgumentException('Заголовок слишком длинный');
-        }
-    }
-}
-```
-
-### Взаимодействие Manager ↔ UseCase
-
-```php
-// ❌ Плохо: UseCase напрямую обращается к Repository
-class CreatePost {
-    public function execute($data): Post {
-        return $this->repository->save($post); // Плохо!
-    }
-}
-
-// ✅ Хорошо: UseCase использует Manager
-class CreatePost {
-    public function execute($data): Post {
-        $post = new Post($data);
-        return $this->postManager->persist($post); // Хорошо!
-    }
-}
-```
-
-Пример сценария создания поста `CreatePost`:
-```php
 class CreatePost
 {
     /**
@@ -580,10 +499,34 @@ class CreatePost
 }
 ```
 
+### Взаимодействие Manager ↔ UseCase
+
+```php
+// ❌ Плохо: UseCase напрямую обращается к Repository
+class CreatePost {
+    public function execute($data): Post {
+        return $this->repository->save($post); // Плохо!
+    }
+}
+
+// ✅ Хорошо: UseCase использует Manager
+class CreatePost {
+    public function create(Post $post): Post {
+        return (new PostManager())->persist($post); // Хорошо!
+    }
+}
+```
+
 Пример класса отвечающего за права доступа `PostPermissions` class:
 
 ```php
 namespace App\Blog\Post\UseCase;
+
+use App\Blog\Post\Aggregate\Post;
+use App\Blog\Post\ValueObject\Role;
+use Domain\User\UseCase\GetCurrentUser;
+use Domain\Exception\NotAuthorizedException;
+use Domain\Exception\NotPermittedException;
 
 class PostPermissions
 {
