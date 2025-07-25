@@ -14,8 +14,9 @@
 - Внешних API и сервисах
 
 ### 2. Анемичная доменная модель
-Хотя фреймворк и не диктует четких правил насчет выбора типа модели, рекомендуется использовать анемичную модель (Anemic Entity vs Rich Entity).
-Объекты содержат **только данные**, а за поведение отвечают UseCases и сервисы:
+Фреймворк не накладывает строгих ограничений на выбор модели, но **рекомендует анемичную модель** с минимальной бизнес-логикой согласно принципу GRASP Information Expert.
+
+Объекты содержат **данные и простую логику над собственными свойствами**, а сложное поведение выносится в UseCases и сервисы:
 ```php
 // ✅ Анемичная модель
 class User {
@@ -29,7 +30,7 @@ class User {
 
     public function getEmail(): ?Email
     {
-        return $this-email;
+        return $this->email;
     }
 }
 ```
@@ -82,12 +83,18 @@ class PostEntity implements EntityInterface
 
 ### [Агрегаты (Aggregates)](./aggregates.md)
 
-**Агрегаты** - расширение сущностей с добавлением связей с другими агрегатами.
+**Агрегаты** - корневые сущности, объединяющие связанные доменные объекты и поддерживающие их консистентность.
 
 #### Характеристики:
-- ✅ Наследуют от Entity
-- ✅ Содержат минимальные бизнес-правила и валидацию
-- ✅ Содержат связанные сущности
+- ✅ Могут наследоваться от Entity (опционально)
+- ✅ Содержат минимальную бизнес-логику согласно принципу Information Expert
+- ✅ Объединяют связанные сущности и коллекции
+- ✅ Поддерживают инвариантность данных
+- ❌ Не генерируют доменные события напрямую
+
+#### Архитектурные решения:
+- **С наследованием от Entity**: больше абстракций, но меньший размер агрегата
+- **Без наследования**: меньше абстракций, но больший размер агрегата
 
 #### Пример агрегата:
 ```php
@@ -109,7 +116,6 @@ class Post extends PostEntity implements AggregateInterface
         }
 
         $this->comments->addItem($comment);
-        $this->raiseEvent(new CommentAddedEvent($this->id, $comment->getId()));
     }
 }
 ```
@@ -127,15 +133,16 @@ class Post extends PostEntity implements AggregateInterface
 - ✅ Не имеют идентификатора
 - ✅ Неизменяемые (immutable)
 - ✅ Определяются значением, не личностью
-- ✅ Содержат валидацию и бизнес-правила
+- ✅ Содержат валидацию собственных данных
 - ✅ Можно безопасно копировать
+- ❌ Не взаимодействуют с сервисами или репозиториями
 
 #### Доступные интерфейсы:
 - `StringValueObjectInterface` - для строковых значений
 - `IntValueObjectInterface` - для целых чисел  
 - `FloatValueObjectInterface` - для дробных чисел
 - `EnumValueObjectInterface` - для перечислений
-- `MixedValueObjectInterface` - 
+- `MixedValueObjectInterface` - для составных значений и комплексных объектов
 
 #### Примеры Value Objects:
 ```php
@@ -241,6 +248,9 @@ class PostCollection implements CollectionInterface
 }
 ```
 
+#### Примечание:
+Фильтрация в коллекциях (как `getPublished()`) - достаточно редкий сценарий, так как обычно сервисы получают уже отфильтрованные данные через репозитории. Более распространенные сценарии - сортировка и базовые операции с коллекцией.
+
 ---
 
 ### [Репозитории (Repositories)](./repositories.md)
@@ -285,7 +295,7 @@ class PublishPost
 {
     private PostRepositoryInterface $postRepository;
     private UserRepositoryInterface $userRepository;
-    private EventDispatcherInterface $eventDispatcher;
+    private Publisher $publisher;
 
     public function execute(int $postId, int $userId): Post
     {
@@ -306,15 +316,14 @@ class PublishPost
         }
 
         // Выполнение бизнес-операции
-        $post->publish();
+        $post->setStatus(PostStatus::published());
+        $post->setPublishedAt(new \DateTime());
 
         // Сохранение
         $publishedPost = $this->postRepository->persist($post);
 
-        // Обработка событий
-        foreach ($post->getEvents() as $event) {
-            $this->eventDispatcher->dispatch($event);
-        }
+        // Генерация событий (ответственность Use Case)
+        $this->publisher->publish(new PostPublishedEvent($post->getId(), $user->getId()));
 
         return $publishedPost;
     }
