@@ -50,6 +50,7 @@ class FileCollection implements IteratorInterface
     }
     
     /**
+     * Добавляет файл в коллекцию
      * @param File|AggregateInterface $file
      * @return $this
      */
@@ -59,6 +60,19 @@ class FileCollection implements IteratorInterface
             $this->items[] = $file;
         }
         
+        return $this;
+    }
+    
+    /**
+     * Добавляет файлы в коллекцию
+     * @param FileCollection $files
+     * @return $this
+     */
+    public function addItems(FileCollection $files): self
+    {
+        foreach ( $files->getCollection() as $file ) {
+            $this->addItem($file);
+        }
         return $this;
     }
     
