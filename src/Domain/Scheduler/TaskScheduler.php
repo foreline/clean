@@ -9,6 +9,7 @@ use Exception;
 use Symfony\Component\Scheduler\Schedule;
 use Symfony\Component\Scheduler\RecurringMessage;
 use Symfony\Component\Scheduler\Scheduler;
+use Throwable;
 
 /**
  * Scheduler system implementing singleton pattern for task management
@@ -31,6 +32,7 @@ class TaskScheduler
     
     /**
      * Get singleton instance
+     * @return static
      */
     public static function getInstance(): self
     {
@@ -43,8 +45,11 @@ class TaskScheduler
     
     /**
      * Add a task to the scheduler
+     * @param TaskInterface $task
+     * @return $this
+     * @throws Exception
      */
-    public function addTask(TaskInterface $task): void
+    public function addTask(TaskInterface $task): self
     {
         // Validate cron expression
         if (!CronExpression::isValidExpression($task->getCronExpression())) {
@@ -61,10 +66,14 @@ class TaskScheduler
                 new TaskMessage($task->getName())
             )
         );
+        
+        return $this;
     }
     
     /**
      * Remove a task from the scheduler
+     * @param string $taskName
+     * @return void
      */
     public function removeTask(string $taskName): void
     {
@@ -75,6 +84,7 @@ class TaskScheduler
     
     /**
      * Get the task registry
+     * @return TaskRegistry
      */
     public function getTaskRegistry(): TaskRegistry
     {
@@ -83,7 +93,6 @@ class TaskScheduler
     
     /**
      * Get all registered tasks
-     * 
      * @return TaskInterface[]
      */
     public function getTasks(): array
@@ -93,6 +102,8 @@ class TaskScheduler
     
     /**
      * Get a specific task by name
+     * @param string $name
+     * @return TaskInterface
      */
     public function getTask(string $name): TaskInterface
     {
@@ -101,6 +112,10 @@ class TaskScheduler
     
     /**
      * Check if a task is due to run based on its cron expression
+     * @param TaskInterface $task
+     * @param DateTimeImmutable|null $currentTime
+     * @return bool
+     * @throws Exception
      */
     public function isTaskDue(TaskInterface $task, ?DateTimeImmutable $currentTime = null): bool
     {
@@ -118,6 +133,10 @@ class TaskScheduler
     
     /**
      * Get the next run time for a task
+     * @param TaskInterface $task
+     * @param DateTimeImmutable|null $currentTime
+     * @return DateTimeImmutable
+     * @throws Exception
      */
     public function getNextRunTime(TaskInterface $task, ?DateTimeImmutable $currentTime = null): DateTimeImmutable
     {
@@ -130,6 +149,9 @@ class TaskScheduler
     
     /**
      * Run all due tasks manually (useful for testing or manual execution)
+     * @param DateTimeImmutable|null $currentTime
+     * @return array
+     * @throws Exception
      */
     public function runDueTasks(?DateTimeImmutable $currentTime = null): array
     {
@@ -155,6 +177,8 @@ class TaskScheduler
     /**
      * Run the scheduler with Symfony Scheduler component
      * This is the main method to be called from tasks.php
+     * @return void
+     * @throws Throwable
      */
     public function run(): void
     {
@@ -174,6 +198,8 @@ class TaskScheduler
     
     /**
      * Get schedule information for debugging
+     * @return array
+     * @throws Exception
      */
     public function getScheduleInfo(): array
     {
@@ -196,6 +222,7 @@ class TaskScheduler
     
     /**
      * Prevent cloning of singleton
+     * @return void
      */
     private function __clone(): void
     {
@@ -203,6 +230,8 @@ class TaskScheduler
     
     /**
      * Prevent unserialization of singleton
+     * @return void
+     * @throws Exception
      */
     public function __wakeup(): void
     {
