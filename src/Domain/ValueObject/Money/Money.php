@@ -23,12 +23,12 @@ class Money implements MultipleValueObjectInterface
     
     /**
      * @param float $amount
-     * @param string $currencyCode
+     * @param string $currency
      */
-    public function __construct(float $amount, string $currencyCode = '')
+    public function __construct(float $amount, string $currency = '')
     {
         $this->amount = (int) round($amount * self::MULTIPLIER);
-        $this->currency = new Currency($currencyCode);
+        $this->currency = new Currency($currency);
     }
     
     /**
