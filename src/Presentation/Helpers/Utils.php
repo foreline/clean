@@ -68,7 +68,7 @@ class Utils
      */
     static function humanFSize(int $size, string $separator = '&nbsp;'): string
     {
-        $fileSizeName = ['Байт', 'Кб', 'Мб', 'Гб', 'Тб'];
+        $fileSizeName = ['Байт', 'Кб', 'Мб', 'Гб', 'Тб', 'Пб'];
     
         if ( 0 >= $size ) {
             return '0' . $separator . $fileSizeName[0];
