@@ -6,10 +6,14 @@ namespace Domain\Repository;
 use Domain\Service\ServiceInterface;
 
 /**
- * Filter class
+ * Filter class is designed to be extended for specific repository needs (add repository specific filter methods).
+ * A filter is used to specify criteria for querying a repository.
+ * It can hold multiple criteria, each represented as a key-value pair.
+ * Criteria can be restricted, and conditions can be grouped with AND/OR logic.
  */
 class Filter implements FilterInterface
 {
+    /** @var ServiceInterface|null Service instance */
     private ?ServiceInterface $service;
     
     public const EXPRESSION_INT_NOT = '!';
@@ -22,7 +26,7 @@ class Filter implements FilterInterface
     private array $restrictions = [];
     
     /**
-     * @param ServiceInterface|null $service
+     * @param ServiceInterface|null $service Service instance to which this filter belongs
      */
     public function __construct(?ServiceInterface $service = null)
     {
@@ -30,8 +34,10 @@ class Filter implements FilterInterface
     }
     
     /**
-     * Returns filter parameters with their values
+     * Return filter criteria (with their values)
      * @return array<string,mixed>
+     *
+     * @refactor This method is too complex and needs to be simplified. Too many nested conditions.
      */
     public function get(): array
     {
@@ -88,7 +94,7 @@ class Filter implements FilterInterface
     }
     
     /**
-     * Sets (overwrites all) filter parameters
+     * Set (overwrite all) filter criteria
      * @param array<string,mixed> $filter
      * @return self
      */
@@ -99,7 +105,7 @@ class Filter implements FilterInterface
     }
     
     /**
-     * Adds filter parameter. If parameter was already set, it will be overwritten with given value
+     * Add filter criteria. If criteria was already set, it will be overwritten with given value
      * @param string $field
      * @param $value
      * @param string $prefix
@@ -114,7 +120,19 @@ class Filter implements FilterInterface
     }
     
     /**
-     * Restricts filter parameter by given value.
+     * Add a condition to filter.
+     * A condition is an array representing a set of criteria with a logical operator (AND/OR).
+     * @param array $condition
+     * @return $this
+     */
+    public function addCondition(array $condition): self
+    {
+        $this->filter['condition'][] = $condition;
+        return $this;
+    }
+    
+    /**
+     * Restrict filter parameter by given value
      * If a parameter was already set, and contains the restrictions it will not be overwritten.
      * If a parameter was not set, it will be added with given value.
      * @param string $field
@@ -131,7 +149,7 @@ class Filter implements FilterInterface
     }
     
     /**
-     * Unsets filter parameter
+     * Unset filter criteria
      * @param string $field
      * @param string $prefix
      * @param string $suffix
@@ -144,7 +162,7 @@ class Filter implements FilterInterface
     }
     
     /**
-     * Inverses filter
+     * Add a criteria with inverse condition (NOT)
      * @param string $field
      * @param $value
      * @return $this
@@ -164,7 +182,7 @@ class Filter implements FilterInterface
     }
     
     /**
-     * Resets filter parameters
+     * Reset (unset) filter criteria
      * @return self
      */
     public function reset(): static
@@ -174,7 +192,7 @@ class Filter implements FilterInterface
     }
     
     /**
-     * Returns service
+     * Return service instance to which this filter belongs, or null if not set.
      * @return ?ServiceInterface
      */
     public function endFilter(): ?ServiceInterface
@@ -183,8 +201,12 @@ class Filter implements FilterInterface
     }
     
     /**
-     * Returns condition filter
-     * @return ConditionFilterInterface|null
+     * Starts a condition block where multiple criteria can be added with AND/OR logic.
+     * Must be ended with endCondition() method for condition to be applied.
+     * Multiple conditions can be added to a filter.
+     * Conditions are combined with AND logic, while criteria inside a condition are combined with chosen ([OR]/AND) logic.
+     * Return condition filter.
+     * @return ConditionFilterInterface|null condition filter
      */
     public function byCondition(): ?ConditionFilterInterface
     {
