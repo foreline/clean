@@ -6,6 +6,7 @@ namespace Domain\ValueObject;
 /**
  * Interface for ValueObject consisting of other ValueObjects and scalar types.
  * This interface must cast to string value.
+ * @deprecated use MixedValueObjectInterface instead
  */
 interface MultipleValueObjectInterface extends StringValueObjectInterface
 {
