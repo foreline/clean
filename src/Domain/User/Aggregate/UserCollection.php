@@ -100,15 +100,6 @@ class UserCollection implements UsersInterface, IteratorInterface
     }
 
     /**
-     * Returns elements count
-     * @return int
-     */
-    public function getCount(): int
-    {
-        return $this->valid() ? count($this->items) : 0;
-    }
-
-    /**
      * @param array $fields
      * @return array|null
      */
