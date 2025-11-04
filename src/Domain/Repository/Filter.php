@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace Domain\Repository;
 
 use Domain\Service\ServiceInterface;
+use InvalidArgumentException;
+use JsonSerializable;
 
 /**
  * Filter class is designed to be extended for specific repository needs (add repository specific filter methods).
@@ -11,7 +13,7 @@ use Domain\Service\ServiceInterface;
  * It can hold multiple criteria, each represented as a key-value pair.
  * Criteria can be restricted, and conditions can be grouped with AND/OR logic.
  */
-class Filter implements FilterInterface
+class Filter implements FilterInterface, JsonSerializable
 {
     /** @var ServiceInterface|null Service instance */
     private ?ServiceInterface $service;
@@ -211,5 +213,64 @@ class Filter implements FilterInterface
     public function byCondition(): ?ConditionFilterInterface
     {
         return new ConditionFilter($this);
+    }
+    
+    /**
+     * Specify filter data which should be serialized to JSON
+     *
+     * @link https://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return array Data which can be serialized by json_encode, which is a value of any type other than a resource.
+     */
+    public function jsonSerialize(): array
+    {
+        return [
+            'filter'    => $this->get(),
+            'version'   => '0.1',
+            'metadata'  => [
+                'created_at' => date('Y-m-d H:i:s'),
+            ],
+        ];
+    }
+    
+    /**
+     * Reconstruct filter from JSON string
+     *
+     * @param string $json
+     * @param ServiceInterface|null $service
+     * @return static
+     */
+    public static function fromJson(string $json, ?ServiceInterface $service = null): static
+    {
+        $data = json_decode($json, true);
+        
+        if ( !is_array($data) ) {
+            throw new InvalidArgumentException('Invalid JSON format for filter');
+        }
+        
+        return static::fromArray($data, $service);
+    }
+    
+    /**
+     * Restore filter from array
+     *
+     * @param array $data
+     * @param ServiceInterface|null $service
+     * @return static
+     */
+    public static function fromArray(array $data, ?ServiceInterface $service = null): static
+    {
+        $filter = new static($service);
+        
+        if ( isset($data['filter']) ) {
+            $filter->set($data['filter']);
+        }
+        
+        if ( isset($data['conditions']) ) {
+            foreach ( $data['conditions'] as $condition ) {
+                $filter->addCondition($condition);
+            }
+        }
+        
+        return $filter;
     }
 }

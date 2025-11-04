@@ -4,11 +4,15 @@ declare(strict_types=1);
 namespace Domain\Repository;
 
 use Domain\Service\ServiceInterface;
+use InvalidArgumentException;
+use JsonSerializable;
 
 /**
- *
+ * Sort class is designed to be extended for specific repository needs (add repository specific sort methods).
+ * A sort is used to specify sorting criteria for querying a repository.
+ * It can hold sorting criteria, each represented as a key-value pair.
  */
-class Sort implements SortInterface
+class Sort implements SortInterface, JsonSerializable
 {
     private ?ServiceInterface $service;
     
@@ -104,13 +108,6 @@ class Sort implements SortInterface
      */
     public function set(array $sort): self
     {
-        /*foreach ( $sort as $tsort ) {
-            //list($field, $order) = $torder;
-            //[$field => $order] = $torder;
-            foreach ( $tsort as $field => $order ) {
-                $this->sortBy($field, $order);
-            }
-        }*/
         foreach ( $sort as $sortBy => $sortOrder )
         {
             $this->by((string)$sortBy, $sortOrder);
@@ -127,8 +124,64 @@ class Sort implements SortInterface
         return $this;
     }
     
+    /**
+     * @return ServiceInterface|null
+     */
     public function endSort(): ?ServiceInterface
     {
         return $this->service;
+    }
+    
+    /**
+     * Specify sort data which should be serialized to JSON
+     *
+     * @link https://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return array data which can be serialized by json_encode, which is a value of any type other than a resource.
+     */
+    public function jsonSerialize(): array
+    {
+        return [
+            'sort'      => $this->get(),
+            'version'   => '0.1',
+            'metadata'  => [
+                'created_at' => date('Y-m-d H:i:s'),
+            ],
+        ];
+    }
+    
+    /**
+     * Reconstruct sort from JSON string
+     *
+     * @param string $json
+     * @param ServiceInterface|null $service
+     * @return static
+     */
+    public static function fromJson(string $json, ?ServiceInterface $service = null): static
+    {
+        $data = json_decode($json, true);
+        
+        if ( !is_array($data) ) {
+            throw new InvalidArgumentException('Invalid JSON format for sort');
+        }
+        
+        return static::fromArray($data, $service);
+    }
+    
+    /**
+     * Restore sort from array
+     *
+     * @param array $data
+     * @param ServiceInterface|null $service
+     * @return static
+     */
+    public static function fromArray(array $data, ?ServiceInterface $service = null): static
+    {
+        $sort = new static($service);
+        
+        if ( isset($data['sort']) && is_array($data['sort']) ) {
+            $sort->set($data['sort']);
+        }
+        
+        return $sort;
     }
 }
