@@ -45,6 +45,15 @@ class FileManager extends AbstractManager implements ServiceInterface
     }
     
     /**
+     * Returns Repository constants (representation of properties)
+     * @return array<string, string>
+     */
+    public function getProperties(): array
+    {
+        return $this->repository::getFields();
+    }
+    
+    /**
      * @param File $file
      * @return File
      * @throws Exception
