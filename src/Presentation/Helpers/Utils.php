@@ -4,18 +4,19 @@ declare(strict_types=1);
 namespace Presentation\Helpers;
 
 /**
- * @deprecated
+ *
  */
 class Utils
 {
     /**
-     * Находит ссылки в тексте и преобразует их в html-тег <a href="...">
+     * Находит ссылки и е-мейлы в тексте и преобразует их в html-тег <a href="...">
      *
      * @param string $text
      * @param array $classes Список классов, которые включить в ссылку
+     * @param bool $shortenLink Сокращать ли отображаемый текст ссылки до домена
      * @return string $text
      */
-    static function parseUrl(string $text = '', array $classes = []): string
+    static function parseUrl(string $text = '', array $classes = [], bool $shortenLink = true): string
     {
         if ( empty($text) ) {
             return '';
@@ -29,20 +30,22 @@ class Utils
         
         // Обычные ссылки
         preg_match_all('#(https?://[0-9a-z._?&=/:%{}\-]+)#xim', $text, $matches);
-    
+        
         if ( is_array($matches) && 0 < count($matches) ) {
             foreach ( $matches[1] as $match ) {
                 if ( !$url = parse_url($match) ) {
                     continue;
                 }
                 
-                $host = $match;
-                if ( array_key_exists('host', $url) ) {
-                    $host = $url['host'];
+                // Determine link text based on shortenLink parameter
+                if ( $shortenLink && array_key_exists('host', $url) ) {
+                    $linkText = $url['host'];
+                } else {
+                    $linkText = $match;
                 }
                 
-                $link = '<a href="' . $match . '" target="_blank" ' . (!empty($classList) ? ' class="' . $classList . '" ' : '') . ' >' . $host . '</a>';
-            
+                $link = '<a href="' . $match . '" target="_blank" ' . (!empty($classList) ? ' class="' . $classList . '" ' : '') . ' >' . $linkText . '</a>';
+                
                 $text = str_replace($match, $link, $text);
             }
         }
@@ -58,7 +61,7 @@ class Utils
         
         return $text;
     }
-
+    
     /**
      * Функция для человеческого отображения размера данных
      *
@@ -69,14 +72,14 @@ class Utils
     static function humanFSize(int $size, string $separator = '&nbsp;'): string
     {
         $fileSizeName = ['Байт', 'Кб', 'Мб', 'Гб', 'Тб', 'Пб'];
-    
+        
         if ( 0 >= $size ) {
             return '0' . $separator . $fileSizeName[0];
         }
-    
+        
         return round($size/pow(1024, ($i = floor(log($size, 1024)))), 2) . $separator . $fileSizeName[$i];
     }
-
+    
     /**
      * Склоняет числительные
      *
@@ -91,7 +94,7 @@ class Utils
         $cases = [2, 0, 1, 1, 1, 2];
         return ($showNumber ? $number . ' ' : '') . $titles[ ($number%100 > 4 && $number%100 < 20)? 2 : $cases[min($number%10, 5)] ];
     }
-
+    
     /**
      * Среднее медиана
      *
@@ -101,7 +104,7 @@ class Utils
     static function mediana(array $arData = []): float|int
     {
         sort($arData, SORT_NUMERIC);
-    
+        
         if ( 0 === count($arData) % 2 ) {
             // Четное число значений
             $mediana = ($arData[(count($arData)/2 - 1)] + $arData[count($arData)/2] ) / 2;
@@ -109,7 +112,7 @@ class Utils
             // Нечетное число значений
             $mediana = $arData[ceil(count($arData)/2)];
         }
-    
+        
         return $mediana;
     }
 }
