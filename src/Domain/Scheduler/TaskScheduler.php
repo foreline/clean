@@ -6,6 +6,7 @@ namespace Domain\Scheduler;
 use Cron\CronExpression;
 use DateTimeImmutable;
 use Exception;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Scheduler\Schedule;
 use Symfony\Component\Scheduler\RecurringMessage;
 use Symfony\Component\Scheduler\Scheduler;
@@ -20,24 +21,26 @@ class TaskScheduler
     private static ?self $instance = null;
     private Schedule $schedule;
     private TaskRegistry $taskRegistry;
+    private LoggerInterface $logger;
     
     /**
      * Private constructor for singleton pattern
      */
-    private function __construct()
+    private function __construct(?LoggerInterface $logger = null)
     {
         $this->schedule = new Schedule();
         $this->taskRegistry = new TaskRegistry();
+        $this->logger = $logger;
     }
     
     /**
      * Get singleton instance
      * @return static
      */
-    public static function getInstance(): self
+    public static function getInstance(?LoggerInterface $logger = null): self
     {
-        if (self::$instance === null) {
-            self::$instance = new self();
+        if ( null === self::$instance ) {
+            self::$instance = new self($logger);
         }
         
         return self::$instance;
@@ -52,7 +55,7 @@ class TaskScheduler
     public function addTask(TaskInterface $task): self
     {
         // Validate cron expression
-        if (!CronExpression::isValidExpression($task->getCronExpression())) {
+        if ( !CronExpression::isValidExpression($task->getCronExpression()) ) {
             throw new Exception("Invalid cron expression: {$task->getCronExpression()}");
         }
         
@@ -123,7 +126,7 @@ class TaskScheduler
         $cron = new CronExpression($task->getCronExpression());
         
         $lastRun = $task->getLastExecutedAt();
-        if ($lastRun === null) {
+        if ( null === $lastRun ) {
             return $cron->isDue($currentTime);
         }
         
@@ -158,13 +161,16 @@ class TaskScheduler
         $currentTime = $currentTime ?? new DateTimeImmutable();
         $executedTasks = [];
         
-        foreach ($this->taskRegistry->getEnabledTasks() as $task) {
-            if ($this->isTaskDue($task, $currentTime)) {
+        foreach ( $this->taskRegistry->getEnabledTasks() as $task ) {
+            if ( $this->isTaskDue($task, $currentTime) ) {
                 try {
+                    $startTime = microtime(true);
+                    $this->logger?->debug('[' . date('Y.m.d H:i:s') . '] ' . "Executing task: {$task->getName()}" . PHP_EOL);
                     $task->execute();
+                    $this->logger?->debug('[' . date('Y.m.d H:i:s') . '] ' . "Task executed successfully: {$task->getName()} in " . (microtime(true) - $startTime) . " seconds" . PHP_EOL . PHP_EOL);
                     $task->setLastExecutedAt($currentTime);
                     $executedTasks[] = $task->getName();
-                } catch (Exception $e) {
+                } catch ( Exception $e ) {
                     // In a real implementation, you might want to log this
                     throw new Exception("Failed to execute task '{$task->getName()}': " . $e->getMessage(), 0, $e);
                 }
@@ -182,7 +188,7 @@ class TaskScheduler
      */
     public function run(): void
     {
-        if (empty($this->taskRegistry->all())) {
+        if ( empty($this->taskRegistry->all()) ) {
             return; // No tasks to run
         }
         
@@ -205,15 +211,15 @@ class TaskScheduler
     {
         $info = [];
         
-        foreach ($this->taskRegistry->all() as $task) {
+        foreach ( $this->taskRegistry->all() as $task ) {
             $info[] = [
-                'name' => $task->getName(),
-                'cron' => $task->getCronExpression(),
-                'enabled' => $task->isEnabled(),
-                'priority' => $task->getPriority(),
+                'name'          => $task->getName(),
+                'cron'          => $task->getCronExpression(),
+                'enabled'       => $task->isEnabled(),
+                'priority'      => $task->getPriority(),
                 'last_executed' => $task->getLastExecutedAt()?->format('Y-m-d H:i:s'),
-                'next_run' => $this->getNextRunTime($task)->format('Y-m-d H:i:s'),
-                'is_due' => $this->isTaskDue($task)
+                'next_run'      => $this->getNextRunTime($task)->format('Y-m-d H:i:s'),
+                'is_due'        => $this->isTaskDue($task)
             ];
         }
         
