@@ -16,7 +16,6 @@ use InvalidArgumentException;
  */
 class GetUserCollection implements ServiceInterface
 {
-    //private UserRepositoryInterface $repository;
     public UserManager $manager;
     
     use UserFilterTrait;
@@ -27,9 +26,8 @@ class GetUserCollection implements ServiceInterface
     /**
      *
      */
-    public function __construct(/*UserRepositoryInterface $repository*/)
+    public function __construct()
     {
-        //$this->repository = $repository;
         $this->manager = new UserManager(null, $this);
         
         $this->filter   = $this->manager->filter;
