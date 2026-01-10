@@ -6,7 +6,6 @@ namespace Domain\User\ValueObject;
 use Domain\ValueObject\CollectionInterface;
 use Domain\ValueObject\CollectionTrait;
 use Domain\ValueObject\ValueObjectInterface;
-use Iterator;
 
 /**
  * Коллекция ролей пользователя
@@ -56,10 +55,10 @@ class RoleCollection implements CollectionInterface
     }
 
     /**
-     * @param RoleCollection|Iterator|null $roles
+     * @param ?CollectionInterface $roles
      * @return $this
      */
-    public function setItems(RoleCollection|null|Iterator $roles): self
+    public function setItems(?CollectionInterface $roles): self
     {
         $this->items = null;
         
