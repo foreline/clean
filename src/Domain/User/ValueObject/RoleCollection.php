@@ -3,17 +3,17 @@ declare(strict_types=1);
 
 namespace Domain\User\ValueObject;
 
-use Domain\Aggregate\AggregateInterface;
-use Domain\Aggregate\IteratorInterface;
-use Domain\Aggregate\IteratorTrait;
+use Domain\ValueObject\CollectionInterface;
+use Domain\ValueObject\CollectionTrait;
+use Domain\ValueObject\ValueObjectInterface;
 use Iterator;
 
 /**
  * Коллекция ролей пользователя
  */
-class RoleCollection implements IteratorInterface
+class RoleCollection implements CollectionInterface
 {
-    use IteratorTrait;
+    use CollectionTrait;
     
     /** @var ?Role[] */
     private ?array $items;
@@ -43,10 +43,10 @@ class RoleCollection implements IteratorInterface
     }
 
     /**
-     * @param Role|AggregateInterface $role
+     * @param Role|ValueObjectInterface $role
      * @return self
      */
-    public function addItem(Role|AggregateInterface $role): self
+    public function addItem(Role|ValueObjectInterface $role): self
     {
         if ( null === $this->items ) {
             $this->items = [];
@@ -65,6 +65,18 @@ class RoleCollection implements IteratorInterface
         
         foreach ( $roles as $item ) {
             $this->addItem($item);
+        }
+        return $this;
+    }
+    
+    /**
+     * @param CollectionInterface $roles
+     * @return $this
+     */
+    public function addItems(CollectionInterface $roles): self
+    {
+        foreach ( $roles as $role ) {
+            $this->addItem($role);
         }
         return $this;
     }

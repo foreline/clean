@@ -5,6 +5,8 @@ namespace Domain\User\ValueObject;
 
 use Domain\ValueObject\StringValueObjectInterface;
 use Domain\ValueObject\EnumValueObjectInterface;
+use InvalidArgumentException;
+use ReflectionClass;
 
 /**
  * Enhanced Role design with better abstraction and flexibility
@@ -75,11 +77,11 @@ abstract class AbstractRole implements StringValueObjectInterface, EnumValueObje
      */
     protected function validateRole(string $code): void
     {
-        $reflection = new \ReflectionClass(static::class);
+        $reflection = new ReflectionClass(static::class);
         $constants = $reflection->getConstants();
         
         if (!in_array($code, $constants, true)) {
-            throw new \InvalidArgumentException("Role '{$code}' is not defined in " . static::class);
+            throw new InvalidArgumentException("Role '{$code}' is not defined in " . static::class);
         }
     }
     
