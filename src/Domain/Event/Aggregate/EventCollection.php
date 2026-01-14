@@ -14,8 +14,8 @@ use Iterator;
  */
 class EventCollection implements IteratorInterface
 {
-    /** @var ?Event[]  */
-    private ?array $items = null;
+    /** @var Event[]  */
+    private array $items = [];
     
     use IteratorTrait;
 

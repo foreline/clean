@@ -15,8 +15,8 @@ class GroupCollection implements IteratorInterface
 {
     use IteratorTrait;
     
-    /** @var ?Group[]  */
-    private ?array $items;
+    /** @var Group[]  */
+    private array $items = [];
     
     /**
      *
