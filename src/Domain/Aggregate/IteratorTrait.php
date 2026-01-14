@@ -15,7 +15,7 @@ trait IteratorTrait
     private int $position;
     
     /** @var ?AggregateInterface[] */
-    private ?array $items;
+    private array $items = [];
     
     /**
      *
@@ -23,7 +23,7 @@ trait IteratorTrait
     public function __construct()
     {
         $this->position = 0;
-        $this->items = null;
+        $this->items = [];
     }
     
     /**
