@@ -7,6 +7,7 @@ use Domain\User\Aggregate\UserCollection;
 
 /**
  * User Collection HTTP API Data Transfer Object
+ * @deprecated Use UserCollectionHandler instead
  */
 class UserCollectionDto
 {

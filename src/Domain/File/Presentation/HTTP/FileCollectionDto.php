@@ -7,6 +7,7 @@ use Domain\File\Aggregate\FileCollection;
 
 /**
  * File Collection HTTP API Data Transfer Object
+ * @deprecated Use FileCollectionHandler instead
  */
 class FileCollectionDto
 {

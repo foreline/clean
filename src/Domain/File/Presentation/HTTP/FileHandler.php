@@ -6,10 +6,9 @@ namespace Domain\File\Presentation\HTTP;
 use Domain\File\Aggregate\File;
 
 /**
- * File HTTP API Data Transfer Object
- * @deprecated use FileHandler instead
+ * File HTTP API Handler
  */
-class FileDto
+class FileHandler
 {
     /**
      * @param File|null $file
@@ -22,31 +21,29 @@ class FileDto
             return null;
         }
         
-        $dto = [
-            'entityType' => 'file',
-        ];
-    
+        $result = [];
+        
         if ( empty($fields) || array_key_exists('id', $fields) ) {
-            $dto['id'] = $file->getId();
-        }
-    
-        if ( empty($fields) || array_key_exists('name', $fields) ) {
-            $dto['name'] = $file->getName();
-        }
-    
-        if ( empty($fields) || array_key_exists('description', $fields) ) {
-            $dto['description'] = $file->getDescription();
-        }
-    
-        if ( empty($fields) || array_key_exists('size', $fields) ) {
-            $dto['size'] = $file->getSize();
-        }
-    
-        if ( empty($fields) || array_key_exists('path', $fields) ) {
-            $dto['path'] = $file->getPath();
+            $result['id'] = $file->getId();
         }
         
-        return $dto;
+        if ( empty($fields) || array_key_exists('name', $fields) ) {
+            $result['name'] = $file->getName();
+        }
+        
+        if ( empty($fields) || array_key_exists('description', $fields) ) {
+            $result['description'] = $file->getDescription();
+        }
+        
+        if ( empty($fields) || array_key_exists('size', $fields) ) {
+            $result['size'] = $file->getSize();
+        }
+        
+        if ( empty($fields) || array_key_exists('path', $fields) ) {
+            $result['path'] = $file->getPath();
+        }
+        
+        return $result;
     }
     
     /**

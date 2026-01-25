@@ -8,6 +8,7 @@ use Domain\User\Aggregate\User;
 
 /**
  * User HTTP API Data Transfer Object
+ * @deprecated use UserHandler instead
  */
 class UserDto
 {
