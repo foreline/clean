@@ -13,8 +13,8 @@ trait CollectionTrait
     /** @var int  */
     private int $position;
     
-    /** @var ?ValueObjectInterface[] */
-    private array $items = [];
+    /** @var ValueObjectInterface[] */
+    private array $items;
     
     /**
      *
