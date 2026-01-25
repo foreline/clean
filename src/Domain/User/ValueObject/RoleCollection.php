@@ -8,31 +8,30 @@ use Domain\ValueObject\CollectionTrait;
 use Domain\ValueObject\ValueObjectInterface;
 
 /**
- * Коллекция ролей пользователя
+ * User Role Collection
  */
 class RoleCollection implements CollectionInterface
 {
     use CollectionTrait;
     
-    /** @var ?Role[] */
-    private ?array $items;
+    /** @var Role[] */
+    private array $items;
     
     public function __construct()
     {
-        $this->items = null;
+        $this->items = [];
         $this->position = 0;
     }
     
     /**
      * Return the current element
-     * @link https://php.net/manual/en/iterator.current.php
      * @return Role|null
      */
     public function current(): ?Role
     {
         return $this->valid() ? $this->items[$this->position] : null;
     }
-
+    
     /**
      * @return ?Role[]
      */
@@ -40,27 +39,24 @@ class RoleCollection implements CollectionInterface
     {
         return $this->items;
     }
-
+    
     /**
      * @param Role|ValueObjectInterface $role
      * @return self
      */
     public function addItem(Role|ValueObjectInterface $role): self
     {
-        if ( null === $this->items ) {
-            $this->items = [];
-        }
         $this->items[] = $role;
         return $this;
     }
-
+    
     /**
      * @param ?CollectionInterface $roles
      * @return $this
      */
     public function setItems(?CollectionInterface $roles): self
     {
-        $this->items = null;
+        $this->items = [];
         
         foreach ( $roles as $item ) {
             $this->addItem($item);
@@ -79,12 +75,9 @@ class RoleCollection implements CollectionInterface
         }
         return $this;
     }
-
+    
     /**
      * The __toString method allows a class to decide how it will react when it is converted to a string.
-     *
-     * @return string
-     * @link https://php.net/manual/en/language.oop5.magic.php#language.oop5.magic.tostring
      */
     public function __toString(): string
     {

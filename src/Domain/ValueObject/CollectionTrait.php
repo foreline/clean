@@ -14,7 +14,7 @@ trait CollectionTrait
     private int $position;
     
     /** @var ?ValueObjectInterface[] */
-    private ?array $items;
+    private array $items = [];
     
     /**
      *
@@ -22,7 +22,7 @@ trait CollectionTrait
     public function __construct()
     {
         $this->position = 0;
-        $this->items = null;
+        $this->items = [];
     }
     
     /**
@@ -66,7 +66,7 @@ trait CollectionTrait
      */
     public function getCount(): int
     {
-        return ( null !== $this->items ? count($this->items) : 0 );
+        return count($this->items);
     }
     
     /**
