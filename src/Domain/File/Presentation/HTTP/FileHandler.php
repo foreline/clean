@@ -10,6 +10,14 @@ use Domain\File\Aggregate\File;
  */
 class FileHandler
 {
+    public const ID = 'id';
+    public const NAME = 'name';
+    public const FILE_NAME = 'fileName';
+    public const DESCRIPTION = 'description';
+    public const SIZE = 'size';
+    public const PATH = 'path';
+    public const SOURCE = 'source';
+    
     /**
      * @param File|null $file
      * @param array $fields
@@ -23,24 +31,24 @@ class FileHandler
         
         $result = [];
         
-        if ( empty($fields) || array_key_exists('id', $fields) ) {
-            $result['id'] = $file->getId();
+        if ( empty($fields) || array_key_exists(self::ID, $fields) ) {
+            $result[self::ID] = $file->getId();
         }
         
-        if ( empty($fields) || array_key_exists('name', $fields) ) {
-            $result['name'] = $file->getName();
+        if ( empty($fields) || array_key_exists(self::NAME, $fields) ) {
+            $result[self::NAME] = $file->getName();
         }
         
-        if ( empty($fields) || array_key_exists('description', $fields) ) {
-            $result['description'] = $file->getDescription();
+        if ( empty($fields) || array_key_exists(self::DESCRIPTION, $fields) ) {
+            $result[self::DESCRIPTION] = $file->getDescription();
         }
         
-        if ( empty($fields) || array_key_exists('size', $fields) ) {
-            $result['size'] = $file->getSize();
+        if ( empty($fields) || array_key_exists(self::SIZE, $fields) ) {
+            $result[self::SIZE] = $file->getSize();
         }
         
-        if ( empty($fields) || array_key_exists('path', $fields) ) {
-            $result['path'] = $file->getPath();
+        if ( empty($fields) || array_key_exists(self::PATH, $fields) ) {
+            $result[self::PATH] = $file->getPath();
         }
         
         return $result;
@@ -58,16 +66,16 @@ class FileHandler
         
         $file = new File();
         
-        if ( array_key_exists('id', $data) ) {
-            $file->setId((int)$data['id']);
+        if ( array_key_exists(self::ID, $data) ) {
+            $file->setId((int)$data[self::ID]);
         }
         
-        if ( array_key_exists('fileName', $data) ) {
-            $file->setFileName((string)$data['fileName']);
+        if ( array_key_exists(self::FILE_NAME, $data) ) {
+            $file->setFileName((string)$data[self::FILE_NAME]);
         }
         
-        if ( array_key_exists('source', $data) ) {
-            $file->setSource((string)$data['source']);
+        if ( array_key_exists(self::SOURCE, $data) ) {
+            $file->setSource((string)$data[self::SOURCE]);
         }
         
         return $file;
