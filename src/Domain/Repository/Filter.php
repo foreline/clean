@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace Domain\Repository;
 
+use Domain\Repository\Enum\FilterOperator;
+use Domain\Repository\Enum\RangeFilterKey;
+use Domain\Repository\ValueObject\RangeFilterValue;
 use Domain\Service\ServiceInterface;
 use InvalidArgumentException;
 use JsonSerializable;
@@ -119,6 +122,32 @@ class Filter implements FilterInterface, JsonSerializable
     {
         $this->filter[$prefix . $field . $suffix] = $value;
         return $this;
+    }
+    
+    /**
+     * Add a range filter criterion
+     *
+     * @param string $field Field name
+     * @param RangeFilterValue $rangeValue Range filter value object
+     * @return self
+     */
+    public function addRange(string $field, RangeFilterValue $rangeValue): self
+    {
+        $this->filter[$field] = $rangeValue->toStorageValue();
+        return $this;
+    }
+    
+    /**
+     * Check if a filter value is a range filter
+     *
+     * @param mixed $value Filter value
+     * @return bool
+     */
+    public static function isRangeFilterValue(mixed $value): bool
+    {
+        return is_array($value)
+            && isset($value[RangeFilterKey::OPERATOR->value])
+            && null !== FilterOperator::tryFrom($value[RangeFilterKey::OPERATOR->value]);
     }
     
     /**
