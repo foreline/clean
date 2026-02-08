@@ -40,7 +40,22 @@ abstract class AbstractEntity
      * @var string Ссылка на элемент
      * @deprecated
      */
+    private string $detailPageUrl = '';
+    
+    /** @var string Ссылка на элемент */
     private string $slug = '';
+    
+    /**
+     * @var string
+     * @deprecated
+     */
+    private string $listUrl = '';
+    
+    /**
+     * @var string
+     * @deprecated
+     */
+    private string $addUrl = '';
     
     /**
      * @return int|null
@@ -171,9 +186,27 @@ abstract class AbstractEntity
     /**
      * @return string
      */
+    public function getDetailPageUrl(): string
+    {
+        return $this->detailPageUrl;
+    }
+    
+    /**
+     * @param string $detailPageUrl
+     * @return self
+     */
+    public function setDetailPageUrl(string $detailPageUrl): self
+    {
+        $this->detailPageUrl = $detailPageUrl;
+        return $this;
+    }
+    
+    /**
+     * @return string
+     */
     public function getSlug(): string
     {
-        return $this->slug;
+        return $this->slug ?: $this->getDetailPageUrl();
     }
     
     /**
@@ -182,7 +215,63 @@ abstract class AbstractEntity
      */
     public function setSlug(string $slug): static
     {
-        $this->slug = $slug;
+        $this->detailPageUrl = $slug;
+        return $this;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getListUrl(): string
+    {
+        return $this->listUrl;
+    }
+    
+    /**
+     * @param string $listUrl
+     * @return self
+     */
+    public function setListUrl(string $listUrl): self
+    {
+        $this->listUrl = $listUrl;
+        return $this;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getAddSlug(): string
+    {
+        return $this->addUrl;
+    }
+    
+    /**
+     * @param string $addSlug
+     * @return $this
+     */
+    public function setAddSlug(string $addSlug): static
+    {
+        $this->addUrl = $addSlug;
+        return $this;
+    }
+    
+    /**
+     * @return string
+     * @deprecated
+     */
+    public function getAddUrl(): string
+    {
+        return $this->addUrl;
+    }
+    
+    /**
+     * @param string $addUrl
+     * @return self
+     * @deprecated
+     */
+    public function setAddUrl(string $addUrl): self
+    {
+        $this->addUrl = $addUrl;
         return $this;
     }
     
