@@ -8,9 +8,10 @@ namespace Domain\Event;
  */
 class Publisher
 {
-    /** @var Subscriber[] */
+    /** @var SubscriberInterface[] */
     private array $subscribers;
     private static ?self $instance = null;
+    private ?AsyncDispatcherInterface $asyncDispatcher = null;
     
     /**
      *
@@ -18,6 +19,27 @@ class Publisher
     private function __construct()
     {
         $this->subscribers = [];
+    }
+    
+    /**
+     * Sets the async dispatcher for handling AsyncSubscriberInterface subscribers.
+     * When not set, all subscribers are processed synchronously (backward compatible).
+     *
+     * @param AsyncDispatcherInterface $asyncDispatcher
+     */
+    public function setAsyncDispatcher(AsyncDispatcherInterface $asyncDispatcher): void
+    {
+        $this->asyncDispatcher = $asyncDispatcher;
+    }
+    
+    /**
+     * Returns the async dispatcher if set.
+     *
+     * @return AsyncDispatcherInterface|null
+     */
+    public function getAsyncDispatcher(): ?AsyncDispatcherInterface
+    {
+        return $this->asyncDispatcher;
     }
     
     /**
@@ -55,6 +77,8 @@ class Publisher
     /**
      * The publish method checks all possible subscribers to see if they are interested in the published domain event.
      * If so, the subscriber's handle method is called.
+     * Async subscribers are dispatched via AsyncDispatcherInterface if available.
+     *
      * @param Event ...$events
      */
     public function publish(EventInterface ... $events): self
@@ -62,7 +86,11 @@ class Publisher
         foreach ( $this->subscribers as $subscriber ) {
             foreach ( $events as $event ) {
                 if ( $subscriber->isSubscribedTo($event) ) {
-                    $subscriber->handle($event);
+                    if ( null !== $this->asyncDispatcher && $subscriber instanceof AsyncSubscriberInterface ) {
+                        $this->asyncDispatcher->dispatch($event, $subscriber);
+                    } else {
+                        $subscriber->handle($event);
+                    }
                 }
             }
         }

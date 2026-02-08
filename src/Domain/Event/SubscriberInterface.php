@@ -14,12 +14,12 @@ interface SubscriberInterface
      */
     public function handle(Event $event): void;
     //public function handle(EventInterface $event): void;
-
+    
     /**
-     * @param Event $event
+     * @param Event|EventInterface $event
      * @return bool
      */
-    public function isSubscribedTo(Event $event): bool;
+    public function isSubscribedTo(Event|EventInterface $event): bool;
     //public function isSubscribedTo(EventInterface $event): bool;
     
     /**
