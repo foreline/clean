@@ -40,5 +40,5 @@
   "scripts": {
     "phpstan": "vendor/bin/phpstan analyse -c phpstan.neon"
   },
-  "bin": ["bin/messenger-worker"]
+  "bin": ["bin/messenger-worker.php"]
 }
