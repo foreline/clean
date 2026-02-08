@@ -5,7 +5,6 @@ namespace Domain\Entity;
 
 use DateTimeImmutable;
 use InvalidArgumentException;
-use Webmozart\Assert\Assert;
 use Domain\User\Aggregate\User;
 
 /**
@@ -34,26 +33,14 @@ abstract class AbstractEntity
     /** @var int Количество */
     private int $aggregatedCount = 1;
     
+    /** @var string Внешний ID */
+    private string $extId = '';
+    
     /**
-     * @var string
+     * @var string Ссылка на элемент
      * @deprecated
      */
-    private string $detailPageUrl = '';
-    
-    /** @var string Ссылка на элемент */
     private string $slug = '';
-    
-    /**
-     * @var string
-     * @deprecated
-     */
-    private string $listUrl = '';
-    
-    /**
-     * @var string
-     * @deprecated
-     */
-    private string $addUrl = '';
     
     /**
      * @return int|null
@@ -75,8 +62,9 @@ abstract class AbstractEntity
             return $this;
         }
         
-        // ID must be positive integer
-        Assert::positiveInteger($id, 'ID должен быть положительным');
+        if ( 0 >= $id ) {
+            throw new InvalidArgumentException('ID должен быть положительным');
+        }
         
         // ID cannot be changed
         if ( 0 < $this->id && $id !== $this->id ) {
@@ -97,7 +85,7 @@ abstract class AbstractEntity
     /**
      * @param string $name
      * @return self
-     * @throw \InvalidArgumentException
+     * @throw InvalidArgumentException
      */
     public function setName(string $name): self
     {
@@ -183,27 +171,9 @@ abstract class AbstractEntity
     /**
      * @return string
      */
-    public function getDetailPageUrl(): string
-    {
-        return $this->detailPageUrl;
-    }
-    
-    /**
-     * @param string $detailPageUrl
-     * @return self
-     */
-    public function setDetailPageUrl(string $detailPageUrl): self
-    {
-        $this->detailPageUrl = $detailPageUrl;
-        return $this;
-    }
-    
-    /**
-     * @return string
-     */
     public function getSlug(): string
     {
-        return $this->slug ?: $this->getDetailPageUrl();
+        return $this->slug;
     }
     
     /**
@@ -212,63 +182,7 @@ abstract class AbstractEntity
      */
     public function setSlug(string $slug): static
     {
-        $this->detailPageUrl = $slug;
-        return $this;
-    }
-    
-    /**
-     * @return string
-     */
-    public function getListUrl(): string
-    {
-        return $this->listUrl;
-    }
-    
-    /**
-     * @param string $listUrl
-     * @return self
-     */
-    public function setListUrl(string $listUrl): self
-    {
-        $this->listUrl = $listUrl;
-        return $this;
-    }
-    
-    /**
-     * @return string
-     */
-    public function getAddSlug(): string
-    {
-        return $this->addUrl;
-    }
-    
-    /**
-     * @param string $addSlug
-     * @return $this
-     */
-    public function setAddSlug(string $addSlug): static
-    {
-        $this->addUrl = $addSlug;
-        return $this;
-    }
-    
-    /**
-     * @return string
-     * @deprecated
-     */
-    public function getAddUrl(): string
-    {
-        return $this->addUrl;
-    }
-    
-    /**
-     * @param string $addUrl
-     * @return self
-     * @deprecated
-     */
-    public function setAddUrl(string $addUrl): self
-    {
-        $this->addUrl = $addUrl;
+        $this->slug = $slug;
         return $this;
     }
     
@@ -307,6 +221,24 @@ abstract class AbstractEntity
     public function setAggregatedCount(int $aggregatedCount): AbstractEntity
     {
         $this->aggregatedCount = $aggregatedCount;
+        return $this;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getExtId(): string
+    {
+        return $this->extId;
+    }
+    
+    /**
+     * @param string $extId
+     * @return $this
+     */
+    public function setExtId(string $extId): self
+    {
+        $this->extId = $extId;
         return $this;
     }
 }
