@@ -18,8 +18,7 @@
     "ramsey/uuid": "^4.8",
     "symfony/scheduler": "^7.3",
     "dragonmantank/cron-expression": "^3.4",
-    "symfony/messenger": "^7.4",
-    "ext-pcntl": "*"
+    "symfony/messenger": "^7.4"
   },
   "require-dev": {
     "phpunit/phpunit": "^9.6",
