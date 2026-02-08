@@ -6,6 +6,7 @@ namespace Domain\User\UseCase;
 use Domain\Exception\NotAuthorizedException;
 use Domain\Exception\NotPermittedException;
 use Domain\User\Aggregate\User;
+use Domain\User\Aggregate\UserInterface;
 use Exception;
 use InvalidArgumentException;
 
@@ -33,7 +34,7 @@ class PersistUser
      * @throws InvalidArgumentException
      * @throws Exception
      */
-    public function persist(User $access): User
+    public function persist(User $access): User|UserInterface
     {
         if ( 0 < $access->getId() ) {
             return (new UpdateUser())($access);

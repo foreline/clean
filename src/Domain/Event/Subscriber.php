@@ -29,7 +29,7 @@ class Subscriber implements SubscriberInterface
      * @param Event $event
      * @return bool
      */
-    public function isSubscribedTo(Event $event): bool
+    public function isSubscribedTo(EventInterface $event): bool
     {
         return true;
     }

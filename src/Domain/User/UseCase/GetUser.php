@@ -5,6 +5,7 @@ namespace Domain\User\UseCase;
 
 use Domain\Exception\NotAuthorizedException;
 use Domain\User\Aggregate\User;
+use Domain\User\Aggregate\UserInterface;
 use Domain\User\Service\GetCurrentUser;
 use Exception;
 use InvalidArgumentException;
@@ -29,7 +30,7 @@ class GetUser
      * @throws InvalidArgumentException
      * @throws Exception
      */
-    public function get(int $id, bool $checkPermissions = true): ?User
+    public function get(int $id, bool $checkPermissions = true): null|User|UserInterface
     {
         try {
             if ( $checkPermissions ) {

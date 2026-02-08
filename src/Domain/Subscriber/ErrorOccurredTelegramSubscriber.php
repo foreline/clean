@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Domain\Subscriber;
 
 use Domain\Event\Event;
+use Domain\Event\EventInterface;
 use Domain\Event\SubscriberInterface;
 use Domain\Events\ErrorOccurredEvent;
 use Domain\User\Service\GetCurrentUser;
@@ -78,7 +79,7 @@ class ErrorOccurredTelegramSubscriber implements SubscriberInterface
      * @param ErrorOccurredEvent $event
      * @return bool
      */
-    public function isSubscribedTo(Event $event): bool
+    public function isSubscribedTo(EventInterface $event): bool
     {
         return $event instanceof ErrorOccurredEvent;
     }
