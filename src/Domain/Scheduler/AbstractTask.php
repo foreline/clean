@@ -14,9 +14,11 @@ abstract class AbstractTask implements TaskInterface
     
     public function __construct(
         private readonly string $name,
-        private readonly string $cronExpression,
+        private string $cronExpression,
         private readonly bool $enabled = true,
-        private readonly int $priority = 0
+        private readonly int $priority = 0,
+        private readonly bool $requiresLock = true,
+        private readonly int $lockTimeout = 300
     ) {
     }
     
@@ -28,6 +30,11 @@ abstract class AbstractTask implements TaskInterface
     public function getCronExpression(): string
     {
         return $this->cronExpression;
+    }
+    
+    public function setCronExpression(string $cronExpression): void
+    {
+        $this->cronExpression = $cronExpression;
     }
     
     public function getLastExecutedAt(): ?DateTimeImmutable
@@ -48,6 +55,16 @@ abstract class AbstractTask implements TaskInterface
     public function getPriority(): int
     {
         return $this->priority;
+    }
+    
+    public function requiresLock(): bool
+    {
+        return $this->requiresLock;
+    }
+    
+    public function getLockTimeout(): int
+    {
+        return $this->lockTimeout;
     }
     
     /**

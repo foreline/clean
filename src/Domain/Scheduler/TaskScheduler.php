@@ -21,26 +21,34 @@ class TaskScheduler
     private static ?self $instance = null;
     private Schedule $schedule;
     private TaskRegistry $taskRegistry;
-    private LoggerInterface $logger;
+    private ?LoggerInterface $logger;
+    private ?string $lockDirectory;
     
     /**
      * Private constructor for singleton pattern
      */
-    private function __construct(?LoggerInterface $logger = null)
-    {
+    private function __construct(
+        ?LoggerInterface $logger = null,
+        ?string $lockDirectory = null
+    ) {
         $this->schedule = new Schedule();
         $this->taskRegistry = new TaskRegistry();
         $this->logger = $logger;
+        $this->lockDirectory = $lockDirectory;
     }
     
     /**
      * Get singleton instance
+     * @param LoggerInterface|null $logger
+     * @param string|null $lockDirectory Directory for per-task lock files. Required for lock support.
      * @return static
      */
-    public static function getInstance(?LoggerInterface $logger = null): self
-    {
+    public static function getInstance(
+        ?LoggerInterface $logger = null,
+        ?string $lockDirectory = null
+    ): self {
         if ( null === self::$instance ) {
-            self::$instance = new self($logger);
+            self::$instance = new self($logger, $lockDirectory);
         }
         
         return self::$instance;
@@ -49,11 +57,17 @@ class TaskScheduler
     /**
      * Add a task to the scheduler
      * @param TaskInterface $task
+     * @param string|null $cronExpression Optional cron expression override
      * @return $this
      * @throws Exception
      */
-    public function addTask(TaskInterface $task): self
+    public function addTask(TaskInterface $task, ?string $cronExpression = null): self
     {
+        // Override cron expression if provided
+        if ( null !== $cronExpression ) {
+            $task->setCronExpression($cronExpression);
+        }
+        
         // Validate cron expression
         if ( !CronExpression::isValidExpression($task->getCronExpression()) ) {
             throw new Exception("Invalid cron expression: {$task->getCronExpression()}");
@@ -163,7 +177,22 @@ class TaskScheduler
         
         foreach ( $this->taskRegistry->getEnabledTasks() as $task ) {
             if ( $this->isTaskDue($task, $currentTime) ) {
+                $lock = null;
+                
                 try {
+                    // Acquire per-task lock if required
+                    if ( $task->requiresLock() && null !== $this->lockDirectory ) {
+                        $lock = new TaskLock($task->getName(), $this->lockDirectory);
+                        
+                        if ( !$lock->acquire() ) {
+                            $this->logger?->warning(
+                                '[' . date('Y.m.d H:i:s') . '] '
+                                . "Task '{$task->getName()}' is already running, skipping" . PHP_EOL
+                            );
+                            continue;
+                        }
+                    }
+                    
                     $startTime = microtime(true);
                     $this->logger?->debug('[' . date('Y.m.d H:i:s') . '] ' . "Executing task: {$task->getName()}" . PHP_EOL);
                     $task->execute();
@@ -171,8 +200,13 @@ class TaskScheduler
                     $task->setLastExecutedAt($currentTime);
                     $executedTasks[] = $task->getName();
                 } catch ( Exception $e ) {
-                    // In a real implementation, you might want to log this
+                    $this->logger?->error(
+                        '[' . date('Y.m.d H:i:s') . '] '
+                        . "Failed to execute task '{$task->getName()}': {$e->getMessage()}" . PHP_EOL
+                    );
                     throw new Exception("Failed to execute task '{$task->getName()}': " . $e->getMessage(), 0, $e);
+                } finally {
+                    $lock?->release();
                 }
             }
         }

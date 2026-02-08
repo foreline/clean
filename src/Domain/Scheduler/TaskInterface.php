@@ -21,6 +21,11 @@ interface TaskInterface
     public function getCronExpression(): string;
     
     /**
+     * Override the cron expression for this task
+     */
+    public function setCronExpression(string $cronExpression): void;
+    
+    /**
      * Execute the task
      */
     public function execute(): void;
@@ -44,4 +49,16 @@ interface TaskInterface
      * Get task priority (higher number = higher priority)
      */
     public function getPriority(): int;
+    
+    /**
+     * Whether this task requires an exclusive lock to prevent concurrent execution.
+     * Tasks returning true will be skipped if another instance is already running.
+     */
+    public function requiresLock(): bool;
+    
+    /**
+     * Maximum expected execution time in seconds.
+     * Used for diagnostics and stale lock detection.
+     */
+    public function getLockTimeout(): int;
 }
