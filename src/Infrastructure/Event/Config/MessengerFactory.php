@@ -11,7 +11,6 @@ use Symfony\Component\Messenger\MessageBus;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Middleware\HandleMessageMiddleware;
 use Symfony\Component\Messenger\Middleware\SendMessageMiddleware;
-use Symfony\Component\Messenger\Retry\MultiplierRetryStrategy;
 use Symfony\Component\Messenger\Transport\Sender\SendersLocator;
 use Symfony\Component\Messenger\Transport\TransportInterface;
 
@@ -72,29 +71,6 @@ final class MessengerFactory
         return new MessageBus([
             new HandleMessageMiddleware($handlersLocator),
         ]);
-    }
-    
-    /**
-     * Creates a retry strategy for failed message processing.
-     *
-     * Uses exponential backoff: 60s → 120s → 240s (max 600s / 10 minutes).
-     *
-     * @param int $maxRetries Maximum retry attempts (default: 3)
-     * @param int $delayMs Base delay in milliseconds (default: 60000 = 60s)
-     * @param float $multiplier Delay multiplier per retry (default: 2.0)
-     * @return MultiplierRetryStrategy
-     */
-    public static function createRetryStrategy(
-        int $maxRetries = 3,
-        int $delayMs = 60000,
-        float $multiplier = 2.0,
-    ): MultiplierRetryStrategy {
-        return new MultiplierRetryStrategy(
-            maxRetries: $maxRetries,
-            delayMilliseconds: $delayMs,
-            multiplier: $multiplier,
-            maxDelayMilliseconds: 600000, // 10 minutes max
-        );
     }
     
     /**
