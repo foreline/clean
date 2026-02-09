@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Domain\Repository;
 
 use Domain\Aggregate\AggregateInterface;
+use Domain\Aggregate\CollectionInterface;
 use Domain\Aggregate\IteratorInterface;
 use Domain\Service\ServiceInterface;
 
@@ -38,7 +39,7 @@ interface RepositoryInterface
     /**
      * @return ?AggregateInterface[]
      */
-    public function find(): ?IteratorInterface;
+    public function find(): null|CollectionInterface|IteratorInterface;
 
     /**
      * @param int $id

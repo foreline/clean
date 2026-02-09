@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Domain\UseCase;
 
+use Domain\Aggregate\CollectionInterface;
 use Domain\Aggregate\IteratorInterface;
 
 /**
@@ -13,7 +14,7 @@ interface GetCollectionInterface
     /**
      * @return ?IteratorInterface
      */
-    public function get(): ?IteratorInterface;
+    public function get(): null|IteratorInterface|CollectionInterface;
     
     /**
      * Filters based on the provided criteria.
