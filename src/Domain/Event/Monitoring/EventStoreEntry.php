@@ -35,6 +35,9 @@ class EventStoreEntry
     /** @var ?DateTimeInterface Время обработки */
     private ?DateTimeInterface $processedAt;
     
+    /** @var ?DateTimeInterface Время начала обработки */
+    private ?DateTimeInterface $processingStartedAt;
+    
     /** @var ?DateTimeInterface Время создания записи */
     private ?DateTimeInterface $dateCreated;
     
@@ -47,17 +50,19 @@ class EventStoreEntry
         ?string $error,
         DateTimeInterface $occurredOn,
         ?DateTimeInterface $processedAt,
+        ?DateTimeInterface $processingStartedAt,
         ?DateTimeInterface $dateCreated
     ) {
-        $this->id              = $id;
-        $this->eventClass      = $eventClass;
-        $this->subscriberClass = $subscriberClass;
-        $this->status          = $status;
-        $this->attempts        = $attempts;
-        $this->error           = $error;
-        $this->occurredOn      = $occurredOn;
-        $this->processedAt     = $processedAt;
-        $this->dateCreated     = $dateCreated;
+        $this->id                  = $id;
+        $this->eventClass          = $eventClass;
+        $this->subscriberClass     = $subscriberClass;
+        $this->status              = $status;
+        $this->attempts            = $attempts;
+        $this->error               = $error;
+        $this->occurredOn          = $occurredOn;
+        $this->processedAt         = $processedAt;
+        $this->processingStartedAt = $processingStartedAt;
+        $this->dateCreated         = $dateCreated;
     }
     
     public function getId(): int
@@ -100,6 +105,11 @@ class EventStoreEntry
         return $this->processedAt;
     }
     
+    public function getProcessingStartedAt(): ?DateTimeInterface
+    {
+        return $this->processingStartedAt;
+    }
+    
     public function getDateCreated(): ?DateTimeInterface
     {
         return $this->dateCreated;
@@ -124,15 +134,54 @@ class EventStoreEntry
     }
     
     /**
+     * Total end-to-end duration in seconds (from dateCreated to processedAt).
+     * Includes queue wait time + execution time.
+     * Returns null if either timestamp is missing.
+     */
+    public function getEndToEndDurationSeconds(): ?float
+    {
+        if ( null === $this->processedAt || null === $this->dateCreated ) {
+            return null;
+        }
+        
+        return (float)($this->processedAt->getTimestamp() - $this->dateCreated->getTimestamp());
+    }
+    
+    /**
+     * Queue wait time in seconds (from dateCreated to processingStartedAt).
+     * How long the event waited before the worker picked it up.
+     * Returns null if either timestamp is missing.
+     */
+    public function getQueueWaitSeconds(): ?float
+    {
+        if ( null === $this->processingStartedAt || null === $this->dateCreated ) {
+            return null;
+        }
+        
+        return (float)($this->processingStartedAt->getTimestamp() - $this->dateCreated->getTimestamp());
+    }
+    
+    /**
+     * Actual execution time in seconds (from processingStartedAt to processedAt).
+     * How long the subscriber took to execute.
+     * Returns null if either timestamp is missing.
+     */
+    public function getExecutionTimeSeconds(): ?float
+    {
+        if ( null === $this->processedAt || null === $this->processingStartedAt ) {
+            return null;
+        }
+        
+        return (float)($this->processedAt->getTimestamp() - $this->processingStartedAt->getTimestamp());
+    }
+    
+    /**
+     * @deprecated Use getEndToEndDurationSeconds() instead.
      * Processing duration in seconds (from dateCreated to processedAt).
      * Returns null if either timestamp is missing.
      */
     public function getProcessingDurationSeconds(): ?float
     {
-        if (null === $this->processedAt || null === $this->dateCreated) {
-            return null;
-        }
-        
-        return (float)($this->processedAt->getTimestamp() - $this->dateCreated->getTimestamp());
+        return $this->getEndToEndDurationSeconds();
     }
 }

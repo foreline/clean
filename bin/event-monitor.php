@@ -300,8 +300,12 @@ function renderStatusSummary(EventStoreStatusSummary $summary): void
 
 function renderThroughput(EventStoreThroughput $throughput): void
 {
-    $avgTime = $throughput->getAvgProcessingTimeSeconds();
-    $avgStr  = null !== $avgTime ? number_format($avgTime, 2) . 's' : 'n/a';
+    $execTime   = $throughput->getAvgExecutionTimeSeconds();
+    $waitTime   = $throughput->getAvgQueueWaitSeconds();
+    $e2eTime    = $throughput->getAvgEndToEndSeconds();
+    $execStr    = null !== $execTime ? formatSeconds($execTime) : 'n/a';
+    $waitStr    = null !== $waitTime ? formatSeconds($waitTime) : 'n/a';
+    $e2eStr     = null !== $e2eTime  ? formatSeconds($e2eTime)  : 'n/a';
     
     out('  THROUGHPUT');
     out('  ' . str_repeat('-', 40));
@@ -309,7 +313,10 @@ function renderThroughput(EventStoreThroughput $throughput): void
     out('    Last hour:    ' . padLeft((string)$throughput->getCompletedLastHour(), 6) . ' completed');
     out('    Last 24h:     ' . padLeft((string)$throughput->getCompletedLast24Hours(), 6) . ' completed');
     out('    Failed/hour:  ' . padLeft((string)$throughput->getFailedLastHour(), 6));
-    out('    Avg time:     ' . padLeft($avgStr, 6));
+    out('  ' . str_repeat('-', 40));
+    out('    Avg exec:     ' . padLeft($execStr, 10) . '  (subscriber work)');
+    out('    Avg wait:     ' . padLeft($waitStr, 10) . '  (queue wait)');
+    out('    Avg e2e:      ' . padLeft($e2eStr, 10) . '  (total latency)');
     out();
 }
 
@@ -363,10 +370,19 @@ function renderEntryList(string $title, EventStoreEntryCollection $entries): voi
             default      => '[????]',
         };
         
-        $duration = $entry->getProcessingDurationSeconds();
-        $durationStr = null !== $duration ? ' (' . number_format($duration, 1) . 's)' : '';
+        $execTime = $entry->getExecutionTimeSeconds();
+        $waitTime = $entry->getQueueWaitSeconds();
         
-        out('    #' . padLeft((string)$entry->getId(), 6) . ' ' . $statusBadge . ' ' . $entry->getShortEventClass() . ' -> ' . $entry->getShortSubscriberClass() . $durationStr);
+        $timingParts = [];
+        if ( null !== $execTime ) {
+            $timingParts[] = 'exec:' . formatSeconds($execTime);
+        }
+        if ( null !== $waitTime ) {
+            $timingParts[] = 'wait:' . formatSeconds($waitTime);
+        }
+        $timingStr = !empty($timingParts) ? ' (' . implode(', ', $timingParts) . ')' : '';
+        
+        out('    #' . padLeft((string)$entry->getId(), 6) . ' ' . $statusBadge . ' ' . $entry->getShortEventClass() . ' -> ' . $entry->getShortSubscriberClass() . $timingStr);
         
         if ( null !== $entry->getError() && '' !== $entry->getError() ) {
             $errorPreview = mb_substr($entry->getError(), 0, 120);
@@ -464,6 +480,30 @@ function formatDuration(int $seconds): string
     }
     
     return $minutes . 'min ' . $remaining . 's';
+}
+
+/**
+ * Format float seconds into human-readable string.
+ * Examples: 0.05s, 3.20s, 1min 23s, 24min 15s
+ */
+function formatSeconds(float $seconds): string
+{
+    if ( 60.0 > $seconds ) {
+        return number_format($seconds, 2) . 's';
+    }
+    
+    $totalSeconds = (int)round($seconds);
+    $minutes = intdiv($totalSeconds, 60);
+    $remaining = $totalSeconds % 60;
+    
+    if ( 60 > $minutes ) {
+        return $minutes . 'min ' . $remaining . 's';
+    }
+    
+    $hours = intdiv($minutes, 60);
+    $remainMinutes = $minutes % 60;
+    
+    return $hours . 'h ' . $remainMinutes . 'min';
 }
 
 function printUsage(): void
