@@ -13,8 +13,8 @@ trait CollectionTrait
     /** @var int  */
     private int $position;
     
-    /** @var ?AggregateInterface[] */
-    private ?array $items;
+    /** @var AggregateInterface[] */
+    private array $items;
     
     /**
      *
@@ -22,7 +22,7 @@ trait CollectionTrait
     public function __construct()
     {
         $this->position = 0;
-        $this->items = null;
+        $this->items = [];
     }
     
     /**
