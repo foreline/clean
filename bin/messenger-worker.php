@@ -106,15 +106,20 @@ declare(strict_types=1);
  */
 
 use Infrastructure\Event\Config\MessengerFactory;
+use Symfony\Component\Messenger\Transport\TransportInterface;
 use Symfony\Component\Messenger\Worker;
 
 // ─── Parse CLI arguments ─────────────────────────────────────────────────────
 
 $bootstrapFile = null;
 
-foreach ( $argv as $arg ) {
+foreach ( $argv as $i => $arg ) {
     if ( str_starts_with($arg, '--bootstrap=') ) {
         $bootstrapFile = substr($arg, strlen('--bootstrap='));
+        break;
+    }
+    if ( '--bootstrap' === $arg && isset($argv[$i + 1]) ) {
+        $bootstrapFile = $argv[$i + 1];
         break;
     }
 }
@@ -132,7 +137,7 @@ if ( !file_exists($bootstrapFile) ) {
 
 // ─── Bootstrap application ───────────────────────────────────────────────────
 
-/** @var array{transport: \Symfony\Component\Messenger\Transport\TransportInterface, handler: callable} $config */
+/** @var array{transport: TransportInterface, handler: callable} $config */
 $config = require $bootstrapFile;
 
 if ( !is_array($config) || !isset($config['transport']) || !isset($config['handler']) ) {
