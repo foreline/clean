@@ -72,7 +72,7 @@ interface CollectionInterface extends Iterator
      * @param CollectionInterface $items
      * @return $this
      */
-    public function addItems(CollectionInterface $items): self;
+    //public function addItems(CollectionInterface $items): self;
     
     /**
      * @param ?Iterator $items
