@@ -66,7 +66,7 @@ trait CollectionTrait
      */
     public function getCount(): int
     {
-        return ( null !== $this->items ? count($this->items) : 0 );
+        return count($this->items);
     }
     
     /**
@@ -96,5 +96,25 @@ trait CollectionTrait
         }
         
         usort($this->items, $sortFunction);
+    }
+    
+    /**
+     * @return void
+     */
+    public function rsort(): void
+    {
+        sort($this->items);
+    }
+    
+    /**
+     * @return int[]|null
+     */
+    public function getIds(): ?array
+    {
+        return ( 0 < count($this->items) )
+            ? array_map(
+                fn(AggregateInterface $item): ?int => $item->getId(),
+                $this->items
+            ) : null;
     }
 }
