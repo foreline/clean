@@ -3,14 +3,14 @@ declare(strict_types=1);
 
 namespace Domain\ValueObject\Money;
 
-use Domain\ValueObject\MultipleValueObjectInterface;
+use Domain\ValueObject\MixedValueObjectInterface;
 use Domain\ValueObject\ValueObjectInterface;
 use InvalidArgumentException;
 
 /**
  *
  */
-class Money implements MultipleValueObjectInterface
+class Money implements MixedValueObjectInterface
 {
     /** @var int Number of decimal places for money */
     private const DECIMAL_PLACES = 2;
