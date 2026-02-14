@@ -14,19 +14,21 @@ class ExceptionOccurredEvent extends Event implements EventInterface
 {
     private Throwable $exception;
     private array $trace;
-
+    private mixed $data;
+    
     /**
      * @param Throwable $exception
      */
-    public function __construct(Throwable $exception)
+    public function __construct(Throwable $exception, mixed $data = null)
     {
         $this->exception = $exception;
         //$this->trace = debug_backtrace();
         $this->trace = $exception->getTrace();
+        $this->data = $data;
         
         parent::__construct();
     }
-
+    
     /**
      * @return Throwable
      */
@@ -34,7 +36,7 @@ class ExceptionOccurredEvent extends Event implements EventInterface
     {
         return $this->exception;
     }
-
+    
     /**
      * @return array
      */
@@ -42,5 +44,12 @@ class ExceptionOccurredEvent extends Event implements EventInterface
     {
         return $this->trace;
     }
-
+    
+    /**
+     * @return mixed
+     */
+    public function getData(): mixed
+    {
+        return $this->data;
+    }
 }
