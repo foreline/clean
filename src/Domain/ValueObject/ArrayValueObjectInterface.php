@@ -24,9 +24,10 @@ interface ArrayValueObjectInterface extends ValueObjectInterface
     /**
      * Create ValueObject from json string.
      *
+     * @param string $json
      * @return ArrayValueObjectInterface
      */
-    public function fromJson(): self;
+    public static function fromJson(string $json): self;
     
     /**
      * @return string[]
