@@ -9,6 +9,11 @@ namespace Domain\ValueObject;
 interface StringValueObjectInterface
 {
     /**
+     * @param string $value
+     */
+    public function __construct(string $value);
+    
+    /**
      * @return string
      */
     public function __toString(): string;

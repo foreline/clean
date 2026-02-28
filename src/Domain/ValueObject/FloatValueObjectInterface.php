@@ -8,5 +8,13 @@ namespace Domain\ValueObject;
  */
 interface FloatValueObjectInterface
 {
-
+    /**
+     * @param float $value
+     */
+    public function __construct(float $value);
+    
+    /**
+     * @return float
+     */
+    public function __toFloat(): float;
 }
