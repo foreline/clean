@@ -15,14 +15,18 @@ interface ArrayValueObjectInterface extends ValueObjectInterface
     public function __construct(array $value);
     
     /**
+     * Get JSON representation
+     *
      * @return string
      */
     public function toJson(): string;
     
     /**
-     * @return array
+     * Create ValueObject from json string.
+     *
+     * @return ArrayValueObjectInterface
      */
-    public function fromJson(): array;
+    public function fromJson(): self;
     
     /**
      * @return string[]
