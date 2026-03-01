@@ -10,7 +10,7 @@ use InvalidArgumentException;
 /**
  *
  */
-class IPv4 implements ValueObjectInterface, IntValueObjectInterface
+class IPv4 implements IntValueObjectInterface
 {
     private int $ip;
     

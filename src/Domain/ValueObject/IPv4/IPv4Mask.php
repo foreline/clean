@@ -4,13 +4,12 @@ declare(strict_types=1);
 namespace Domain\ValueObject\IPv4;
 
 use Domain\ValueObject\StringValueObjectInterface;
-use Domain\ValueObject\ValueObjectInterface;
 use InvalidArgumentException;
 
 /**
  *
  */
-class IPv4Mask implements ValueObjectInterface, StringValueObjectInterface
+class IPv4Mask implements StringValueObjectInterface
 {
     private string $cidrNotation;
     private int $prefixLength;
@@ -34,6 +33,12 @@ class IPv4Mask implements ValueObjectInterface, StringValueObjectInterface
         }
     }
     
+    /**
+     * Validate prefix length (must be between 0 and 32)
+     *
+     * @param int $length
+     * @return int
+     */
     private static function validatePrefixLength(int $length): int
     {
         if ($length < 0 || $length > 32) {
@@ -42,6 +47,11 @@ class IPv4Mask implements ValueObjectInterface, StringValueObjectInterface
         return $length;
     }
     
+    /**
+     *
+     * @param string $mask
+     * @return string
+     */
     private static function normalizeDottedDecimal(string $mask): string
     {
         $octets = array_map('intval', explode('.', $mask));
@@ -66,6 +76,12 @@ class IPv4Mask implements ValueObjectInterface, StringValueObjectInterface
         return implode('.', $octets);
     }
     
+    /**
+     * Convert prefix length to dotted decimal notation
+     *
+     * @param int $prefixLength
+     * @return string
+     */
     private static function prefixToDotted(int $prefixLength): string
     {
         $binary = str_repeat('1', $prefixLength) . str_repeat('0', 32 - $prefixLength);
@@ -79,6 +95,12 @@ class IPv4Mask implements ValueObjectInterface, StringValueObjectInterface
         return implode('.', $result);
     }
     
+    /**
+     * Calculate prefix length from dotted decimal notation
+     *
+     * @param string $mask
+     * @return int
+     */
     private static function calculatePrefixLength(string $mask): int
     {
         $binary = '';
@@ -98,36 +120,59 @@ class IPv4Mask implements ValueObjectInterface, StringValueObjectInterface
         return $prefixLength;
     }
     
+    /**
+     *
+     * @return string
+     */
     public function getCIDRNotation(): string
     {
         return $this->cidrNotation;
     }
     
+    /**
+     * @return int
+     */
     public function getCIDR(): int
     {
         return (int) str_replace('/', '', $this->getCIDRNotation());
     }
     
+    /**
+     * @return string
+     */
     public function getDottedDecimal(): string
     {
         return $this->dottedDecimal;
     }
     
+    /**
+     * @return int
+     */
     public function getPrefixLength(): int
     {
         return $this->prefixLength;
     }
     
+    /**
+     * @param IPv4Mask $other
+     * @return bool
+     */
     public function equals(self $other): bool
     {
         return $this->prefixLength === $other->prefixLength;
     }
     
+    /**
+     * @return string
+     */
     public function __toString(): string
     {
         return $this->getCIDRNotation();
     }
     
+    /**
+     * @return string
+     */
     public function jsonSerialize(): string
     {
         return $this->getCIDRNotation();
