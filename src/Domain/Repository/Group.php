@@ -16,6 +16,12 @@ class Group implements GroupInterface, JsonSerializable
     /** @var string[] */
     private array $group = [];
     
+    /** @var int Минимальное количество для фильтрации */
+    private int $minCount = 0;
+    
+    /** @var int Максимальное количество для фильтрации */
+    private int $maxCount = 0;
+    
     private ?ServiceInterface $service;
     
     /**
@@ -59,8 +65,69 @@ class Group implements GroupInterface, JsonSerializable
      */
     public function reset(): GroupInterface
     {
-        $this->group = [];
+        $this->group    = [];
+        $this->minCount = 0;
+        $this->maxCount = 0;
         return $this;
+    }
+    
+    /**
+     * Минимальное количество элементов в группе.
+     *
+     * @param int $minCount
+     * @return self
+     */
+    public function setMinCount(int $minCount): self
+    {
+        $this->minCount = $minCount;
+        return $this;
+    }
+    
+    /**
+     * @return int
+     */
+    public function getMinCount(): int
+    {
+        return $this->minCount;
+    }
+    
+    /**
+     * Максимальное количество элементов в группе.
+     *
+     * @param int $maxCount
+     * @return self
+     */
+    public function setMaxCount(int $maxCount): self
+    {
+        $this->maxCount = $maxCount;
+        return $this;
+    }
+    
+    /**
+     * @return int
+     */
+    public function getMaxCount(): int
+    {
+        return $this->maxCount;
+    }
+    
+    /**
+     * Проверяет, удовлетворяет ли количество условиям фильтрации.
+     *
+     * @param int $count
+     * @return bool
+     */
+    public function isCountAccepted(int $count): bool
+    {
+        if ( 0 < $this->minCount && $this->minCount > $count ) {
+            return false;
+        }
+        
+        if ( 0 < $this->maxCount && $count > $this->maxCount ) {
+            return false;
+        }
+        
+        return true;
     }
     
     /**
@@ -81,6 +148,8 @@ class Group implements GroupInterface, JsonSerializable
     {
         return [
             'group'     => $this->get(),
+            'minCount'  => $this->getMinCount(),
+            'maxCount'  => $this->getMaxCount(),
             'version'   => '0.1',
             'metadata'  => [
                 'created_at' => date('Y-m-d H:i:s'),
@@ -119,6 +188,14 @@ class Group implements GroupInterface, JsonSerializable
         
         if ( isset($data['group']) ) {
             $group->set($data['group']);
+        }
+        
+        if ( isset($data['minCount']) ) {
+            $group->setMinCount((int) $data['minCount']);
+        }
+        
+        if ( isset($data['maxCount']) ) {
+            $group->setMaxCount((int) $data['maxCount']);
         }
         
         return $group;
