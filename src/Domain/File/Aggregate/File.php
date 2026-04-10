@@ -127,7 +127,7 @@ class File extends FileEntity implements AggregateInterface, FileInterface
      * @param string $extId
      * @return File
      */
-    public function setExtId(string $extId): self
+    public function setExtId(string $extId): static
     {
         $this->extId = $extId;
         return $this;

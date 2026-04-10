@@ -19,5 +19,5 @@ interface ConvertableInterface
      * @param string $extId
      * @return $this
      */
-    public function setExtId(string $extId): self;
+    public function setExtId(string $extId): static;
 }

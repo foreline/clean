@@ -249,7 +249,7 @@ class User extends UserEntity implements AggregateInterface, UserInterface
      * @param string $extId
      * @return User
      */
-    public function setExtId(string $extId): self
+    public function setExtId(string $extId): static
     {
         $this->extId = $extId;
         return $this;
@@ -258,6 +258,7 @@ class User extends UserEntity implements AggregateInterface, UserInterface
     /**
      * @param array $fields
      * @return array
+     * @deprecated
      */
     public function toArray(array $fields = []): array
     {

@@ -51,7 +51,7 @@ class Group extends GroupEntity implements AggregateInterface, GroupInterface
      * @param string $extId
      * @return $this
      */
-    public function setExtId(string $extId): self
+    public function setExtId(string $extId): static
     {
         $this->extId = $extId;
         return $this;
