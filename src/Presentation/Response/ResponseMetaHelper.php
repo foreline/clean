@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Presentation\Response;
 
 use InvalidArgumentException;
-use Webmozart\Assert\Assert;
 
 /**
  *

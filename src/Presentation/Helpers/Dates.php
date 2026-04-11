@@ -4,13 +4,11 @@ declare(strict_types=1);
 namespace Presentation\Helpers;
 
 use DateInterval;
-use DateTime;
 use DateTimeImmutable;
 use InvalidArgumentException;
 
 /**
  * Класс для работы с датами
- * @deprecated
  */
 class Dates {
     
@@ -83,20 +81,12 @@ class Dates {
         $date = trim($date);
         
         /// 31.01/2001
-        //$pattern = '#^[0-3]{1}[1-9]{1}.\d{2}.\d{4}#';
         $pattern = '#\d{2}.\d{2}.\d{4}#';
-        //$pattern = '#^\d{2}.\d{2}.\d{4}$#xismU';
-        //$pattern = '#^[0-3]{1}\d{1}.[0-1]{1}\d{1}.\d{4}#';
         
         /// 2001-01.31
-        //$pattern1 = '#^\d{4}.\d{2}.[0-3]{1}[1-9]{1}#';
         $pattern1 = '#\d{4}.\d{2}.\d{2}#';
-        //$pattern1 = '#^\d{4}.\d{2}.\d{2}$#ximsU';
-        //$pattern1 = '#^\d{4}.[0-1]{1}\d{1}.[0-3]{1}\d{1}#';
         
-        //$pattern3 = '#^(\d{2,4}).(\d{2}).(\d{2,4})#';
         $pattern3 = '#^(\d{1,4}).(\d{1,2}).(\d{1,4})#';
-        
         
         // 5/16/2013 2:58:18 PM
         $pattern4 = '#\d{1,4}[./-]\d{1,2}[./-]\d{2,4}([^0-9]\d{1,2}:\d{2}:\d{2})*#';
@@ -248,7 +238,7 @@ class Dates {
         
         $hour       = date('H', $timeStamp);
         $minute     = date('i', $timeStamp);
-        $seconds    = date('s', $timeStamp);
+        //$seconds    = date('s', $timeStamp);
         
         // Определяем сегодняшнее ли это дата/время
         $isToday = false;
@@ -296,7 +286,7 @@ class Dates {
     /**
      * Выводит отформатированную дату и время (если задано) "сегодня в 7:00 | вчера в 19:35 | 1 сентября, 11:19".
      *
-     * @param string $date Исходная дата
+     * @param ?string $date Исходная дата
      * @param bool $today Заменять ли дату на "сегодня" и "вчера"
      * @param bool $weekDays Выводить ли дополнительно дни недели: 14 января 15:35, пн
      *
@@ -304,7 +294,7 @@ class Dates {
      */
     public static function dateTimeFormat(?string $date = null, bool $today = true, bool $weekDays = false): string
     {
-        if ( !$date || empty($date) ) {
+        if ( empty($date) ) {
             return '';
         }
         

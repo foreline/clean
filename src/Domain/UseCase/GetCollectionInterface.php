@@ -12,7 +12,7 @@ use Domain\Aggregate\IteratorInterface;
 interface GetCollectionInterface
 {
     /**
-     * @return ?IteratorInterface
+     * @return IteratorInterface|CollectionInterface|null
      */
     public function get(): null|IteratorInterface|CollectionInterface;
     
