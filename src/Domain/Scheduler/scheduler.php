@@ -10,11 +10,13 @@ declare(strict_types=1);
  *   php scheduler.php test [task]   - Test a specific task or all tasks
  */
 
-use Domain\Scheduler\TaskScheduler;
 use Domain\Scheduler\SchedulerHelper;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
+/**
+ * @return void
+ */
 function showHelp(): void
 {
     echo "Scheduler CLI Tool\n";
@@ -27,12 +29,20 @@ function showHelp(): void
     echo "\n";
 }
 
+/**
+ * @return void
+ * @throws Exception
+ */
 function handleStatus(): void
 {
     $scheduler = SchedulerHelper::bootstrap();
     SchedulerHelper::printTaskReport($scheduler);
 }
 
+/**
+ * @return void
+ * @throws Exception
+ */
 function handleRun(): void
 {
     $scheduler = SchedulerHelper::bootstrap();
@@ -47,6 +57,11 @@ function handleRun(): void
     }
 }
 
+/**
+ * @param string|null $taskName
+ * @return void
+ * @throws Exception
+ */
 function handleTest(?string $taskName = null): void
 {
     $scheduler = SchedulerHelper::bootstrap();
@@ -82,6 +97,10 @@ function handleTest(?string $taskName = null): void
     }
 }
 
+/**
+ * @return void
+ * @throws Exception
+ */
 function handleList(): void
 {
     $scheduler = SchedulerHelper::bootstrap();

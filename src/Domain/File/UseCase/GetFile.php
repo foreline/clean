@@ -5,7 +5,6 @@ namespace Domain\File\UseCase;
 
 use Domain\Exception\NotAuthorizedException;
 use Domain\File\Aggregate\File;
-use Domain\User\Service\GetCurrentUser;
 use Exception;
 use InvalidArgumentException;
 
@@ -38,7 +37,6 @@ class GetFile
     }
 
     /**
-     * @throws NotAuthorizedException
      * @throws Exception
      */
     public function checkPermissions(int $id): void

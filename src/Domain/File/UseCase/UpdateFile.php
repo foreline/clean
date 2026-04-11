@@ -51,7 +51,7 @@ class UpdateFile
      */
     public function checkPermissions(File $file): void
     {
-        if ( !$user = ( new GetCurrentUser() )->get() ) {
+        if ( !( new GetCurrentUser() )->get() ) {
             throw new NotAuthorizedException();
         }
         // @fixme @todo check permissions

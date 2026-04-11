@@ -36,10 +36,10 @@ interface UserInterface
      * @return bool
      */
     public function isAuthorized(): bool;
-
+    
     /**
      * Checks if user is in roles
-     * @param string|string[] ...$role
+     * @param string|array ...$role
      * @return bool
      */
     public function in(string|array ...$role): bool;

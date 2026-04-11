@@ -5,12 +5,15 @@ namespace Domain\File\UseCase;
 
 use Domain\Exception\NotAuthorizedException;
 use Domain\File\Aggregate\FileCollection;
-use Domain\File\Infrastructure\Repository\Bitrix\FileRepository;
 use Domain\File\Infrastructure\Repository\FileFields;
 use Domain\File\Infrastructure\Repository\FileFilter;
 use Domain\File\Infrastructure\Repository\FileLimit;
 use Domain\File\Infrastructure\Repository\FileRepositoryInterface;
 use Domain\File\Infrastructure\Repository\FileSort;
+use Domain\Repository\FieldsInterface;
+use Domain\Repository\FilterInterface;
+use Domain\Repository\LimitInterface;
+use Domain\Repository\SortInterface;
 use Domain\Service\ServiceInterface;
 use Domain\User\Service\GetCurrentUser;
 use Exception;
@@ -21,21 +24,19 @@ use InvalidArgumentException;
  */
 class GetFileCollection implements ServiceInterface
 {
-    //private UserRepositoryInterface $repository;
     public FileManager $manager;
     
-    public FileFilter $filter;
-    public FileSort $sort;
-    public FileLimit $limit;
-    public FileFields $fields;
+    public FileFilter|FilterInterface $filter;
+    public FileSort|SortInterface $sort;
+    public FileLimit|LimitInterface $limit;
+    public FileFields|FieldsInterface $fields;
 
     /**
      *
      * @throws Exception
      */
-    public function __construct(/*FileRepositoryInterface $repository*/)
+    public function __construct()
     {
-        //$this->repository = $repository;
         $this->manager = new FileManager();
     
         $this->filter   = $this->manager->filter;

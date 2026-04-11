@@ -86,41 +86,41 @@ class User extends UserEntity implements AggregateInterface, UserInterface
     
     /**
      * Check if user has any of the specified roles (supports inheritance and namespace-specific roles)
-     * 
-     * @param string|string[]|Role ...$rolesCode Role codes, class constants, or Role instances
+     *
+     * @param string|array|Role ...$rolesCode
      * @return bool
      */
     public function in(string|array|Role ...$rolesCode): bool
     {
-        if (null === $userRoles = $this->getRoles()) {
+        if ( null === $userRoles = $this->getRoles() ) {
             return false;
         }
         
-        if (0 === $userRoles->getCount()) {
+        if ( 0 === $userRoles->getCount() ) {
             return false;
         }
         
         // Convert multidimensional array to flat and resolve role codes
         $rolesToCheck = [];
         array_walk_recursive($rolesCode, function ($item) use (&$rolesToCheck) {
-            if ($item instanceof Role) {
+            if ( $item instanceof Role ) {
                 $rolesToCheck[] = $item->getRole();
-            } elseif (is_string($item)) {
+            } elseif ( is_string($item) ) {
                 // Handle namespace-specific role constants (e.g., \App\Blog\Post\Role::AUTHOR)
                 $rolesToCheck[] = $this->resolveRoleConstant($item);
             }
         });
         
         // Check each user role against requested roles (with inheritance)
-        foreach ($userRoles->getCollection() as $userRole) {
-            if ($userRole instanceof Role) {
+        foreach ( $userRoles->getCollection() as $userRole ) {
+            if ( $userRole instanceof Role ) {
                 // Check if user role has any of the requested roles (including inherited)
-                if ($userRole->hasAnyRole($rolesToCheck)) {
+                if ( $userRole->hasAnyRole($rolesToCheck) ) {
                     return true;
                 }
-            } elseif (is_string($userRole)) {
+            } elseif ( is_string($userRole) ) {
                 // Backward compatibility: check direct string match
-                if (in_array($userRole, $rolesToCheck, true)) {
+                if ( in_array($userRole, $rolesToCheck, true) ) {
                     return true;
                 }
             }

@@ -20,6 +20,10 @@ class TaskHandler
     
     /**
      * Handle task message execution
+     *
+     * @param TaskMessage $message
+     * @return void
+     * @throws Exception
      */
     public function __invoke(TaskMessage $message): void
     {

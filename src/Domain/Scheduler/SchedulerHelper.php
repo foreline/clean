@@ -3,10 +3,12 @@ declare(strict_types=1);
 
 namespace Domain\Scheduler;
 
+use Cron\CronExpression;
 use DateTimeImmutable;
 use Domain\Scheduler\Tasks\CleanupTask;
 use Domain\Scheduler\Tasks\NotificationTask;
 use Domain\Scheduler\Tasks\BackupTask;
+use Exception;
 
 /**
  * Helper class for scheduler management and utilities
@@ -15,6 +17,9 @@ class SchedulerHelper
 {
     /**
      * Bootstrap the scheduler with default tasks
+     *
+     * @return TaskScheduler
+     * @throws Exception
      */
     public static function bootstrap(): TaskScheduler
     {
@@ -72,16 +77,17 @@ class SchedulerHelper
      */
     public static function isValidCronExpression(string $cronExpression): bool
     {
-        return \Cron\CronExpression::isValidExpression($cronExpression);
+        return CronExpression::isValidExpression($cronExpression);
     }
     
     /**
      * Get the next N run times for a cron expression
-     * 
+     *
      * @param string $cronExpression
      * @param int $count
      * @param DateTimeImmutable|null $startTime
      * @return DateTimeImmutable[]
+     * @throws Exception
      */
     public static function getNextRunTimes(string $cronExpression, int $count = 5, ?DateTimeImmutable $startTime = null): array
     {
@@ -89,13 +95,13 @@ class SchedulerHelper
             return [];
         }
         
-        $cron = new \Cron\CronExpression($cronExpression);
+        $cron = new CronExpression($cronExpression);
         $startTime = $startTime ?? new DateTimeImmutable();
         
         $times = [];
         $currentTime = $startTime;
         
-        for ($i = 0; $i < $count; $i++) {
+        for ( $i = 0; $i < $count; $i++ ) {
             $nextTime = $cron->getNextRunDate($currentTime);
             $times[] = DateTimeImmutable::createFromInterface($nextTime);
             $currentTime = $nextTime;
@@ -106,6 +112,10 @@ class SchedulerHelper
     
     /**
      * Create a task summary report
+     *
+     * @param TaskScheduler $scheduler
+     * @return array
+     * @throws Exception
      */
     public static function createTaskReport(TaskScheduler $scheduler): array
     {
@@ -138,6 +148,10 @@ class SchedulerHelper
     
     /**
      * Print a formatted task report
+     *
+     * @param TaskScheduler $scheduler
+     * @return void
+     * @throws Exception
      */
     public static function printTaskReport(TaskScheduler $scheduler): void
     {

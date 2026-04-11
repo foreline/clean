@@ -66,7 +66,7 @@ abstract class AbstractRole implements StringValueObjectInterface, EnumValueObje
     protected static function getHierarchy(): array
     {
         $class = static::class;
-        if (!isset(static::$roleHierarchy[$class])) {
+        if ( !isset(static::$roleHierarchy[$class]) ) {
             static::$roleHierarchy[$class] = static::defineHierarchy();
         }
         return static::$roleHierarchy[$class];
@@ -80,7 +80,7 @@ abstract class AbstractRole implements StringValueObjectInterface, EnumValueObje
         $reflection = new ReflectionClass(static::class);
         $constants = $reflection->getConstants();
         
-        if (!in_array($code, $constants, true)) {
+        if ( !in_array($code, $constants, true) ) {
             throw new InvalidArgumentException("Role '{$code}' is not defined in " . static::class);
         }
     }
