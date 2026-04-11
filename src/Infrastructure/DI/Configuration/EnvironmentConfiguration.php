@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Infrastructure\DI\Configuration;
 
+use InvalidArgumentException;
+
 /**
  * Environment Configuration
  * 
@@ -110,13 +112,13 @@ class EnvironmentConfiguration
     public function loadFromFile(string $filePath): void
     {
         if (!file_exists($filePath)) {
-            throw new \InvalidArgumentException("Configuration file not found: {$filePath}");
+            throw new InvalidArgumentException("Configuration file not found: {$filePath}");
         }
 
         $config = require $filePath;
         
         if (!is_array($config)) {
-            throw new \InvalidArgumentException("Configuration file must return an array");
+            throw new InvalidArgumentException("Configuration file must return an array");
         }
 
         $this->loadFromArray($config);

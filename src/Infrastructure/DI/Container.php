@@ -6,13 +6,15 @@ namespace Infrastructure\DI;
 use Infrastructure\DI\Exception\ContainerException;
 use Infrastructure\DI\Exception\NotFoundException;
 use ReflectionClass;
+use ReflectionException;
 use ReflectionMethod;
 use ReflectionNamedType;
+use Throwable;
 
 /**
  * Pristine Framework DI Container
  * 
- * PSR-11 compliant dependency injection container with autowiring,
+ * PSR-11 compliant dependency injection container with auto-wiring,
  * singleton support, and service provider integration.
  * 
  * @package Infrastructure\DI
@@ -27,11 +29,14 @@ class Container implements ContainerInterface
     
     /** @var array Circular dependency detection */
     private array $resolving = [];
-
+    
     /**
-     * {@inheritdoc}
+     * @param string $id
+     * @return mixed
+     * @throws ContainerException
+     * @throws NotFoundException
      */
-    public function get(string $id): mixed
+    public function get($id): mixed
     {
         // Return existing singleton instance
         if (isset($this->instances[$id])) {
@@ -69,11 +74,14 @@ class Container implements ContainerInterface
             unset($this->resolving[$id]);
 
             return $instance;
-        } catch (\Throwable $e) {
+        } catch ( Throwable $e ) {
             // Clean up resolving state
             unset($this->resolving[$id]);
             
-            if ($e instanceof ContainerException || $e instanceof NotFoundException) {
+            if (
+                $e instanceof ContainerException
+                || $e instanceof NotFoundException
+            ) {
                 throw $e;
             }
             
@@ -84,7 +92,7 @@ class Container implements ContainerInterface
     /**
      * {@inheritdoc}
      */
-    public function has(string $id): bool
+    public function has($id): bool
     {
         return isset($this->bindings[$id]);
     }
@@ -141,6 +149,11 @@ class Container implements ContainerInterface
 
     /**
      * Resolve a service binding
+     *
+     * @param array $binding
+     * @return mixed
+     * @throws ContainerException
+     * @throws ReflectionException
      */
     private function resolve(array $binding): mixed
     {
@@ -159,12 +172,17 @@ class Container implements ContainerInterface
 
     /**
      * Build a concrete class with automatic dependency injection
+     *
+     * @param string $className
+     * @return object
+     * @throws ContainerException
+     * @throws ReflectionException
      */
     private function build(string $className): object
     {
         try {
             $reflection = new ReflectionClass($className);
-        } catch (\ReflectionException $e) {
+        } catch (ReflectionException) {
             throw new ContainerException("Class '{$className}' does not exist");
         }
 
@@ -185,6 +203,10 @@ class Container implements ContainerInterface
 
     /**
      * Resolve constructor dependencies
+     *
+     * @param ReflectionMethod $constructor
+     * @return array
+     * @throws ContainerException
      */
     private function resolveDependencies(ReflectionMethod $constructor): array
     {
@@ -206,8 +228,8 @@ class Container implements ContainerInterface
                 
                 try {
                     $dependencies[] = $this->get($typeName);
-                } catch (NotFoundException $e) {
-                    if ($parameter->isDefaultValueAvailable()) {
+                } catch ( NotFoundException ) {
+                    if ( $parameter->isDefaultValueAvailable() ) {
                         $dependencies[] = $parameter->getDefaultValue();
                     } else {
                         throw new ContainerException(

@@ -35,9 +35,9 @@ interface RepositoryInterface
      * @return bool
      */
     public function delete(int $id): bool;
-
+    
     /**
-     * @return ?AggregateInterface[]
+     * @return CollectionInterface|IteratorInterface|null
      */
     public function find(): null|CollectionInterface|IteratorInterface;
 

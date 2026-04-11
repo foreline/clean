@@ -5,6 +5,7 @@ namespace Infrastructure\DI\Bridge;
 
 use Infrastructure\DI\ContainerInterface;
 use Infrastructure\DI\ServiceProviderInterface;
+use RuntimeException;
 
 /**
  * Symfony Framework Bridge
@@ -93,7 +94,7 @@ class SymfonyBridge implements ServiceProviderInterface
     private function registerPristineServices(ContainerInterface $container): void
     {
         // This method can be extended to register Pristine services
-        // in Symfony container if needed (bi-directional bridge)
+        // in Symfony container if needed (bidirectional bridge)
     }
 
     /**
@@ -105,7 +106,7 @@ class SymfonyBridge implements ServiceProviderInterface
             return $this->symfonyContainer->get($id);
         }
 
-        throw new \RuntimeException("Cannot retrieve service '{$id}' from Symfony container");
+        throw new RuntimeException("Cannot retrieve service '{$id}' from Symfony container");
     }
 
     /**
