@@ -99,6 +99,7 @@ abstract class AbstractEntity
     
     /**
      * @return string
+     * @deprecated
      */
     public function getDetailPageUrl(): string
     {
@@ -108,6 +109,7 @@ abstract class AbstractEntity
     /**
      * @param string $detailPageUrl
      * @return self
+     * @deprecated
      */
     public function setDetailPageUrl(string $detailPageUrl): self
     {
@@ -117,6 +119,7 @@ abstract class AbstractEntity
     
     /**
      * @return string
+     * @deprecated
      */
     public function getSlug(): string
     {
@@ -126,6 +129,7 @@ abstract class AbstractEntity
     /**
      * @param string $slug
      * @return $this
+     * @deprecated
      */
     public function setSlug(string $slug): static
     {
@@ -135,6 +139,7 @@ abstract class AbstractEntity
     
     /**
      * @return string
+     * @deprecated
      */
     public function getListUrl(): string
     {
@@ -144,6 +149,7 @@ abstract class AbstractEntity
     /**
      * @param string $listUrl
      * @return self
+     * @deprecated
      */
     public function setListUrl(string $listUrl): self
     {
@@ -153,6 +159,7 @@ abstract class AbstractEntity
     
     /**
      * @return string
+     * @deprecated
      */
     public function getAddSlug(): string
     {
@@ -162,6 +169,7 @@ abstract class AbstractEntity
     /**
      * @param string $addSlug
      * @return $this
+     * @deprecated
      */
     public function setAddSlug(string $addSlug): static
     {
