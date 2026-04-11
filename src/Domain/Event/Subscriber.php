@@ -20,7 +20,7 @@ class Subscriber implements SubscriberInterface
     /**
      * @param Event $event
      */
-    public function handle(Event $event): void
+    public function handle(EventInterface $event): void
     {
         $this->eventStore->append($event);
     }

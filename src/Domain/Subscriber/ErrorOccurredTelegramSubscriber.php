@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Domain\Subscriber;
 
-use Domain\Event\Event;
 use Domain\Event\EventInterface;
 use Domain\Event\SubscriberInterface;
 use Domain\Events\ErrorOccurredEvent;
@@ -19,7 +18,7 @@ class ErrorOccurredTelegramSubscriber implements SubscriberInterface
      * @param ErrorOccurredEvent $event
      * @return void
      */
-    public function handle(Event $event): void
+    public function handle(EventInterface $event): void
     {
         if ( !array_key_exists('ERROR_TELEGRAM_TOKEN', $_ENV) || empty($_ENV['ERROR_TELEGRAM_TOKEN']) ) {
             return;

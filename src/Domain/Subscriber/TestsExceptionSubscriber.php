@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Domain\Subscriber;
 
-use Domain\Event\Event;
 use Domain\Event\EventInterface;
 use Domain\Event\SubscriberInterface;
 use Domain\Events\ExceptionOccurredEvent;
@@ -19,7 +18,7 @@ class TestsExceptionSubscriber implements SubscriberInterface
      * @return void
      * @throws Throwable
      */
-    public function handle(Event $event): void
+    public function handle(EventInterface $event): void
     {
         throw $event->getException();
     }

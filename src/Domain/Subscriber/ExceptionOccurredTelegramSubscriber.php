@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace Domain\Subscriber;
 
-use Domain\Event\AsyncSubscriberInterface;
-use Domain\Event\Event;
 use Domain\Event\EventInterface;
 use Domain\Event\SubscriberInterface;
 use Domain\Events\ExceptionOccurredEvent;
@@ -20,7 +18,7 @@ class ExceptionOccurredTelegramSubscriber implements SubscriberInterface
      * @param ExceptionOccurredEvent $event
      * @return void
      */
-    public function handle(Event $event): void
+    public function handle(EventInterface $event): void
     {
         if (
             !array_key_exists('EXCEPTION_TELEGRAM_TOKEN', $_ENV)

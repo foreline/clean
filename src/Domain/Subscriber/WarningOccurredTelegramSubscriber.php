@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Domain\Subscriber;
 
-use Domain\Event\Event;
 use Domain\Event\EventInterface;
 use Domain\Event\SubscriberInterface;
 use Domain\Events\WarningOccurredEvent;
@@ -20,7 +19,7 @@ class WarningOccurredTelegramSubscriber implements SubscriberInterface
      * @param WarningOccurredEvent $event
      * @return void
      */
-    public function handle(Event $event): void
+    public function handle(EventInterface $event): void
     {
         if ( !array_key_exists('WARNING_TELEGRAM_TOKEN', $_ENV) || empty($_ENV['WARNING_TELEGRAM_TOKEN']) ) {
             return;
@@ -72,7 +71,7 @@ class WarningOccurredTelegramSubscriber implements SubscriberInterface
             
             file_get_contents('https://api.telegram.org/bot' . $apiToken . '/sendMessage?' . http_build_query($data) );
             
-        } catch (Exception $e) {
+        } catch (Exception) {
             // @todo log exception
         }
     }

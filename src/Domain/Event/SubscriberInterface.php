@@ -10,22 +10,20 @@ namespace Domain\Event;
 interface SubscriberInterface
 {
     /**
-     * @param Event $event
+     * @param EventInterface $event
      */
-    public function handle(Event $event): void;
-    //public function handle(EventInterface $event): void;
+    public function handle(EventInterface $event): void;
     
     /**
-     * @param Event|EventInterface $event
+     * @param EventInterface $event
      * @return bool
      */
-    public function isSubscribedTo(Event|EventInterface $event): bool;
-    //public function isSubscribedTo(EventInterface $event): bool;
+    public function isSubscribedTo(EventInterface $event): bool;
     
     /**
      * Checks the criteria for whether an event should be processed.
      * @param Event $event
      * @return bool
      */
-    //public function isHandled(Event $event): bool;
+    //public function isHandled(EventInterface $event): bool;
 }

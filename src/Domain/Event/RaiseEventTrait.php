@@ -13,7 +13,7 @@ trait RaiseEventTrait {
     protected array $events = [];
 
     /**
-     * @return EventCollection
+     * @return array
      */
     public function flush(): array
     {

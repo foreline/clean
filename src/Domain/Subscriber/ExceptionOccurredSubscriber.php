@@ -6,12 +6,10 @@ namespace Domain\Subscriber;
 use Domain\Event\EventInterface;
 use Domain\Event\SubscriberInterface;
 use Domain\User\Service\GetCurrentUser;
-use Domain\Event\Event;
 use Domain\Events\ExceptionOccurredEvent;
 use Exception;
 use Infrastructure\Mailer\EmailMessage;
 use Infrastructure\Mailer\MailerManager;
-use Infrastructure\Mailer\Bitrix\Mailer; // @fixme
 
 /**
  * Обработчик события вызова исключения
@@ -23,7 +21,7 @@ class ExceptionOccurredSubscriber implements SubscriberInterface
      * @param ExceptionOccurredEvent $event
      * @return void
      */
-    public function handle(Event $event): void
+    public function handle(EventInterface $event): void
     {
         if ( !array_key_exists('EXCEPTION_EMAIL', $_ENV) || empty($_ENV['EXCEPTION_EMAIL']) ) {
             return;
@@ -60,7 +58,7 @@ class ExceptionOccurredSubscriber implements SubscriberInterface
             $body .= implode(PHP_EOL, $trace) . PHP_EOL;
             $body .= '</pre>' . PHP_EOL;
 
-            ( new MailerManager(new Mailer()) )->send(
+            ( new MailerManager() )->send(
                 (new EmailMessage())
                     ->setSubject($subject)
                     ->setTo($_ENV['EXCEPTION_EMAIL'])

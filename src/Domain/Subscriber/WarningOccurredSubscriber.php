@@ -5,13 +5,11 @@ namespace Domain\Subscriber;
 
 use Domain\Event\EventInterface;
 use Domain\User\Service\GetCurrentUser;
-use Domain\Event\Event;
 use Domain\Event\SubscriberInterface;
 use Domain\Events\WarningOccurredEvent;
 use Exception;
 use Infrastructure\Mailer\EmailMessage;
 use Infrastructure\Mailer\MailerManager;
-use Infrastructure\Mailer\Bitrix\Mailer; // @fixme
 
 /**
  * Warning event Subscriber. Sends WarningOccurredEvent message to email $_ENV['WARNING_EMAIL']
@@ -22,7 +20,7 @@ class WarningOccurredSubscriber implements SubscriberInterface
      * @param WarningOccurredEvent $event
      * @return void
      */
-    public function handle(Event $event): void
+    public function handle(EventInterface $event): void
     {
         if ( !array_key_exists('WARNING_EMAIL', $_ENV) || empty($_ENV['WARNING_EMAIL']) ) {
             return;
@@ -53,13 +51,13 @@ class WarningOccurredSubscriber implements SubscriberInterface
             $body .= implode(PHP_EOL, $trace) . PHP_EOL;
             $body .= '</pre>' . PHP_EOL;
 
-            ( new MailerManager(new Mailer()) )->send(
+            ( new MailerManager() )->send(
                 (new EmailMessage())
                     ->setTo($_ENV['WARNING_EMAIL'])
                     ->setSubject($subject)
                     ->setBody($body)
             );
-        } catch (Exception $e) {
+        } catch (Exception) {
             //
         }
     

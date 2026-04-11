@@ -18,6 +18,7 @@ class ExceptionOccurredEvent extends Event implements EventInterface
     
     /**
      * @param Throwable $exception
+     * @param mixed|null $data
      */
     public function __construct(Throwable $exception, mixed $data = null)
     {
