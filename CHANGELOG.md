@@ -1,4 +1,4 @@
-# Changelog
+﻿# Changelog
 
 All notable changes to this project will be documented in this file.
 
@@ -27,6 +27,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved DI Container resolution logic and Environment Configuration handling.
 - Simplified AbstractManager use case base class and GetCollectionInterface contracts.
 
+### Fixed
+- MailerManager now safely handles null mailer with null-safe operator to prevent null reference errors.
+
 ## [1.1.3] - 2025-01-XX
 
 ### Added
@@ -52,4 +55,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Improved entity permissions type hints and consolidation: replaced mixed types with specific type hints (AggregateInterface, ServiceInterface) for better static analysis. Consolidated EntityPermissionsInterface into AbstractEntityPermissions.
 - Internal restructuring.
-
