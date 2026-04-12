@@ -10,8 +10,8 @@ use Exception;
  */
 class MailerManager
 {
-    /** @var MailerInterface */
-    private MailerInterface $mailer;
+    /** @var ?MailerInterface */
+    private ?MailerInterface $mailer;
     
     /** @var ?self */
     private static ?self $instance = null;
@@ -51,6 +51,6 @@ class MailerManager
         if ( 'dev' === mb_strtolower($_ENV['APP_ENV']) ) {
             return;
         }
-        $this->mailer->send($message);
+        $this->mailer?->send($message);
     }
 }
