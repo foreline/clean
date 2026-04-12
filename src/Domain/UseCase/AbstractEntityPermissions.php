@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Domain\UseCase;
 
+use Domain\Aggregate\AggregateInterface;
 use Domain\Exception\NotAuthorizedException;
 use Domain\Service\ServiceInterface;
 use Domain\User\Aggregate\UserInterface;
@@ -11,8 +12,17 @@ use Exception;
 
 /**
  * Base class for entity permissions checks.
+ *
+ * Concrete classes must implement can* methods with entity-specific type hints.
+ * The checkCan* methods are inherited and should NOT be overridden.
+ *
+ * @method void canCreate(?AggregateInterface $entity = null)
+ * @method void canUpdate(?AggregateInterface $entity = null)
+ * @method void canDelete(?AggregateInterface $entity = null)
+ * @method void canGet(?AggregateInterface $entity = null)
+ * @method void canGetCollection(?ServiceInterface $service = null)
  */
-abstract class AbstractEntityPermissions implements EntityPermissionsInterface
+abstract class AbstractEntityPermissions
 {
     /**
      * Returns the currently authenticated user
@@ -32,10 +42,10 @@ abstract class AbstractEntityPermissions implements EntityPermissionsInterface
     /**
      * Checks if the user has permission to create an entity.
      *
-     * @param mixed|null $entity
+     * @param ?AggregateInterface $entity
      * @return bool
      */
-    public function checkCanCreate(mixed $entity = null): bool
+    public function checkCanCreate(?AggregateInterface $entity = null): bool
     {
         try {
             $this->canCreate($entity);
@@ -48,10 +58,10 @@ abstract class AbstractEntityPermissions implements EntityPermissionsInterface
     /**
      * Checks if the user has permission to update an entity.
      *
-     * @param mixed|null $entity
+     * @param ?AggregateInterface $entity
      * @return bool
      */
-    public function checkCanUpdate(mixed $entity = null): bool
+    public function checkCanUpdate(?AggregateInterface $entity = null): bool
     {
         try {
             $this->canUpdate($entity);
@@ -64,10 +74,10 @@ abstract class AbstractEntityPermissions implements EntityPermissionsInterface
     /**
      * Checks if the user has permission to delete an entity.
      *
-     * @param mixed|null $entity
+     * @param ?AggregateInterface $entity
      * @return bool
      */
-    public function checkCanDelete(mixed $entity = null): bool
+    public function checkCanDelete(?AggregateInterface $entity = null): bool
     {
         try {
             $this->canDelete($entity);
@@ -80,10 +90,10 @@ abstract class AbstractEntityPermissions implements EntityPermissionsInterface
     /**
      * Checks if the user has permission to get an entity
      *
-     * @param mixed|null $entity
+     * @param ?AggregateInterface $entity
      * @return bool
      */
-    public function checkCanGet(mixed $entity = null): bool
+    public function checkCanGet(?AggregateInterface $entity = null): bool
     {
         try {
             $this->canGet($entity);
@@ -96,10 +106,10 @@ abstract class AbstractEntityPermissions implements EntityPermissionsInterface
     /**
      * Checks if the user has permission to get a collection of entities
      *
-     * @param mixed|null|ServiceInterface $service
+     * @param ?ServiceInterface $service
      * @return bool
      */
-    public function checkCanGetCollection(mixed $service = null): bool
+    public function checkCanGetCollection(?ServiceInterface $service = null): bool
     {
         try {
             $this->canGetCollection($service);
