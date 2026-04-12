@@ -1,4 +1,4 @@
-# Changelog
+﻿# Changelog
 
 All notable changes to this project will be documented in this file.
 
@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+### Added
+- EntityPermissionsInterface and AbstractEntityPermissions for CRUD authorization checks in the business logic layer.
 
 ### Deprecated
 - AbstractEntity URL methods (getDetailPageUrl, setDetailPageUrl, getSlug, setSlug, getListUrl, setListUrl, getAddSlug, setAddSlug) are now marked as deprecated and will be removed in v2.0. Use domain-specific URL generation instead.
@@ -47,17 +50,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Internal restructuring.
-
-## [1.0.01] - 2025-01-XX
-
-### Changed
-- Initial documentation updates.
-
-## [0.6.46] - 2025-01-XX
-
-### Changed
-- Removed addItems() method (breaking change).
-
-## [0.6.45] - 2025-01-XX
-
-### Added
