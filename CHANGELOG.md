@@ -1,4 +1,4 @@
-﻿# Changelog
+# Changelog
 
 All notable changes to this project will be documented in this file.
 
@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - EventStoreRepositoryInterface from incomplete event store implementation.
 
 ### Changed
+- Improved entity permissions type hints and consolidation: replaced mixed types with specific type hints (AggregateInterface, ServiceInterface) for better static analysis. Consolidated EntityPermissionsInterface into AbstractEntityPermissions.
 - Improved event-driven architecture: Subscriber and SubscriberInterface now accept EventInterface for polymorphic event handling.
 - Refactored Scheduler architecture with improved task ordering and execution logic in SchedulerHelper and TaskHandler.
 - Enhanced User aggregate and File use cases with cleaner signatures and better separation of concerns.
@@ -49,4 +50,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.02] - 2025-01-XX
 
 ### Changed
+- Improved entity permissions type hints and consolidation: replaced mixed types with specific type hints (AggregateInterface, ServiceInterface) for better static analysis. Consolidated EntityPermissionsInterface into AbstractEntityPermissions.
 - Internal restructuring.
+
