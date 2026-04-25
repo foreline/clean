@@ -12,6 +12,7 @@ use Webmozart\Assert\Assert;
 
 /**
  * Color ValueObject
+ * @deprecated should be extracted to foreline/clean-vo library
  */
 class Color implements ValueObjectInterface, StringValueObjectInterface, ToArrayInterface, FromArrayInterface
 {
