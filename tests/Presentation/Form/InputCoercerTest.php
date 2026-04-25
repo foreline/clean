@@ -212,4 +212,35 @@ class InputCoercerTest extends TestCase
             'array' => [['on']],
         ];
     }
+
+    public function testStringDefault(): void
+    {
+        self::assertSame('', InputCoercer::string(null, ''));
+        self::assertSame('', InputCoercer::string('', ''));
+        self::assertSame('hello', InputCoercer::string('hello', ''));
+        self::assertSame('fallback', InputCoercer::string(null, 'fallback'));
+    }
+
+    public function testIntDefault(): void
+    {
+        self::assertSame(0, InputCoercer::int(null, 0));
+        self::assertSame(0, InputCoercer::int('', 0));
+        self::assertSame(42, InputCoercer::int('42', 0));
+        self::assertSame(-1, InputCoercer::int(null, -1));
+    }
+
+    public function testFloatDefault(): void
+    {
+        self::assertSame(0.0, InputCoercer::float(null, 0.0));
+        self::assertSame(0.0, InputCoercer::float('', 0.0));
+        self::assertSame(1999.99, InputCoercer::float('1 999.99', 0.0));
+    }
+
+    public function testBoolDefault(): void
+    {
+        self::assertTrue(InputCoercer::bool(null, true));
+        self::assertFalse(InputCoercer::bool(null, false));
+        self::assertFalse(InputCoercer::bool('', true)); // empty string is recognised as falsy regardless of default
+        self::assertTrue(InputCoercer::bool('on', false));
+    }
 }

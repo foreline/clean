@@ -59,15 +59,20 @@ final class InputCoercer
      * Coerce raw form input to a string.
      *
      * Trims ASCII whitespace plus NBSP/NNBSP. Empty results map to
-     * `null` so optional fields stay optional.
+     * `null` (or `$default` when supplied) so optional fields stay
+     * optional and required fields can be aligned with non-nullable
+     * targets.
      *
-     * @param mixed $value Raw value from `$_POST`/`$_GET`/`$data[KEY]`.
-     * @return string|null Trimmed string, or `null` for `null`/empty input.
+     * @param mixed       $value   Raw value from `$_POST`/`$_GET`/`$data[KEY]`.
+     * @param string|null $default Value returned when the input is
+     *                             `null`/empty. Generators should pass
+     *                             `''` for non-nullable `string` targets.
+     * @return string|null Trimmed string, or `$default` for `null`/empty input.
      */
-    public static function string(mixed $value): ?string
+    public static function string(mixed $value, ?string $default = null): ?string
     {
         if (null === $value) {
-            return null;
+            return $default;
         }
 
         if (is_array($value) || (is_object($value) && !method_exists($value, '__toString'))) {
@@ -78,7 +83,7 @@ final class InputCoercer
 
         $string = trim((string) $value, self::TRIM_CHARS);
 
-        return '' === $string ? null : $string;
+        return '' === $string ? $default : $string;
     }
 
     /**
@@ -90,15 +95,18 @@ final class InputCoercer
      * (`"3.14"`) is truncated to its integer part — matching PHP's
      * native `(int)` cast for the digit portion.
      *
-     * @param mixed $value Raw value from a form payload.
-     * @return int|null `null` for `null`/empty input.
+     * @param mixed    $value   Raw value from a form payload.
+     * @param int|null $default Value returned when the input is
+     *                          `null`/empty. Generators should pass
+     *                          `0` for non-nullable `int` targets.
+     * @return int|null `$default` for `null`/empty input.
      * @throws InvalidArgumentException When the input has no digit.
      */
-    public static function int(mixed $value): ?int
+    public static function int(mixed $value, ?int $default = null): ?int
     {
         $normalised = self::normaliseNumeric($value);
         if (null === $normalised) {
-            return null;
+            return $default;
         }
 
         // Drop fractional part if present — int() always truncates.
@@ -134,15 +142,18 @@ final class InputCoercer
      * deterministically. For locale-strict parsing, project authors can
      * call {@see self::floatLocale()} (requires `ext-intl`).
      *
-     * @param mixed $value Raw value from a form payload.
-     * @return float|null `null` for `null`/empty input.
+     * @param mixed      $value   Raw value from a form payload.
+     * @param float|null $default Value returned when the input is
+     *                            `null`/empty. Generators should pass
+     *                            `0.0` for non-nullable `float` targets.
+     * @return float|null `$default` for `null`/empty input.
      * @throws InvalidArgumentException When the input has no digit.
      */
-    public static function float(mixed $value): ?float
+    public static function float(mixed $value, ?float $default = null): ?float
     {
         $normalised = self::normaliseNumeric($value);
         if (null === $normalised) {
-            return null;
+            return $default;
         }
 
         if ('' === $normalised || '-' === $normalised || '+' === $normalised || '.' === $normalised) {
@@ -165,14 +176,20 @@ final class InputCoercer
      * - Truthy: `1`, `on`, `yes`, `y`, `true`, `checked`
      * - Falsy:  `0`, `off`, `no`, `n`, `false`, empty string, `null`
      *
-     * @param mixed $value Raw value from a form payload, or `null` when
-     *                     the form key was absent (unchecked checkbox).
+     * @param mixed $value   Raw value from a form payload, or `null`
+     *                       when the form key was absent (unchecked checkbox).
+     * @param bool  $default Value returned when the input is `null`.
+     *                       Defaults to `false` (HTML checkbox semantics).
      * @return bool
      * @throws InvalidArgumentException On unknown vocabulary.
      */
-    public static function bool(mixed $value): bool
+    public static function bool(mixed $value, bool $default = false): bool
     {
-        if (null === $value || false === $value) {
+        if (null === $value) {
+            return $default;
+        }
+
+        if (false === $value) {
             return false;
         }
 
