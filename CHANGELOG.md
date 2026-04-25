@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- InputCoercer class for tolerant HTML form value coercion, bridging the Presentation→Domain boundary with support for locale-aware numeric parsing and HTML form vocabulary recognition.
+
 ## [2.0.0] - 2026-04-25
 
 ### Removed
@@ -61,8 +66,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Improved entity permissions type hints and consolidation: replaced mixed types with specific type hints (AggregateInterface, ServiceInterface) for better static analysis. Consolidated EntityPermissionsInterface into AbstractEntityPermissions.
 - Internal restructuring.
-
-
-
-
-## [Unreleased]
