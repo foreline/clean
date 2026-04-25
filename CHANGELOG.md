@@ -7,7 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.0] - 2026-04-25
+
 ### Added
+- InputCoercer coercion methods now accept optional `$default` parameter for handling non-nullable form targets (e.g., `string`, `int`, `float`), enabling form generators to provide sensible defaults while preserving optional field semantics.
 - InputCoercer class for tolerant HTML form value coercion, bridging the Presentation→Domain boundary with support for locale-aware numeric parsing and HTML form vocabulary recognition.
 
 ## [2.0.0] - 2026-04-25
