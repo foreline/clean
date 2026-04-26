@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.3.0] - 2026-04-26
+
+### Added
+- Lifecycle management abstractions: AbstractLifecycleStatus base class for lifecycle-aware aggregates.
+- EnumInterface for typed enum contracts in domain models.
+- LifecycleStatusInterface and related contracts for status management and transitions.
+- LifecycleAwareInterface for marking entities that participate in lifecycle systems.
+
 ## [2.2.0] - 2026-04-25
 
 ### Added
