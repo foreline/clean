@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.4.0] - 2026-04-26
+
+### Added
+- AbstractLifecycleStatusTransitions: base implementation of StatusTransitionsInterface with sensible defaults for UI methods.
+- UI methods for status transitions: transitionDeniedReason() for disabled states, reasonRequiredFor() to mandate transition reasons.
+- Transition matrix methods: canTransitionMatrix(), transitionDeniedReasonMatrix(), reasonRequiredMatrix() for UI rendering.
+- Nullable $from parameter support throughout StatusTransitionsInterface to handle unsaved entities.
+
 ## [2.3.1] - 2026-04-26
 
 ### Fixed
