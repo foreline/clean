@@ -15,15 +15,13 @@ use Domain\Entity\AbstractEntity;
  * а не leaf-агрегатом — конечные агрегаты сохраняют инкапсуляцию через
  * публичный API getter/setter.
  */
-abstract class AbstractLifecycleStatus extends AbstractEntity implements
-    LifecycleStatusInterface,
-    AggregateInterface
+abstract class AbstractLifecycleStatus extends AbstractEntity implements LifecycleStatusInterface, AggregateInterface
 {
     /** @var string Описание */
     protected string $description = '';
 
     /** @var string Цвет */
-    protected string $color = '';
+    protected string $color;
 
     /** @var int Сортировка */
     protected int $sort = 1;
@@ -33,8 +31,15 @@ abstract class AbstractLifecycleStatus extends AbstractEntity implements
 
     /** @var bool По умолчанию */
     protected bool $defaultStatus = false;
-
-
+    
+    /**
+     *
+     */
+    public function __construct()
+    {
+        $this->color = LifecycleColorPalette::DEFAULT->value;
+    }
+    
     /**
      * Системный код статуса.
      */
@@ -58,8 +63,7 @@ abstract class AbstractLifecycleStatus extends AbstractEntity implements
         $this->description = $description;
         return $this;
     }
-
-
+    
     /**
      * @return string
      */
@@ -67,17 +71,35 @@ abstract class AbstractLifecycleStatus extends AbstractEntity implements
     {
         return $this->color;
     }
-
+    
+    /**
+     * @return LifecycleColorPalette
+     */
+    public function getColorPalette(): LifecycleColorPalette
+    {
+        return LifecycleColorPalette::tryFrom($this->color) ?? LifecycleColorPalette::DEFAULT;
+    }
+    
     /**
      * @param string $color
-     * @return static
+     * @return $this
      */
-    public function setColor(string $color): static
+    public function setColor(string $color): self
     {
-        $this->color = $color;
+        // backward-compat: accept either a palette token or a legacy hex; legacy hex collapses to DEFAULT
+        $this->color = LifecycleColorPalette::tryFrom($color)?->value ?? LifecycleColorPalette::DEFAULT->value;
         return $this;
     }
-
+    
+    /**
+     * @param LifecycleColorPalette $palette
+     * @return $this
+     */
+    public function setColorPalette(LifecycleColorPalette $palette): self
+    {
+        $this->color = $palette->value;
+        return $this;
+    }
 
     /**
      * @return int
@@ -97,7 +119,6 @@ abstract class AbstractLifecycleStatus extends AbstractEntity implements
         return $this;
     }
 
-
     /**
      * @return bool
      */
@@ -115,7 +136,6 @@ abstract class AbstractLifecycleStatus extends AbstractEntity implements
         $this->active = $active;
         return $this;
     }
-
 
     /**
      * @return bool
@@ -135,21 +155,20 @@ abstract class AbstractLifecycleStatus extends AbstractEntity implements
         return $this;
     }
 
-
     /**
      * Соответствует ли статус хотя бы одному из перечисленных системных кодов.
+     *
+     * @param LifecycleStatusEnumInterface ...$codes
+     * @return bool
      */
     public function is(LifecycleStatusEnumInterface ...$codes): bool
     {
         $current = $this->getCode();
-        foreach ( $codes as $code ) {
-            if ( $current === $code ) {
-                return true;
-            }
+        if ( in_array($current, $codes, true) ) {
+            return true;
         }
         return false;
     }
-
 
     /**
      * @return bool
@@ -158,7 +177,6 @@ abstract class AbstractLifecycleStatus extends AbstractEntity implements
     {
         return $this->getCode()->isInProgress();
     }
-
 
     /**
      * @return bool
