@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.5.0] - 2026-04-27
+
+### Added
+- LifecycleColorPalette enum with predefined color options for status customization.
+- Color palette support in AbstractLifecycleStatus with getColorPalette() and setColorPalette() methods.
+- Backward compatibility layer in setColor() for legacy color values.
+
 ## [2.4.0] - 2026-04-26
 
 ### Added
