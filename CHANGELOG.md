@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- getHint() method to LifecycleStatusInterface for UI user hints (e.g., hover tooltips).
+- Comprehensive PHPDoc documentation for all LifecycleStatusInterface methods.
+
 ## [2.5.0] - 2026-04-27
 
 ### Added
