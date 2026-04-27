@@ -32,6 +32,9 @@ abstract class AbstractLifecycleStatus extends AbstractEntity implements Lifecyc
     /** @var bool По умолчанию */
     protected bool $defaultStatus = false;
     
+    /** @var string Подсказка */
+    protected string $hint = '';
+    
     /**
      *
      */
@@ -62,6 +65,22 @@ abstract class AbstractLifecycleStatus extends AbstractEntity implements Lifecyc
     {
         $this->description = $description;
         return $this;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getHint(): string
+    {
+        return $this->hint;
+    }
+    
+    /**
+     * @param string $hint
+     */
+    public function setHint(string $hint): void
+    {
+        $this->hint = $hint;
     }
     
     /**
