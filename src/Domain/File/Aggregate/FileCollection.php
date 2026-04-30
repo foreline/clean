@@ -4,28 +4,19 @@ declare(strict_types=1);
 namespace Domain\File\Aggregate;
 
 use Domain\Aggregate\AggregateInterface;
-use Domain\Aggregate\IteratorInterface;
-use Domain\Aggregate\IteratorTrait;
+use Domain\Aggregate\CollectionInterface;
+use Domain\Aggregate\CollectionTrait;
 use Iterator;
 
 /**
  * File Collection
  */
-class FileCollection implements IteratorInterface
+class FileCollection implements CollectionInterface
 {
-    use IteratorTrait;
+    use CollectionTrait;
     
     /** @var File[]  */
-    private array $items = [];
-    
-    /**
-     *
-     */
-    public function __construct()
-    {
-        $this->position = 0;
-        $this->items = [];
-    }
+    private array $items;
     
     /**
      * @return ?File[]

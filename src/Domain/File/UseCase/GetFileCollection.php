@@ -129,21 +129,6 @@ class GetFileCollection implements ServiceInterface
         }
         return $this;
     }
-    
-    /**
-     * @param string|string[] $code
-     * @param bool $inverse
-     * @return $this
-     */
-    public function filterByCode(string|array $code, bool $inverse = false): self
-    {
-        if ( $inverse ) {
-            $this->filter->not(FileRepositoryInterface::CODE, $code);
-        } else {
-            $this->filter->add(FileRepositoryInterface::CODE, $code);
-        }
-        return $this;
-    }
 
     /**
      * @param array $sort
