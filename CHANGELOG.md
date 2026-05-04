@@ -7,10 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.7.0] - 2026-05-04
+
 ### Added
+- IndexedSubscriberInterface for opt-in indexed event dispatch, enabling O(1) event lookup via Publisher's event index.
+- Priority parameter to Publisher::subscribe() for ordering subscribers within the same event type (higher priority = dispatched first).
 - getHint() method to LifecycleStatusInterface for UI user hints (e.g., hover tooltips).
 - Comprehensive PHPDoc documentation for all LifecycleStatusInterface methods.
 - Hint property and hint getter/setter methods to AbstractLifecycleStatus for storing user-facing hints.
+
+### Changed
+- Publisher event dispatch now uses fast-path indexing for indexed subscribers, with fallback to linear scan for non-indexed subscribers.
 
 ## [2.5.0] - 2026-04-27
 
