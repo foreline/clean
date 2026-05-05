@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Domain\Subscriber;
 
 use Domain\Event\EventInterface;
-use Domain\Event\SubscriberInterface;
+use Domain\Event\IndexedSubscriberInterface;
 use Domain\Events\ErrorOccurredEvent;
 use Domain\User\Service\GetCurrentUser;
 use Exception;
@@ -14,8 +14,19 @@ use Infrastructure\Mailer\MailerManager;
 /**
  * Error Event Subscriber. Sends ErrorOccurredEvent message to email $_ENV['ERROR_EMAIL']
  */
-class ErrorOccurredSubscriber implements SubscriberInterface
+class ErrorOccurredSubscriber implements IndexedSubscriberInterface
 {
+    /**
+     * Returns the list of event class names this subscriber handles.
+     * Must include every event class that isSubscribedTo() would return true for.
+     *
+     * @return array<class-string<EventInterface>>
+     */
+    public static function getSubscribedEvents(): array
+    {
+        return [ErrorOccurredEvent::class];
+    }
+    
     /**
      * @param ErrorOccurredEvent $event
      * @return void

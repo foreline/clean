@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace Domain\Subscriber;
 
 use Domain\Event\EventInterface;
+use Domain\Event\IndexedSubscriberInterface;
 use Domain\User\Service\GetCurrentUser;
-use Domain\Event\SubscriberInterface;
 use Domain\Events\WarningOccurredEvent;
 use Exception;
 use Infrastructure\Mailer\EmailMessage;
@@ -14,8 +14,19 @@ use Infrastructure\Mailer\MailerManager;
 /**
  * Warning event Subscriber. Sends WarningOccurredEvent message to email $_ENV['WARNING_EMAIL']
  */
-class WarningOccurredSubscriber implements SubscriberInterface
+class WarningOccurredSubscriber implements IndexedSubscriberInterface
 {
+    /**
+     * Returns the list of event class names this subscriber handles.
+     * Must include every event class that isSubscribedTo() would return true for.
+     *
+     * @return array<class-string<EventInterface>>
+     */
+    public static function getSubscribedEvents(): array
+    {
+        return [WarningOccurredEvent::class];
+    }
+    
     /**
      * @param WarningOccurredEvent $event
      * @return void

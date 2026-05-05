@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Domain\Subscriber;
 
 use Domain\Event\EventInterface;
-use Domain\Event\SubscriberInterface;
+use Domain\Event\IndexedSubscriberInterface;
 use Domain\Events\ExceptionOccurredEvent;
 use Domain\User\Service\GetCurrentUser;
 use Exception;
@@ -12,8 +12,19 @@ use Exception;
 /**
  * Exception Subscriber. Sends ExceptionOccurredEvent message to Telegram chat $_ENV['EXCEPTION_TELEGRAM_CHAT_ID'] using $_ENV['EXCEPTION_TELEGRAM_TOKEN']
  */
-class ExceptionOccurredTelegramSubscriber implements SubscriberInterface
+class ExceptionOccurredTelegramSubscriber implements IndexedSubscriberInterface
 {
+    /**
+     * Returns the list of event class names this subscriber handles.
+     * Must include every event class that isSubscribedTo() would return true for.
+     *
+     * @return array<class-string<EventInterface>>
+     */
+    public static function getSubscribedEvents(): array
+    {
+        return [ExceptionOccurredEvent::class];
+    }
+    
     /**
      * @param ExceptionOccurredEvent $event
      * @return void

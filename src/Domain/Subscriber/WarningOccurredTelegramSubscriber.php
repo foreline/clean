@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Domain\Subscriber;
 
 use Domain\Event\EventInterface;
-use Domain\Event\SubscriberInterface;
+use Domain\Event\IndexedSubscriberInterface;
 use Domain\Events\WarningOccurredEvent;
 use Domain\User\Service\GetCurrentUser;
 use Exception;
@@ -13,8 +13,19 @@ use Exception;
  * Warning event subscriber.
  * Sends WarningOccurredEvent message to Telegram chat $_ENV['WARNING_TELEGRAM_CHAT_ID'] using $_ENV['WARNING_TELEGRAM_TOKEN']
  */
-class WarningOccurredTelegramSubscriber implements SubscriberInterface
+class WarningOccurredTelegramSubscriber implements IndexedSubscriberInterface
 {
+    /**
+     * Returns the list of event class names this subscriber handles.
+     * Must include every event class that isSubscribedTo() would return true for.
+     *
+     * @return array<class-string<EventInterface>>
+     */
+    public static function getSubscribedEvents(): array
+    {
+        return [WarningOccurredEvent::class];
+    }
+    
     /**
      * @param WarningOccurredEvent $event
      * @return void

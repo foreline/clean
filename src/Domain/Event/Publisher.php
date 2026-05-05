@@ -8,8 +8,11 @@ namespace Domain\Event;
  */
 class Publisher
 {
-    /** @var SubscriberInterface[] */
+    /** @var SubscriberInterface[] All registered subscribers (for deduplication checks and getSubscribers()). */
     private array $subscribers;
+    
+    /** @var SubscriberInterface[] Only non-indexed subscribers — iterated during fallback scan. */
+    private array $legacySubscribers = [];
     
     /**
      * Event index for IndexedSubscriberInterface implementors.
@@ -90,7 +93,10 @@ class Publisher
         if ( $subscriber instanceof IndexedSubscriberInterface ) {
             foreach ( $subscriber::getSubscribedEvents() as $eventClass ) {
                 $this->index[$eventClass][$priority][] = $subscriber;
+                krsort($this->index[$eventClass]);
             }
+        } else {
+            $this->legacySubscribers[] = $subscriber;
         }
     }
     
@@ -117,6 +123,11 @@ class Publisher
                     }
                 }
             }
+        } else {
+            $legacyKey = array_search($subscriber, $this->legacySubscribers, true);
+            if ( false !== $legacyKey ) {
+                unset($this->legacySubscribers[$legacyKey]);
+            }
         }
     }
     
@@ -136,22 +147,18 @@ class Publisher
         foreach ( $events as $event ) {
             $eventClass = $event::class;
             
-            // Fast path: indexed subscribers, dispatched in priority order.
+            // Fast path: indexed subscribers, already sorted by priority at subscribe() time.
             if ( isset($this->index[$eventClass]) ) {
-                $buckets = $this->index[$eventClass];
-                krsort($buckets);
-                foreach ( $buckets as $bucket ) {
+                foreach ( $this->index[$eventClass] as $bucket ) {
                     foreach ( $bucket as $subscriber ) {
                         $this->dispatch($subscriber, $event);
                     }
                 }
             }
             
-            // Fallback: linear scan for non-indexed subscribers.
-            foreach ( $this->subscribers as $subscriber ) {
-                if ( $subscriber instanceof IndexedSubscriberInterface ) {
-                    continue;
-                }
+            // Fallback: linear scan for non-indexed (legacy) subscribers.
+            // Only iterates the small set of legacy subscribers, not the full list.
+            foreach ( $this->legacySubscribers as $subscriber ) {
                 if ( $subscriber->isSubscribedTo($event) ) {
                     $this->dispatch($subscriber, $event);
                 }
@@ -180,6 +187,30 @@ class Publisher
     public function getSubscribers(): array
     {
         return $this->subscribers;
+    }
+    
+    /**
+     * Returns count of non-indexed (legacy) subscribers. For debugging only.
+     * @return int
+     */
+    public function getLegacySubscribersCount(): int
+    {
+        return count($this->legacySubscribers);
+    }
+    
+    /**
+     * Returns class names of non-indexed (legacy) subscribers. For debugging only.
+     * @return array<string, int>
+     */
+    public function getLegacySubscriberClasses(): array
+    {
+        $classes = [];
+        foreach ( $this->legacySubscribers as $subscriber ) {
+            $class = $subscriber::class;
+            $classes[$class] = ( $classes[$class] ?? 0 ) + 1;
+        }
+        ksort($classes);
+        return $classes;
     }
     
     /**
