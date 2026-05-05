@@ -13,6 +13,6 @@ namespace Domain\Event;
  * Requires AsyncDispatcherInterface to be set on the Publisher instance.
  * If no async dispatcher is configured, the subscriber will fall back to synchronous processing.
  */
-interface AsyncSubscriberInterface extends SubscriberInterface
+interface AsyncSubscriberInterface extends SubscriberInterface, IndexedSubscriberInterface
 {
 }
