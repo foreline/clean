@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Event dispatch performance improved with pre-sorted indexed subscribers and dedicated legacy subscriber tracking, eliminating runtime sorting overhead.
+
 ## [2.7.0] - 2026-05-04
 
 ### Added
