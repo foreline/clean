@@ -12,7 +12,7 @@ use Domain\Aggregate\AggregateInterface;
 class File implements AggregateInterface, FileInterface
 {
     /** @var int|null File ID */
-    private ?int $id;
+    private ?int $id = null;
     
     /** @var DateTimeImmutable|null  */
     private ?DateTimeImmutable $dateCreated = null;
