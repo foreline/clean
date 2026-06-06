@@ -2,3 +2,14 @@ parameters:
     level: 3
     paths:
         - src
+    reportUnmatchedIgnoredErrors: false
+    ignoreErrors:
+        # The redis/memcached PHP extensions are optional runtime dependencies.
+        # Their classes (\Redis, \Memcached) are unavailable during static analysis
+        # when the extensions are not installed; the backends guard usage at runtime.
+        -
+            message: '#(class Redis|class Memcached|unknown class Redis|unknown class Memcached)#'
+            paths:
+                - src/Infrastructure/Event/Debounce/RedisDebounceStorage.php
+                - src/Infrastructure/Event/Debounce/MemcachedDebounceStorage.php
+                - src/Infrastructure/Event/Debounce/DebounceStorageFactory.php

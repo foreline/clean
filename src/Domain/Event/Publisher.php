@@ -34,6 +34,11 @@ class Publisher
     private ?AsyncDispatcherInterface $asyncDispatcher = null;
     
     /**
+     * @var DebounceHandlerInterface|null
+     */
+    private ?DebounceHandlerInterface $debounceHandler = null;
+    
+    /**
      *
      */
     private function __construct()
@@ -60,6 +65,27 @@ class Publisher
     public function getAsyncDispatcher(): ?AsyncDispatcherInterface
     {
         return $this->asyncDispatcher;
+    }
+    
+    /**
+     * Sets the debounce handler for DebouncedSubscriberInterface subscribers.
+     * When not set, debounced subscribers are processed synchronously (backward compatible).
+     *
+     * @param DebounceHandlerInterface $debounceHandler
+     */
+    public function setDebounceHandler(DebounceHandlerInterface $debounceHandler): void
+    {
+        $this->debounceHandler = $debounceHandler;
+    }
+    
+    /**
+     * Returns the debounce handler if set.
+     *
+     * @return DebounceHandlerInterface|null
+     */
+    public function getDebounceHandler(): ?DebounceHandlerInterface
+    {
+        return $this->debounceHandler;
     }
     
     /**
@@ -169,11 +195,17 @@ class Publisher
     }
     
     /**
-     * Dispatches a single subscriber, routing to async if applicable.
+     * Dispatches a single subscriber, routing to debounce or async if applicable.
+     *
+     * Debounced subscribers take precedence: matching events are coalesced via the
+     * debounce handler. Async subscribers are enqueued via the async dispatcher.
+     * Otherwise the subscriber is handled synchronously.
      */
     private function dispatch(SubscriberInterface $subscriber, EventInterface $event): void
     {
-        if ( null !== $this->asyncDispatcher && $subscriber instanceof AsyncSubscriberInterface ) {
+        if ( null !== $this->debounceHandler && $subscriber instanceof DebouncedSubscriberInterface ) {
+            $this->debounceHandler->debounce($subscriber, $event);
+        } elseif ( null !== $this->asyncDispatcher && $subscriber instanceof AsyncSubscriberInterface ) {
             $this->asyncDispatcher->dispatch($event, $subscriber);
         } else {
             $subscriber->handle($event);

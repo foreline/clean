@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- DebouncedSubscriberInterface for coalescing bursts of domain events into a single deferred subscriber invocation (trailing-edge debounce with optional max-wait cap).
+- DebouncedSubscriberHandler that schedules debounced invocations and flushes due ones once their quiet window has elapsed.
+- Cross-request debounce storage backends: FileDebounceStorage, RedisDebounceStorage, and MemcachedDebounceStorage, selectable via the `EVENT_DEBOUNCE_STORAGE` environment variable through DebounceStorageFactory.
+- Publisher::setDebounceHandler() to route DebouncedSubscriberInterface subscribers through the debounce handler (falls back to synchronous handling when unset).
+
 ### Changed
 - Event dispatch performance improved with pre-sorted indexed subscribers and dedicated legacy subscriber tracking, eliminating runtime sorting overhead.
 
