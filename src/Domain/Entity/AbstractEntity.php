@@ -24,6 +24,7 @@ abstract class AbstractEntity
     
     /**
      * @var string Ссылка на элемент
+     *
      * @deprecated
      */
     private string $detailPageUrl = '';
@@ -33,12 +34,14 @@ abstract class AbstractEntity
     
     /**
      * @var string
+     *
      * @deprecated
      */
     private string $listUrl = '';
     
     /**
      * @var string
+     *
      * @deprecated
      */
     private string $addUrl = '';
