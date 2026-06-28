@@ -16,7 +16,7 @@ abstract class AbstractEntity
     /** @var string Название */
     private string $name = '';
     
-    /** @var int Количество. При группировке элементов */
+    /** @var int Количество. Используется при группировке элементов */
     private int $aggregatedCount = 1;
     
     /** @var string Внешний ID */
@@ -63,7 +63,7 @@ abstract class AbstractEntity
             return $this;
         }
         
-        if ( 0 >= $id ) {
+        if ( 0 > $id ) {
             throw new InvalidArgumentException('ID должен быть положительным');
         }
         
