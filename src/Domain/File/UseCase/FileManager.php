@@ -68,6 +68,7 @@ class FileManager extends AbstractManager implements ServiceInterface
      * @param string[] $descriptions Массив с описаниями. Ключи массива должны соответствовать "файлам"
      * @return ?FileCollection
      * @throws Exception
+     * @deprecated Use Domain\File\UseCase\UploadFile::uploadFiles() instead.
      */
     public function uploadFiles(array $userFile, array $descriptions = []): ?FileCollection
     {
@@ -143,6 +144,7 @@ class FileManager extends AbstractManager implements ServiceInterface
      * @param string $description
      * @return File
      * @throws Exception
+     * @deprecated Use Domain\File\UseCase\UploadFile::upload() instead.
      */
     public function upload(string $fileLocalPathOrUrl, string $name = '', string $description = ''): File
     {
