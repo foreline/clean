@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Publisher::setDebounceHandler() to route DebouncedSubscriberInterface subscribers through the debounce handler (falls back to synchronous handling when unset).
 
 ### Changed
+- **BREAKING CHANGE:** `GroupManager` no longer exposes a singleton `getInstance()` factory; instantiate it directly or retrieve it from the DI container.
+- **BREAKING CHANGE:** `AbstractManager` no longer extends `AbstractValueObjectManager`. Its filter, sort, limit, fields, and group APIs are now declared directly on `AbstractManager`, and the deprecated `listPageUrl` accessors are removed.
 - Event dispatch performance improved with pre-sorted indexed subscribers and dedicated legacy subscriber tracking, eliminating runtime sorting overhead.
 
 ## [2.7.0] - 2026-05-04
