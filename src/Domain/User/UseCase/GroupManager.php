@@ -25,26 +25,12 @@ class GroupManager extends AbstractManager implements ServiceInterface
 {
     private ?ServiceInterface $service;
     
-    private static ?self $instance = null;
     private GroupRepositoryInterface $repository;
     
     public FilterInterface|GroupFilter $filter;
     public SortInterface|GroupSort $sort;
     public LimitInterface|GroupLimit $limit;
     public FieldsInterface|GroupFields $fields;
-    
-    /**
-     * @param GroupRepositoryInterface|null $repository
-     * @return self
-     * @deprecated
-     */
-    public static function getInstance(GroupRepositoryInterface $repository = null): self
-    {
-        if ( !self::$instance ) {
-            self::$instance = new self($repository);
-        }
-        return self::$instance;
-    }
     
     /**
      * @param GroupRepositoryInterface|null $repository
