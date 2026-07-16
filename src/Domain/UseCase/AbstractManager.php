@@ -22,7 +22,7 @@ abstract class AbstractManager
     protected int $offset = 0;
     protected int $pageNum = 0;
     
-    public FilterInterface $filter;
+    //public FilterInterface $filter;
     public SortInterface $sort;
     public LimitInterface $limit;
     public FieldsInterface $fields;

@@ -27,6 +27,7 @@ class Filter implements FilterInterface, JsonSerializable
     
     /** @var array  */
     private array $filter = [];
+    
     /** @var array  */
     private array $restrictions = [];
     
@@ -49,49 +50,44 @@ class Filter implements FilterInterface, JsonSerializable
         $result = [];
         
         foreach ( array_merge($this->filter, $this->restrictions) as $field => $value ) {
+            
             if ( !isset($this->restrictions[$field]) ) {
                 $result[$field] = $this->filter[$field];
             } elseif ( !isset($this->filter[$field]) ) {
                 $result[$field] = $this->restrictions[$field];
-            } else {
+            } elseif (
+                is_array($this->restrictions[$field])
+                && is_array($this->filter[$field])
+            ) {
+                $result[$field] =
+                    array_intersect($this->restrictions[$field], $this->filter[$field])
+                        ?: $this->restrictions[$field];
+            } elseif (
+                is_array($this->restrictions[$field])
+                && !is_array($this->filter[$field])
+            ) {
                 
-                if (
-                    is_array($this->restrictions[$field])
-                    && is_array($this->filter[$field])
-                ) {
-                    $result[$field] =
-                        array_intersect($this->restrictions[$field], $this->filter[$field])
-                            ?: $this->restrictions[$field];
-                } elseif (
-                    is_array($this->restrictions[$field])
-                    && !is_array($this->filter[$field])
-                ) {
-                    
-                    if ( in_array($this->filter[$field], $this->restrictions[$field], true) ) {
-                        $result[$field] = $this->filter[$field];
-                    } else {
-                        $result[$field] = $this->restrictions[$field];
-                    }
-                    
-                } elseif (
-                    !is_array($this->restrictions[$field])
-                    && is_array($this->filter[$field])
-                ) {
-                    
-                    if ( in_array($this->restrictions[$field], $this->filter[$field], true) ) {
-                        $result[$field] = $this->filter[$field];
-                    } else {
-                        $result[$field] = $this->restrictions[$field];
-                    }
-                    
+                if ( in_array($this->filter[$field], $this->restrictions[$field], true) ) {
+                    $result[$field] = $this->filter[$field];
                 } else {
-                    
-                    if ( $this->filter[$field] === $this->restrictions[$field] ) {
-                        $result[$field] = $this->filter[$field];
-                    } else {
-                        $result[$field] = $this->restrictions[$field];
-                    }
+                    $result[$field] = $this->restrictions[$field];
                 }
+                
+            } elseif (
+                !is_array($this->restrictions[$field])
+                && is_array($this->filter[$field])
+            ) {
+                
+                if ( in_array($this->restrictions[$field], $this->filter[$field], true) ) {
+                    $result[$field] = $this->filter[$field];
+                } else {
+                    $result[$field] = $this->restrictions[$field];
+                }
+                
+            } elseif ( $this->filter[$field] === $this->restrictions[$field] ) {
+                $result[$field] = $this->filter[$field];
+            } else {
+                $result[$field] = $this->restrictions[$field];
             }
         }
         
