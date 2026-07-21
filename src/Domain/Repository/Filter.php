@@ -25,6 +25,12 @@ class Filter implements FilterInterface, JsonSerializable
     public const EXPRESSION_STRING_LIKE = '%';
     public const EXPRESSION_STRING_NOT = '!';
     
+    // Comparison operators
+    public const LESS_THAN = '<';
+    public const LESS_THAN_OR_EQUAL = '<=';
+    public const GREATER_THAN = '>';
+    public const GREATER_THAN_OR_EQUAL = '>=';
+    
     /** @var array  */
     private array $filter = [];
     
