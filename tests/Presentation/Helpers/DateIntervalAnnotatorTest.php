@@ -98,4 +98,25 @@ class DateIntervalAnnotatorTest extends TestCase
 
         $this->assertSame($text, $result);
     }
+
+    public function testAnnotateStringIsIdempotent(): void
+    {
+        $text = 'Дата регистрации: 2026-07-05 15:11:15, изменено 23.07.2026 21:54:19, срок 2026.08.04 15:11:09.';
+
+        $once = DateIntervalAnnotator::annotateString($text, $this->now);
+        $twice = DateIntervalAnnotator::annotateString($once, $this->now);
+
+        // Повторное применение не должно дробить секунды: «15:11 (X):15 (X)»
+        $this->assertSame($once, $twice);
+        $this->assertStringContainsString('2026-07-05 15:11:15 (18 дней назад)', $once);
+    }
+
+    public function testAnnotateStringCoversZabbixFormat(): void
+    {
+        $text = 'SSL certificate expires on 2026.08.04 15:11:09';
+
+        $result = DateIntervalAnnotator::annotateString($text, $this->now);
+
+        $this->assertSame('SSL certificate expires on 2026.08.04 15:11:09 (через 12 дней)', $result);
+    }
 }

@@ -91,16 +91,29 @@ class DateIntervalAnnotator
         // Уже аннотированная дата: за ней следует метка интервала
         $notAnnotated = '(?!\s*\((?:\d+\s+дн|сегодня|вчера|завтра|через\s+\d+\s+дн))';
 
+        // Атомарные (possessive) группы времени: без них PCRE при неудаче lookahead'а
+        // откатывается к префиксу «H:i» уже аннотированной даты «Y-m-d H:i:s (…)»
+        // и аннотирует её повторно («15:11 (X):15 (X)»).
+        $timeIso = '(?:[ T]\d{2}:\d{2}(?::\d{2})?+)?+';
+        $timeRu  = '(?: \d{2}:\d{2}(?::\d{2})?+)?+';
+
         // ISO: 2026-07-23 или 2026-07-23 21:32[:25]
         $text = (string) preg_replace_callback(
-            '/\b\d{4}-\d{2}-\d{2}(?:[ T]\d{2}:\d{2}(?::\d{2})?)?' . $notAnnotated . '/',
+            '/\b\d{4}-\d{2}-\d{2}' . $timeIso . $notAnnotated . '/',
             static fn(array $m): string => self::annotateMatch($m[0], $now),
             $text
         );
 
         // RU: 23.07.2026 или 23.07.2026 21:32[:25]
         $text = (string) preg_replace_callback(
-            '/\b\d{2}\.\d{2}\.\d{4}(?: \d{2}:\d{2}(?::\d{2})?)?' . $notAnnotated . '/',
+            '/\b\d{2}\.\d{2}\.\d{4}' . $timeRu . $notAnnotated . '/',
+            static fn(array $m): string => self::annotateMatch($m[0], $now),
+            $text
+        );
+
+        // Zabbix/Veeam: 2026.08.04 или 2026.08.04 15:11[:09]
+        $text = (string) preg_replace_callback(
+            '/\b\d{4}\.\d{2}\.\d{2}' . $timeRu . $notAnnotated . '/',
             static fn(array $m): string => self::annotateMatch($m[0], $now),
             $text
         );
@@ -137,6 +150,7 @@ class DateIntervalAnnotator
         $formats = [
             'Y-m-d H:i:s', 'Y-m-d H:i', 'Y-m-d\TH:i:s', 'Y-m-d\TH:i', 'Y-m-d',
             'd.m.Y H:i:s', 'd.m.Y H:i', 'd.m.Y',
+            'Y.m.d H:i:s', 'Y.m.d H:i', 'Y.m.d',
         ];
 
         foreach ( $formats as $format ) {
