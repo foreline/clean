@@ -158,7 +158,12 @@ $workerBus = MessengerFactory::createWorkerBus($handler);
 
 if ( function_exists('pcntl_signal') ) {
     $worker = null;
-    
+
+    // Deliver signals asynchronously: without this, the handlers below are only
+    // invoked on pcntl_signal_dispatch(), which nothing calls — SIGTERM from
+    // systemd would be queued forever and the process killed after TimeoutStopSec.
+    pcntl_async_signals(true);
+
     pcntl_signal(SIGTERM, static function () use (&$worker) {
         echo "\n[" . date('Y-m-d H:i:s') . "] Received SIGTERM, stopping gracefully...\n";
         $worker?->stop();
