@@ -119,4 +119,66 @@ class DateIntervalAnnotatorTest extends TestCase
 
         $this->assertSame('SSL certificate expires on 2026.08.04 15:11:09 (через 12 дней)', $result);
     }
+
+    public function testStripAnnotationsRoundtrip(): void
+    {
+        $texts = [
+            'Зарегистрировано 2026-06-27 04:04:16, продление 01.07.2025, срок до 2026-08-01.',
+            'Дата регистрации: 2026-07-05 15:11:15, изменено 23.07.2026 21:54:19, срок 2026.08.04 15:11:09.',
+            'SSL certificate expires on 2026.08.04 15:11:09',
+            'Сегодня 2026-07-23, вчера 2026-07-22, завтра 2026-07-24.',
+        ];
+
+        foreach ( $texts as $text ) {
+            $annotated = DateIntervalAnnotator::annotateString($text, $this->now);
+
+            $this->assertSame(
+                $text,
+                DateIntervalAnnotator::stripAnnotations($annotated),
+                'Roundtrip annotate→strip должен вернуть исходный текст'
+            );
+        }
+    }
+
+    public function testStripAnnotationsCoversAllLabelKinds(): void
+    {
+        $text = 'a 2026-07-23 (сегодня), b 2026-07-22 (вчера), c 2026-07-24 (завтра),'
+            . ' d 2026-07-22 (1 день назад), e 2026-07-20 (3 дня назад), f 2026-07-11 (12 дней назад),'
+            . ' g 2026-07-24 (через 1 день), h 2026-07-26 (через 3 дня), i 2026-08-04 (через 12 дней).';
+
+        $expected = 'a 2026-07-23, b 2026-07-22, c 2026-07-24,'
+            . ' d 2026-07-22, e 2026-07-20, f 2026-07-11,'
+            . ' g 2026-07-24, h 2026-07-26, i 2026-08-04.';
+
+        $this->assertSame($expected, DateIntervalAnnotator::stripAnnotations($text));
+    }
+
+    public function testStripAnnotationsLeavesPlainTextUntouched(): void
+    {
+        $texts = [
+            // Скобки не после даты — легитимный текст
+            'Интервал (5 дней назад) указан вручную, дата где-то рядом.',
+            'Описание (сегодня) без даты.',
+            // Невалидные даты и версии не аннотируются — и не стрипаются
+            'Veeam 11.0.1.1261 P20220302, дата 2026-13-45 не дата.',
+            // Обычные скобки после даты, но не метка интервала
+            'Дата 2026-07-23 (утро) и 2026-07-24 (по UTC).',
+        ];
+
+        foreach ( $texts as $text ) {
+            $this->assertSame($text, DateIntervalAnnotator::stripAnnotations($text));
+        }
+    }
+
+    public function testStripAnnotationsHandlesStaleCopiedLabels(): void
+    {
+        // Случай из практики: агент скопировал дату с устаревшей меткой из старого
+        // контекста в текст действия — при записи метка снимается, дата остаётся.
+        $text = 'Срок истекает через 13 дней (2026-07-23 (5 дней назад)).';
+
+        $this->assertSame(
+            'Срок истекает через 13 дней (2026-07-23).',
+            DateIntervalAnnotator::stripAnnotations($text)
+        );
+    }
 }
