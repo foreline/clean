@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- SourceInterface, SourceHolderInterface, and MultiSourceInterface contracts in `Domain\Aggregate` for the multi-source pattern (upstreamed from project implementations).
+- `SourceHolderInterface::getUrl()` and `SourceHolderInterface::getSourceUrl()` — resolved external-record URL with own-template → Source-template fallback precedence.
+- `SourceUrlTrait` providing the canonical `getSourceUrl()` implementation via the holder's public getters.
+- `SourceUrlTraitTest` covering template precedence, Source fallback, explicit sourceId, and empty cases.
+
 ## [2.8.0] - 2026-07-14
 
 ### Added
