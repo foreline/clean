@@ -7,10 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.11.0] - 2026-08-20
+
+### Added
+- Length-limited text Value Objects in `Domain\ValueObject`: `AbstractLengthLimitedText` (mb-aware char limit + byte budget for text-family columns) and the `ShortText` (varchar(255)), `Text`, `MediumText`, `LongText` base classes implementing `LengthAwareStringValueObjectInterface`. Moved here from `foreline/clean-vo` — low-level text contracts belong to the core framework; `clean-vo` keeps high-level VOs (Money, IPv4, …). Class names/namespaces are unchanged, so consumers need no code changes — just `composer update foreline/clean`.
+
 ## [2.10.0] - 2026-08-20
 
 ### Added
-- `Domain\ValueObject\LengthAwareStringValueObjectInterface` — string VO contract with static length metadata (`maxLength()`, `columnType()`) for code generators (ORM column sizing, MCP `maxLength`, UI `maxlength`). Consumed by `foreline/clean-vo` (`AbstractLengthLimitedText`) since v0.0.3.
+- `Domain\ValueObject\LengthAwareStringValueObjectInterface` — string VO contract with static length metadata (`maxLength()`, `columnType()`) for code generators (ORM column sizing, MCP `maxLength`, UI `maxlength`).
 - AGENTS.md: release & push policy (multi-remote rule, dependency cascade).
 
 ## [2.9.0] - 2026-08-01
