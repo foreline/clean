@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.10.0] - 2026-08-20
+
+### Added
+- `Domain\ValueObject\LengthAwareStringValueObjectInterface` — string VO contract with static length metadata (`maxLength()`, `columnType()`) for code generators (ORM column sizing, MCP `maxLength`, UI `maxlength`). Consumed by `foreline/clean-vo` (`AbstractLengthLimitedText`) since v0.0.3.
+- AGENTS.md: release & push policy (multi-remote rule, dependency cascade).
+
+## [2.9.0] - 2026-08-01
+
 ### Added
 - SourceInterface, SourceHolderInterface, and MultiSourceInterface contracts in `Domain\Aggregate` for the multi-source pattern (upstreamed from project implementations).
 - `SourceHolderInterface::getUrl()` and `SourceHolderInterface::getSourceUrl()` — resolved external-record URL with own-template → Source-template fallback precedence.

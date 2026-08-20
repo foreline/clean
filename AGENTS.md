@@ -308,6 +308,15 @@ src/Domain/{Entity}/
 
 ---
 
+## Релизы и публикация (push/tag)
+
+- Мы — мейнтейнеры этой библиотеки. У репозитория два remote: `github` и `gitlab`. Все изменения и релизные теги пушатся **во все remotes** (`git push github main --tags && git push gitlab main --tags`). GitLab — release-critical: composer-зависимые проекты тянут пакеты именно оттуда, но github не должен молча отставать.
+- Конвенции: Conventional Commits, CHANGELOG.md (Keep a Changelog), SemVer.
+- Теги — аннотированные: `git tag -a vX.Y.Z -m "vX.Y.Z: <краткое описание релиза>"`. Следующая версия определяется по коммитам с последнего тега (`git describe --tags --abbrev=0`): `feat` → MINOR, `fix` → PATCH, breaking change → MAJOR.
+- Каскад зависимостей: после релиза `clean` обновить зависимые библиотеки — в `clean-vo` и `clean-bitrix` выполнить `composer update foreline/clean`, commit, tag, push; затем обновить потребителей `clean-bitrix` (например, модуль servicedesk: `composer update foreline/clean-bitrix -W`).
+
+---
+
 ## Контакты
 
 Автор: Simakin Dima <dima@foreline.ru>.
