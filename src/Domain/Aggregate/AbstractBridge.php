@@ -4,21 +4,21 @@ declare(strict_types=1);
 namespace Domain\Aggregate;
 
 use DateTimeImmutable;
-use Domain\User\Aggregate\User;
+use Domain\User\Aggregate\UserInterface;
 
 /**
  * Bridge entities are used for maintaining relations between entities
  */
 abstract class AbstractBridge
 {
-    /** @var User|null Инициатор */
-    private ?User $createdBy = null;
+    /** @var UserInterface|null Инициатор */
+    private ?UserInterface $createdBy = null;
     
     /** @var DateTimeImmutable|null Дата создания */
     private ?DateTimeImmutable $dateCreated = null;
     
-    /** @var User|null Кем изменено */
-    private ?User $modifiedBy = null;
+    /** @var UserInterface|null Кем изменено */
+    private ?UserInterface $modifiedBy = null;
     
     /** @var DateTimeImmutable|null Дата изменения */
     private ?DateTimeImmutable $dateModified = null;
@@ -27,18 +27,18 @@ abstract class AbstractBridge
     //private bool $deleted = false;
     
     /**
-     * @return User|null
+     * @return UserInterface|null
      */
-    public function getCreatedBy(): ?User
+    public function getCreatedBy(): ?UserInterface
     {
         return $this->createdBy;
     }
     
     /**
-     * @param User|null $createdBy
+     * @param UserInterface|null $createdBy
      * @return AbstractBridge
      */
-    public function setCreatedBy(?User $createdBy): AbstractBridge
+    public function setCreatedBy(?UserInterface $createdBy): AbstractBridge
     {
         $this->createdBy = $createdBy;
         return $this;
@@ -63,18 +63,18 @@ abstract class AbstractBridge
     }
     
     /**
-     * @return User|null
+     * @return UserInterface|null
      */
-    public function getModifiedBy(): ?User
+    public function getModifiedBy(): ?UserInterface
     {
         return $this->modifiedBy;
     }
     
     /**
-     * @param User|null $modifiedBy
+     * @param UserInterface|null $modifiedBy
      * @return AbstractBridge
      */
-    public function setModifiedBy(?User $modifiedBy): AbstractBridge
+    public function setModifiedBy(?UserInterface $modifiedBy): AbstractBridge
     {
         $this->modifiedBy = $modifiedBy;
         return $this;

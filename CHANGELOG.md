@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.12.0] - 2026-08-30
+
+### Changed
+- `Domain\Aggregate\AbstractBridge`: audit fields `createdBy`/`modifiedBy` (properties, getters, setters) are now typed against `Domain\User\Aggregate\UserInterface` instead of the concrete `User`. This aligns the bridge base class with the History/Lifecycle generators (which emit `UserInterface`-typed audit members) and fixes load-time covariance fatals in bridge aggregates that redeclare these accessors with `UserInterface`. Source-compatible for callers (`User` implements `UserInterface`); subclasses that override the accessors with the concrete `User` type must be regenerated/widened.
+
 ## [2.11.0] - 2026-08-20
 
 ### Added
