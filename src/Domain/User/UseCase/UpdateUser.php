@@ -55,8 +55,16 @@ class UpdateUser
      */
     public function checkPermissions(UserInterface $user): void
     {
-        if ( !$currentUser = ( new GetCurrentUser() )->get() ) {
+        $getCurrentUser = new GetCurrentUser();
+
+        if ( !$currentUser = $getCurrentUser->get() ) {
             throw new NotAuthorizedException();
+        }
+
+        // Системный контекст (service account): фоновые сценарии вроде синхронизаций
+        // исполняются от имени системного пользователя без роли администратора
+        if ( $getCurrentUser->isSystemContext() ) {
+            return;
         }
 
         if ( !$currentUser->in(Role::ADMIN) && $currentUser->getId() !== $user->getId() ) {

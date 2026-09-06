@@ -13,6 +13,13 @@ use Exception;
 class GetCurrentUser
 {
     private static ?UserInterface $currentUser = null;
+
+    /**
+     * Признак системного контекста выполнения (service account):
+     * код исполняется от имени системного пользователя в фоновых сценариях
+     * (cron, webhook, async worker), где нет интерактивного пользователя
+     */
+    private static bool $systemContext = false;
     
     /**
      * @return UserInterface|null
@@ -45,5 +52,27 @@ class GetCurrentUser
     {
         self::$currentUser = $user;
         return $this;
+    }
+
+    /**
+     * Включает/выключает системный контекст выполнения.
+     * Устанавливается сервисами подмены пользователя (например, RunAsSystemUser)
+     * на время исполнения callback и гарантированно восстанавливается после него
+     * @param bool $systemContext
+     * @return $this
+     */
+    public function setSystemContext(bool $systemContext): self
+    {
+        self::$systemContext = $systemContext;
+        return $this;
+    }
+
+    /**
+     * Активен ли системный контекст выполнения
+     * @return bool
+     */
+    public function isSystemContext(): bool
+    {
+        return self::$systemContext;
     }
 }

@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.12.1] - 2026-09-06
+
+### Added
+- `Domain\User\Service\GetCurrentUser::setSystemContext()` / `isSystemContext()` — explicit system-context (service account) flag for background execution (cron, webhooks, async workers) where code runs as a system user without an administrator role. Set by user-substitution services (e.g. the consumer app's `RunAsSystemUser`) for the duration of the callback.
+
+### Fixed
+- `Domain\User\UseCase\UpdateUser::checkPermissions()` now permits updates in an active system context instead of throwing `NotPermittedException`. Previously, background synchronizations running as a system user (no `admin` role, updating another user) always failed with "Нет доступа".
+
 ## [2.12.0] - 2026-08-30
 
 ### Changed
