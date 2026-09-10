@@ -8,6 +8,14 @@ namespace Domain\Aggregate;
  */
 interface SourceHolderInterface
 {
+    /**
+     * Designated source registry reference. Generator consumers expose a mapped
+     * property named source and narrow this return type to its concrete class.
+     *
+     * @return SourceInterface|null
+     */
+    public function getSource(): ?SourceInterface;
+
     public function isPrimary(): bool;
     
     public function setIsPrimary(bool $isPrimary): self;

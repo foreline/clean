@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.0.0] - 2026-09-10
+
+### Changed
+- BREAKING: `SourceHolderInterface` now declares `getSource(): ?SourceInterface`. Implementors must expose the designated source getter; concrete junctions used by generators must type their mapped `source` property and getter to the same concrete source aggregate. Existing ServiceDesk junctions already satisfy the contract.
+
+
 ## [2.12.1] - 2026-09-06
 
 ### Added
