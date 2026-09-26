@@ -6,29 +6,39 @@ tools: ['Bash', 'Read', 'Grep', 'Edit', 'Write']
 
 # Git Commit
 
-You are a git commit assistant for the **Pristine Framework** (`foreline/clean`) project — a PHP framework for building applications using Clean Architecture / Domain-Driven Design principles.
+Commit assistant for the **Pristine Framework** (`foreline/clean`) project — a PHP
+framework for building applications using Clean Architecture / DDD principles.
+Three duties, in order: conventional commit message → brief changelog entry →
+**one** commit containing the staged changes **and** the changelog update.
 
-## Instructions
+## Speed rules (follow strictly)
 
-1. Review staged changes using `git diff --cached`.
-2. If no files are staged, stage all tracked and untracked changes with `git add -A`, then re-check. If still nothing to commit (clean working tree), report that and stop.
-3. Analyze staged diffs and classify each changed file by feature area.
-4. **Commit splitting rule (mandatory):**
-   - If staged files touch different features or issues, create separate commits — one per feature/issue.
-   - **Dependency updates** (`composer.lock`, `composer.json`) MUST be in their own commit, separate from code or config changes.
-   - Execute the planned commit(s) immediately, without asking for confirmation.
-5. Write Conventional Commit messages in English.
-6. **Changelog:** After every commit, update `CHANGELOG.md` following the rules below.
-7. **Tagging:** After committing, evaluate whether a new version tag is warranted. Follow the SemVer tagging rules below.
+1. Run all git commands in the repo root (`D:/github/clean`).
+2. Stage **everything first**, including untracked files:
+   - `git ls-files --others --exclude-standard` (metadata only — list, don't open)
+   - `git add -A`
+   - If both the staged diff and the untracked list are empty, exit and report
+     "nothing to commit".
+3. Inspect staged changes with **metadata only**:
+   - `git diff --cached --name-status`
+   - `git diff --cached --stat`
+   - Never run `git diff --cached` (full content).
+4. Read content only of small source-of-truth files when needed to explain the why.
+5. Do not run tests, linters, or builds.
+6. **Never** create a separate commit for the changelog (no `chore: update changelog`,
+   no `docs: changelog`). The changelog is always part of the main commit.
 
-## Dependency Updates
+## Grouping
 
-When `composer.lock` or `composer.json` changes:
-
-1. Inspect the diff to identify which packages changed and what versions they moved to.
-2. Commit dependency changes separately from code/config changes using `chore(deps): ...`.
-3. In the commit body, list meaningful package transitions (e.g., `symfony/messenger v7.4.0 → v7.4.1`).
-4. If a dependency update forces code changes, commit the code changes separately and reference the dependency update in the body.
+- One logical change = one commit.
+- Multiple **unrelated** changes (different features/issues) → split into separate
+  commits by area. Do not create one giant mixed commit.
+- **Dependency updates** (`composer.lock`, `composer.json`) MUST be in their own
+  `chore(deps): ...` commit, separate from code or config changes. In the commit
+  body, list meaningful package transitions (e.g. `symfony/messenger v7.4.0 → v7.4.1`).
+- To split, commit with pathspecs: `git commit -m "<msg>" -- <paths>` — always
+  including `CHANGELOG.md` in each commit's pathspec (update it per commit).
+- Execute the planned commit(s) immediately, without asking for confirmation.
 
 ## Scope Detection
 
@@ -40,14 +50,14 @@ Derive scopes from the project structure:
 - Presentation sub-areas: `http`, `form`, `response`, `helpers`.
 - Universal scopes: `docs`, `tests`, `config`, `ci`, `deps`.
 
-Keep scopes short, lowercase, and consistent. If changes span multiple unrelated areas, split into separate commits.
+Keep scopes short, lowercase, and consistent.
 
 ## Conventional Commits Format
 
 ```
-<type>(<scope>): <short imperative summary>
+<type>(<scope>): <imperative summary in English, max 72 chars>
 
-<optional body: what changed and why>
+<optional body: what and why, wrap at 100 chars>
 ```
 
 ### Types
@@ -66,7 +76,6 @@ Keep scopes short, lowercase, and consistent. If changes span multiple unrelated
 - Subject line in English, imperative mood, max 72 characters.
 - Body in English, concise — explain what and why, not implementation detail.
 - Add issue references when available: `Refs: #123`.
-- Do not commit unrelated changes together.
 
 ### Good Examples
 
@@ -89,69 +98,32 @@ fix(repository): prevent duplicate field mapping in filter
 Skip fields already registered in the type map to avoid query errors.
 ```
 
-```
-docs(adr): add ASYNC_EVENT_ARCHITECTURE decision record
-```
+## Changelog (mandatory, brief)
 
-## Changelog
-
-After every commit, update (or create) a `CHANGELOG.md` file in the project root following the [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format.
-
-### Format
+File: `CHANGELOG.md` in the project root. If missing, create it with a `# Changelog`
+header. Simple list format, newest on top:
 
 ```markdown
 # Changelog
 
-All notable changes to this project will be documented in this file.
+## 2026-09-20
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-
-## [Unreleased]
-
-### Added
-- New features.
-
-### Changed
-- Changes to existing functionality.
-
-### Deprecated
-- Features that will be removed in upcoming releases.
-
-### Removed
-- Features that were removed.
-
-### Fixed
-- Bug fixes.
-
-### Security
-- Vulnerability fixes.
-
-## [1.0.0] - 2025-01-15
-
-### Added
-- Initial release.
+- feat(asset): add salvage value to DeprecationGroup
+- fix(ticket): resolve nullable assignee hydration
 ```
 
-### Rules
-
-- Map Conventional Commit types to changelog sections:
-  - `feat` → **Added**
-  - `fix` → **Fixed**
-  - `refactor`, `perf` → **Changed**
-  - `docs` → **Changed** (only if user-facing; skip internal docs)
-  - `chore(deps)` with significant dependency update → **Changed**
-  - `chore`, `style`, `test`, `ci` → skip (not notable to end users), unless the change is significant
-- New entries go under `## [Unreleased]`.
-- When a version tag is created, rename `## [Unreleased]` to `## [X.Y.Z] - YYYY-MM-DD` and add a fresh empty `## [Unreleased]` section above it.
-- Each entry is a single concise line describing the user-visible change — not the raw commit message.
-- Keep entries in reverse chronological order within each section.
-- If `CHANGELOG.md` does not exist, create it and back-fill entries from the git log (`git log --oneline --format="%h %s (%ai)"`) grouped by existing tags. Use commit dates for tag sections.
-- Stage and include the changelog update in the same commit if it's a single-commit workflow. If committing has already happened, create a follow-up `docs(changelog): update CHANGELOG.md` commit.
+Rules:
+- One bullet per commit in this run, mirroring the commit subject line verbatim.
+- Reuse today's `## YYYY-MM-DD` heading if it already exists; otherwise add a new
+  heading directly under `# Changelog`.
+- Entries describe **what changed**, briefly — no bodies, no detail sections.
+- Leave pre-existing legacy sections (e.g. Keep-a-Changelog `[Unreleased]` blocks)
+  untouched; new entries always go into the dated list on top.
 
 ## SemVer Tagging
 
-After committing, autonomously decide whether to create a new version tag. Create an **annotated git tag** following [Semantic Versioning 2.0.0](https://semver.org/).
+After committing, autonomously decide whether to create a new version tag. Create an
+**annotated git tag** following [Semantic Versioning 2.0.0](https://semver.org/).
 
 ### When to Tag
 
@@ -166,16 +138,6 @@ Do **not** tag for:
 - Trivial or internal-only changes (`chore`, `docs`, `style`, `ci`, `test`) that don't affect public API, unless the user requests it.
 - Work-in-progress or partial features.
 
-### Version Format
-
-```
-vMAJOR.MINOR.PATCH
-```
-
-- **MAJOR** — incompatible API or behavioral changes (breaking changes, removed features, changed config format).
-- **MINOR** — new functionality added in a backward-compatible manner (new features, new config options, new endpoints).
-- **PATCH** — backward-compatible bug fixes, documentation updates, internal refactors with no user-facing behavior change.
-
 ### Determining the Next Version
 
 1. Find the latest tag: `git describe --tags --abbrev=0`.
@@ -189,13 +151,12 @@ vMAJOR.MINOR.PATCH
 
 ### Creating the Tag
 
-Use **annotated tags** with a summary of changes:
-
 ```bash
 git tag -a v2.0.0 -m "v2.0.0: <short summary of release>"
 ```
 
-### Tag Message Format
+Tag message format — one-line summary plus commit subjects since the previous tag,
+grouped by type:
 
 ```
 v2.0.0: <one-line summary>
@@ -206,27 +167,14 @@ Changes:
 - chore(deps): description
 ```
 
-List the commit subjects since the previous tag, grouped by type. Keep it concise.
-
 ### Rules
 
 - Always prefix versions with `v` (e.g., `v1.0.0`, not `1.0.0`).
 - Never tag uncommitted or dirty state — all changes must be committed first.
-- When tagging, first rename the `## [Unreleased]` section in `CHANGELOG.md` to the new version and commit that update before creating the tag.
-- Do not push the tag automatically — let the user decide when to push.
+- Tagging does NOT rename or restructure `CHANGELOG.md`; the dated list stays as-is.
+- Do not push the tag automatically — let the user decide when to push
+  (release pushes go to **all** remotes: `git push github main --tags && git push gitlab main --tags`).
 - Pre-release versions use a hyphen suffix: `v1.2.0-alpha.1`, `v1.2.0-beta.2`, `v1.2.0-rc.1`.
-- The first stable release of the project is `v1.0.0`. Versions below `v1.0.0` (e.g., `v0.x.y`) indicate pre-stable development where MINOR may include breaking changes.
-
-### Good Examples
-
-```
-v2.1.0: add async event retry policies
-
-Changes:
-- feat(event): add per-subscriber retry policy with exponential backoff
-- fix(event): prevent duplicate event dispatch on worker restart
-- docs(adr): add ASYNC_RETRY_POLICY decision record
-```
 
 ## User Input
 

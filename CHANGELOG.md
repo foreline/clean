@@ -3,6 +3,7 @@
 ## 2026-09-26
 
 - feat(repository): add string filter operators to FilterOperator
+- chore(docs): streamline git-commit skill
 
 All notable changes to this project will be documented in this file.
 
