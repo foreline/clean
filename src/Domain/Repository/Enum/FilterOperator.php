@@ -27,8 +27,11 @@ enum FilterOperator: string
     
     // String operators
     case CONTAINS = 'contains';
+    case NOT_CONTAINS = 'not_contains';
     case STARTS_WITH = 'starts';
     case ENDS_WITH = 'ends';
+    case FILLED = 'filled';
+    case UNFILLED = 'unfilled';
     
     // Collection operators
     case IN = 'in';
@@ -48,8 +51,11 @@ enum FilterOperator: string
             self::LESS_OR_EQUAL => 'меньше или равно',
             self::BETWEEN => 'в диапазоне',
             self::CONTAINS => 'содержит',
+            self::NOT_CONTAINS => 'не содержит',
             self::STARTS_WITH => 'начинается с',
             self::ENDS_WITH => 'заканчивается на',
+            self::FILLED => 'заполнено',
+            self::UNFILLED => 'не заполнено',
             self::IN => 'один из',
             self::NOT_IN => 'не один из',
         };
@@ -104,6 +110,21 @@ enum FilterOperator: string
     }
     
     /**
+     * Operators applicable to string fields
+     *
+     * @return self[]
+     */
+    public static function forString(): array
+    {
+        return [
+            self::CONTAINS,
+            self::NOT_CONTAINS,
+            self::FILLED,
+            self::UNFILLED,
+        ];
+    }
+    
+    /**
      * Check if this operator requires a range (min/max values)
      */
     public function isRange(): bool
@@ -112,10 +133,20 @@ enum FilterOperator: string
     }
     
     /**
+     * Check if this operator requires a value to compare against
+     *
+     * FILLED and UNFILLED check the field itself and carry no value.
+     */
+    public function requiresValue(): bool
+    {
+        return self::FILLED !== $this && self::UNFILLED !== $this;
+    }
+    
+    /**
      * Check if this operator requires a single value
      */
     public function isSingleValue(): bool
     {
-        return !$this->isRange() && self::IN !== $this && self::NOT_IN !== $this;
+        return !$this->isRange() && $this->requiresValue() && self::IN !== $this && self::NOT_IN !== $this;
     }
 }
