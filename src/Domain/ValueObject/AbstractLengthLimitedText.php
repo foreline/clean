@@ -48,7 +48,7 @@ abstract class AbstractLengthLimitedText implements LengthAwareStringValueObject
      * @param string $value Значение
      * @throws InvalidArgumentException При превышении символьного или байтового лимита
      */
-    public function __construct(string $value)
+    public function __construct(string $value = '')
     {
         $length = mb_strlen($value, 'UTF-8');
         if ( $length > static::maxLength() ) {

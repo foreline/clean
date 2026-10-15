@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-15
+
+- feat(valueobject): allow empty default construction of length-limited text values
+
 ## 2026-09-26
 
 - feat(repository): add string filter operators to FilterOperator
