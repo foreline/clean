@@ -1,5 +1,11 @@
 # Changelog
 
+## [3.3.0] - 2026-10-17
+
+### Added
+- Boolean value contract and immutable BooleanValue, Active and SortOrder value objects.
+- Semantic ActiveValueObjectInterface and SortValueObjectInterface markers for code generation.
+
 ## 2026-10-15
 
 - feat(valueobject): allow empty default construction of length-limited text values
