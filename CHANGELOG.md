@@ -2,6 +2,8 @@
 
 ## 2026-10-17
 
+- chore(deps): remove webmozart/assert dependency
+
 - refactor(validation): replace Webmozart assertions with native checks
 
 ## [3.3.0] - 2026-10-17
