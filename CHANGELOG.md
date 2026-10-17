@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-17
+
+- refactor(validation): replace Webmozart assertions with native checks
+
 ## [3.3.0] - 2026-10-17
 
 ### Added

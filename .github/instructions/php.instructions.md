@@ -15,5 +15,5 @@ applyTo: '**/*.php'
 - Use `readonly` properties where appropriate (PHP 8.1+)
 - Prefer constructor promotion for simple DTOs
 - Import classes with `use` statements — no inline fully-qualified names
-- Validate inputs at system boundaries with `webmozart/assert` or typed exceptions
+- Validate inputs at system boundaries with native PHP checks and typed exceptions
 - Never use `@suppress` or silence errors with `@` operator without justification

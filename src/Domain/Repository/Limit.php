@@ -35,7 +35,6 @@ class Limit implements LimitInterface, JsonSerializable
     public function setLimit(int $limit = 1): self
     {
         // 0 - no limit
-        //Assert::greaterThan($limit, 0, 'Limit must be greater than 0');
         $this->limit = $limit;
         return $this;
     }
@@ -48,7 +47,6 @@ class Limit implements LimitInterface, JsonSerializable
      */
     public function set(int $limit = 1, int $offset = 0, int $pageNum = 1): self
     {
-        //Assert::greaterThan($limit, 0, 'Limit must be greater than 0');
         $this->limit = $limit;
         $this->offset = $offset;
         $this->pageNum = $pageNum;
@@ -95,7 +93,6 @@ class Limit implements LimitInterface, JsonSerializable
      */
     public function setPageNum(int $pageNum): self
     {
-        //Assert::greaterThanEq($pageNum, 1, 'Page number must be greater than 0');
         $this->pageNum = $pageNum;
         return $this;
     }

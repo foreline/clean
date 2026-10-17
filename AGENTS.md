@@ -25,7 +25,6 @@
   - `symfony/scheduler` (^7.3)
   - `symfony/messenger` (^7.4)
 - `psr/log` (^2.0 || ^3.0)
-- `webmozart/assert` (^1.11) — валидация на границах.
 - `ramsey/uuid` (^4.8)
 - `dragonmantank/cron-expression` (^3.4)
 - `ext-curl`
@@ -239,7 +238,7 @@ PHPUnit настроен на сбор покрытия для `src/` в `.phpun
   - абстрактные классы — префикс `Abstract` (`AbstractEntity`);
   - трейты — суффикс `Trait`.
 - Использовать `use`-импорты, не inline FQN.
-- Валидация на границах системы через `webmozart/assert` или типизированные исключения.
+- Валидация на границах системы простыми проверками PHP с типизированными исключениями.
 - Не использовать `@suppress` и `@`-оператор без обоснования.
 - `readonly` свойства и constructor promotion применяются для простых DTO.
 - Устаревший код помечать `@deprecated`.

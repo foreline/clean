@@ -8,7 +8,7 @@ use Domain\Entity\ToArrayInterface;
 use Domain\ValueObject\StringValueObjectInterface;
 use Domain\ValueObject\ValueObjectInterface;
 use Exception;
-use Webmozart\Assert\Assert;
+use InvalidArgumentException;
 
 /**
  * Color ValueObject
@@ -31,17 +31,32 @@ class Color implements ValueObjectInterface, StringValueObjectInterface, ToArray
         
         [$red, $green, $blue, $alpha] = sscanf($hexColor, '#%02x%02x%02x%02x');
         
-        Assert::greaterThanEq($red, 0, 'Значение красного цвета не может быть отрицательным');
-        Assert::lessThanEq($red, 255, 'Значение красного цвета не может превышать 255');
-        Assert::greaterThanEq($green, 0, 'Значение зеленого цвета не может быть отрицательным');
-        Assert::lessThanEq($green, 255, 'Значение зеленого цвета не может превышать 255');
-        Assert::greaterThanEq($blue, 0, 'Значение синего цвета не может быть отрицательным');
-        Assert::lessThanEq($blue, 255, 'Значение синего цвета не может превышать 255');
+        if ( 0 > $red ) {
+            throw new InvalidArgumentException('Значение красного цвета не может быть отрицательным');
+        }
+        if ( 255 < $red ) {
+            throw new InvalidArgumentException('Значение красного цвета не может превышать 255');
+        }
+        if ( 0 > $green ) {
+            throw new InvalidArgumentException('Значение зеленого цвета не может быть отрицательным');
+        }
+        if ( 255 < $green ) {
+            throw new InvalidArgumentException('Значение зеленого цвета не может превышать 255');
+        }
+        if ( 0 > $blue ) {
+            throw new InvalidArgumentException('Значение синего цвета не может быть отрицательным');
+        }
+        if ( 255 < $blue ) {
+            throw new InvalidArgumentException('Значение синего цвета не может превышать 255');
+        }
         
         if ( null !== $alpha ) {
-            Assert::greaterThanEq($alpha, 0, 'Значение прозрачности не может быть отрицательным');
-            //Assert::lessThanEq($alpha, 100, 'Значение прозрачности не может превышать 100');
-            Assert::lessThanEq($alpha, 255, 'Значение прозрачности не может превышать 255');
+            if ( 0 > $alpha ) {
+                throw new InvalidArgumentException('Значение прозрачности не может быть отрицательным');
+            }
+            if ( 255 < $alpha ) {
+                throw new InvalidArgumentException('Значение прозрачности не может превышать 255');
+            }
         } else {
             $alpha = 100;
         }
@@ -184,9 +199,15 @@ class Color implements ValueObjectInterface, StringValueObjectInterface, ToArray
     public function fromArray(array $data = []): self
     {
         // Проверяем наличие необходимых ключей в массиве
-        Assert::keyExists($data, 'red', 'Ключ "red" должен присутствовать в массиве');
-        Assert::keyExists($data, 'green', 'Ключ "green" должен присутствовать в массиве');
-        Assert::keyExists($data, 'blue', 'Ключ "blue" должен присутствовать в массиве');
+        if ( !array_key_exists('red', $data) ) {
+            throw new InvalidArgumentException('Ключ "red" должен присутствовать в массиве');
+        }
+        if ( !array_key_exists('green', $data) ) {
+            throw new InvalidArgumentException('Ключ "green" должен присутствовать в массиве');
+        }
+        if ( !array_key_exists('blue', $data) ) {
+            throw new InvalidArgumentException('Ключ "blue" должен присутствовать в массиве');
+        }
     
         // Получаем значения из массива
         $red    = (int)$data['red'];

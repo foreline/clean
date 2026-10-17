@@ -6,7 +6,7 @@ PHP Clean Architecture framework providing base abstractions for building domain
 - PHP 8.1+ with `declare(strict_types=1)`
 - Symfony components: HttpFoundation, Scheduler, Messenger
 - ramsey/uuid for UUID generation
-- webmozart/assert for input validation
+- Native PHP checks and InvalidArgumentException for input validation
 - PHPUnit 9.6 for testing, PHPStan for static analysis
 
 ## Architecture
@@ -37,7 +37,7 @@ PHP Clean Architecture framework providing base abstractions for building domain
 
 ## Error Handling
 - Use specific exception classes under `Domain\Exception\` and `Infrastructure\DI\Exception\`
-- Validate at boundaries using `webmozart/assert` or `InvalidArgumentException`
+- Validate at boundaries using native PHP checks and `InvalidArgumentException`
 - Never swallow exceptions silently unless explicitly justified
 
 ## Testing

@@ -22,7 +22,7 @@ Generate a new value object class in the `Domain\ValueObject` namespace.
    - Array → `ArrayValueObjectInterface`
 3. If complex, create a subdirectory: `src/Domain/ValueObject/{Name}/`.
 4. Value objects must be immutable — no setters, all state set in constructor.
-5. Include validation in the constructor using `webmozart/assert` or exceptions.
+5. Include validation in the constructor using native PHP checks and exceptions.
 6. Add `__toString()` for string-representable VOs.
 7. Add `equals(ValueObjectInterface $other): bool` for comparison.
 8. Generate a PHPUnit test in `tests/ValueObject/{Name}/`.

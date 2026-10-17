@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Domain\User\Entity;
 
-use Webmozart\Assert\Assert;
+use InvalidArgumentException;
 
 /**
  * User Entity
@@ -183,7 +183,9 @@ class UserEntity
     public function setEmail(string $email): self
     {
         if ( '' !== $email ) {
-            Assert::email($email, 'Неверный е-мейл');
+            if ( false === filter_var($email, FILTER_VALIDATE_EMAIL) ) {
+                throw new InvalidArgumentException('Неверный е-мейл');
+            }
         }
         $this->email = $email;
         return $this;

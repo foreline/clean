@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Domain\Event;
 
-use Webmozart\Assert\Assert;
+use InvalidArgumentException;
 
 /**
  * Immutable snapshot of a pending debounced invocation.
@@ -56,9 +56,15 @@ final class DebounceState
         int $firstSeenAtMs,
         int $deadlineMs,
     ) {
-        Assert::stringNotEmpty($key);
-        Assert::stringNotEmpty($subscriberClass);
-        Assert::stringNotEmpty($eventClass);
+        if ( '' === $key ) {
+            throw new InvalidArgumentException('Expected a non-empty string. Got: ""');
+        }
+        if ( '' === $subscriberClass ) {
+            throw new InvalidArgumentException('Expected a non-empty string. Got: ""');
+        }
+        if ( '' === $eventClass ) {
+            throw new InvalidArgumentException('Expected a non-empty string. Got: ""');
+        }
 
         $this->key = $key;
         $this->subscriberClass = $subscriberClass;
@@ -151,13 +157,27 @@ final class DebounceState
      */
     public static function fromArray(array $data): self
     {
-        Assert::keyExists($data, 'key');
-        Assert::keyExists($data, 'subscriberClass');
-        Assert::keyExists($data, 'eventClass');
-        Assert::keyExists($data, 'serializedEvent');
-        Assert::keyExists($data, 'dueAtMs');
-        Assert::keyExists($data, 'firstSeenAtMs');
-        Assert::keyExists($data, 'deadlineMs');
+        if ( !array_key_exists('key', $data) ) {
+            throw new InvalidArgumentException('Expected the key "key" to exist.');
+        }
+        if ( !array_key_exists('subscriberClass', $data) ) {
+            throw new InvalidArgumentException('Expected the key "subscriberClass" to exist.');
+        }
+        if ( !array_key_exists('eventClass', $data) ) {
+            throw new InvalidArgumentException('Expected the key "eventClass" to exist.');
+        }
+        if ( !array_key_exists('serializedEvent', $data) ) {
+            throw new InvalidArgumentException('Expected the key "serializedEvent" to exist.');
+        }
+        if ( !array_key_exists('dueAtMs', $data) ) {
+            throw new InvalidArgumentException('Expected the key "dueAtMs" to exist.');
+        }
+        if ( !array_key_exists('firstSeenAtMs', $data) ) {
+            throw new InvalidArgumentException('Expected the key "firstSeenAtMs" to exist.');
+        }
+        if ( !array_key_exists('deadlineMs', $data) ) {
+            throw new InvalidArgumentException('Expected the key "deadlineMs" to exist.');
+        }
 
         /** @var class-string<SubscriberInterface> $subscriberClass */
         $subscriberClass = (string)$data['subscriberClass'];

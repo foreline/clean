@@ -25,5 +25,5 @@ Generate a complete domain entity following Clean Architecture conventions.
    - PHPDoc on all methods
    - Fluent setters returning `self`
    - Yoda conditions in validation
-   - Appropriate use of `webmozart/assert` for validation
+   - Native PHP checks and typed exceptions for validation
 8. Generate a basic PHPUnit test for the entity in `tests/Domain/{EntityName}/`.

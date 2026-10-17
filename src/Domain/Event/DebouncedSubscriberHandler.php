@@ -5,7 +5,6 @@ namespace Domain\Event;
 
 use InvalidArgumentException;
 use Throwable;
-use Webmozart\Assert\Assert;
 
 /**
  * Default {@see DebounceHandlerInterface} implementation.
@@ -58,10 +57,14 @@ final class DebouncedSubscriberHandler implements DebounceHandlerInterface
     public function debounce(DebouncedSubscriberInterface $subscriber, EventInterface $event): void
     {
         $debounceMs = $subscriber->getDebounceMilliseconds();
-        Assert::greaterThan($debounceMs, 0, 'Debounce window must be greater than zero milliseconds.');
+        if ( 0 >= $debounceMs ) {
+            throw new InvalidArgumentException('Debounce window must be greater than zero milliseconds.');
+        }
 
         $maxWaitMs = $subscriber->getMaxWaitMilliseconds();
-        Assert::greaterThanEq($maxWaitMs, 0, 'Max wait must be zero or greater.');
+        if ( 0 > $maxWaitMs ) {
+            throw new InvalidArgumentException('Max wait must be zero or greater.');
+        }
 
         $now = ($this->clock)();
         $key = $this->buildKey($subscriber, $event);
