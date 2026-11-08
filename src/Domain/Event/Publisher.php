@@ -172,12 +172,13 @@ class Publisher
     {
         foreach ( $events as $event ) {
             $eventClass = $event::class;
+            $asyncSubscribers = [];
             
             // Fast path: indexed subscribers, already sorted by priority at subscribe() time.
             if ( isset($this->index[$eventClass]) ) {
                 foreach ( $this->index[$eventClass] as $bucket ) {
                     foreach ( $bucket as $subscriber ) {
-                        $this->dispatch($subscriber, $event);
+                        $this->route($subscriber, $event, $asyncSubscribers);
                     }
                 }
             }
@@ -186,8 +187,11 @@ class Publisher
             // Only iterates the small set of legacy subscribers, not the full list.
             foreach ( $this->legacySubscribers as $subscriber ) {
                 if ( $subscriber->isSubscribedTo($event) ) {
-                    $this->dispatch($subscriber, $event);
+                    $this->route($subscriber, $event, $asyncSubscribers);
                 }
+            }
+            if ( [] !== $asyncSubscribers ) {
+                $this->asyncDispatcher->dispatchBatch($event, $asyncSubscribers);
             }
         }
         
@@ -210,6 +214,21 @@ class Publisher
         } else {
             $subscriber->handle($event);
         }
+    }
+
+    /** @param list<AsyncSubscriberInterface> $asyncSubscribers */
+    private function route(SubscriberInterface $subscriber, EventInterface $event, array &$asyncSubscribers): void
+    {
+        if ( $subscriber instanceof AsyncEnqueueFilterInterface && !$subscriber->shouldEnqueue($event) ) {
+            return;
+        }
+        if ( $this->asyncDispatcher instanceof BatchAsyncDispatcherInterface
+            && $subscriber instanceof AsyncSubscriberInterface
+            && !(null !== $this->debounceHandler && $subscriber instanceof DebouncedSubscriberInterface) ) {
+            $asyncSubscribers[] = $subscriber;
+            return;
+        }
+        $this->dispatch($subscriber, $event);
     }
     
     /**

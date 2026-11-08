@@ -15,15 +15,18 @@ class Event implements EventInterface
 {
     private DateTimeImmutable $occurredOn;
     private ?User $user = null;
+    private ?int $actorId = null;
 
     /**
      *
      */
-    public function __construct()
+    public function __construct(bool $captureUser = true)
     {
         $this->occurredOn = new DateTimeImmutable();
         try {
-            $this->user = ( new GetCurrentUser() )->get();
+            $user = ( new GetCurrentUser() )->get();
+            $this->actorId = $user?->getId();
+            $this->user = $captureUser ? $user : null;
         } catch (Exception) {
         }
     }
@@ -42,5 +45,11 @@ class Event implements EventInterface
     public function getUser(): ?User
     {
         return $this->user;
+    }
+
+    /** Автор компактного события; старые сериализованные события сохраняют getUser(). */
+    public function getActorId(): ?int
+    {
+        return $this->actorId;
     }
 }

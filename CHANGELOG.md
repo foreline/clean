@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-08
+
+- feat(event): support atomic delivery batches and compact actor context
+
 ## 2026-10-17
 
 - chore(deps): remove webmozart/assert dependency
