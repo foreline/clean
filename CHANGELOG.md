@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-23
+
+- fix(file): remove temporary downloads after upload
+
 ## 2026-11-08
 
 - feat(event): support atomic delivery batches and compact actor context

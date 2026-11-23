@@ -154,29 +154,34 @@ class FileManager extends AbstractManager implements ServiceInterface
         
         $name = $name ?: basename($fileLocalPathOrUrl);
         
-        if ( $this->isUrl($fileLocalPathOrUrl) ) {
-            // Загружаем файл по URL
-            $tempFile = tempnam(sys_get_temp_dir(), 'tmp_');
-            $result = file_put_contents($tempFile, fopen($fileLocalPathOrUrl, 'r'));
-            if ( false === $result ) {
-                throw new Exception('Ошибка при загрузке файла по URL: "' . $fileLocalPathOrUrl . '"');
+        $tempFile = null;
+        try {
+            if ( $this->isUrl($fileLocalPathOrUrl) ) {
+                $tempFile = tempnam(sys_get_temp_dir(), 'tmp_');
+                if ( false === $tempFile ) {
+                    throw new Exception('Не удалось создать временный файл');
+                }
+                if ( !copy($fileLocalPathOrUrl, $tempFile) ) {
+                    throw new Exception('Ошибка при загрузке файла по URL');
+                }
+                $fileLocalPathOrUrl = $tempFile;
+            } elseif ( !is_file($fileLocalPathOrUrl) ) {
+                throw new Exception('Не является файлом: "' . $fileLocalPathOrUrl . '"');
             }
-            $fileLocalPathOrUrl = $tempFile;
-        } elseif ( !is_file($fileLocalPathOrUrl) ) {
-            throw new Exception('Не является файлом: "' . $fileLocalPathOrUrl . '"');
+
+            $file = new File();
+            $file->setOriginalName($name);
+            $file->setTmpName($fileLocalPathOrUrl);
+            $file->setFileName($name);
+            $file->setDescription($description);
+            $file = $this->persist($file);
+            $file->setNewlyUploaded(true);
+            return $file;
+        } finally {
+            if ( is_string($tempFile) && is_file($tempFile) ) {
+                unlink($tempFile);
+            }
         }
-        
-        $file = new File();
-        $file->setOriginalName($name);
-        $file->setTmpName($fileLocalPathOrUrl);
-        $file->setFileName($name);
-        $file->setDescription($description);
-        
-        $file = $this->persist($file);
-        
-        $file->setNewlyUploaded(true);
-        
-        return $file;
     }
     
     /**
